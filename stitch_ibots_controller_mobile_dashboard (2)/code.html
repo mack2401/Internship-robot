@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Virtual Gamepad</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: #F8FAFC;
+      color: #0F172A;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Glossy 3D Tactile Button Finish */
+    .btn-glossy-3d {
+      background: radial-gradient(circle at 35% 28%, #FFFFFF 0%, #FFFFFF 65%, #F1F5F9 100%);
+      box-shadow: 
+        0 10px 22px -4px rgba(15, 23, 42, 0.14),
+        0 4px 8px -2px rgba(15, 23, 42, 0.06),
+        inset 0 2px 4px rgba(255, 255, 255, 1),
+        inset 0 -2px 5px rgba(203, 213, 225, 0.6);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      transition: all 0.08s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .btn-glossy-3d:hover {
+      box-shadow: 
+        0 12px 24px -4px rgba(15, 23, 42, 0.18),
+        0 5px 10px -2px rgba(15, 23, 42, 0.08),
+        inset 0 2px 4px rgba(255, 255, 255, 1),
+        inset 0 -2px 5px rgba(203, 213, 225, 0.7);
+    }
+
+    .btn-glossy-3d:active, .btn-glossy-3d.active {
+      transform: translateY(2px) scale(0.96);
+      box-shadow: 
+        0 3px 8px rgba(15, 23, 42, 0.15),
+        inset 0 2px 5px rgba(148, 163, 184, 0.35),
+        inset 0 -1px 2px rgba(255, 255, 255, 0.8);
+      background: radial-gradient(circle at 45% 40%, #F8FAFC 0%, #E2E8F0 80%, #CBD5E1 100%);
+    }
+
+    /* Directional Button Shape */
+    .btn-dpad {
+      width: 76px;
+      height: 76px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Action Button Shape */
+    .btn-action {
+      width: 76px;
+      height: 76px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Center Mini Pivot Button */
+    .btn-pivot {
+      background: radial-gradient(circle at 35% 30%, #E2E8F0 0%, #CBD5E1 70%, #94A3B8 100%);
+      box-shadow: 
+        0 2px 6px rgba(15, 23, 42, 0.12),
+        inset 0 1px 2px rgba(255, 255, 255, 0.8),
+        inset 0 -2px 3px rgba(100, 116, 139, 0.35);
+      border: 1px solid rgba(203, 213, 225, 0.9);
+    }
+
+    /* Teal Start/Pause Pill Buttons */
+    .btn-teal-pill {
+      background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%);
+      box-shadow: 
+        0 4px 14px rgba(13, 148, 136, 0.35),
+        inset 0 1px 2px rgba(255, 255, 255, 0.4),
+        inset 0 -2px 4px rgba(15, 118, 110, 0.5);
+      border: 1px solid rgba(45, 212, 191, 0.4);
+      transition: all 0.12s ease;
+    }
+
+    .btn-teal-pill:hover {
+      background: linear-gradient(180deg, #14b8a6 0%, #0f766e 100%);
+      box-shadow: 0 6px 18px rgba(13, 148, 136, 0.45);
+    }
+
+    .btn-teal-pill:active, .btn-teal-pill.active {
+      transform: translateY(2px) scale(0.97);
+      background: linear-gradient(180deg, #0f766e 0%, #115e59 100%);
+      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Cluster Background Wells */
+    .control-well {
+      background: radial-gradient(circle, #F8FAFC 0%, #F1F5F9 65%, #E2E8F0 100%);
+      border: 1px solid #E2E8F0;
+      box-shadow: 
+        inset 0 4px 16px rgba(15, 23, 42, 0.05),
+        0 10px 30px -8px rgba(15, 23, 42, 0.07);
+      border-radius: 9999px;
+    }
+
+    /* Movable Joystick Specific Styles */
+    .joystick-base {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #F8FAFC 0%, #EDF2F7 70%, #E2E8F0 100%);
+      box-shadow: 
+        inset 0 4px 12px rgba(15, 23, 42, 0.1),
+        inset 0 -2px 6px rgba(255, 255, 255, 0.9),
+        0 0 0 2px rgba(203, 213, 225, 0.6);
+      position: relative;
+      touch-action: none;
+    }
+
+    .joystick-crosshair {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .joystick-thumb {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      cursor: grab;
+      touch-action: none;
+      background: radial-gradient(circle at 35% 28%, #FFFFFF 0%, #F8FAFC 55%, #E2E8F0 100%);
+      box-shadow: 
+        0 8px 20px rgba(15, 23, 42, 0.18),
+        inset 0 3px 5px rgba(255, 255, 255, 1),
+        inset 0 -3px 5px rgba(148, 163, 184, 0.35);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: box-shadow 0.15s ease;
+    }
+
+    .joystick-thumb:active, .joystick-thumb.dragging {
+      cursor: grabbing;
+      box-shadow: 
+        0 4px 12px rgba(15, 23, 42, 0.22),
+        inset 0 2px 4px rgba(255, 255, 255, 0.9),
+        inset 0 -2px 4px rgba(148, 163, 184, 0.45);
+    }
+  </style>
+</head>
+<body class="flex flex-col justify-between min-h-screen bg-slate-50 text-slate-800 select-none">
+<!-- TOP NAVIGATION BAR -->
+<header class="w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-3 flex items-center justify-between z-30 sticky top-0 shadow-sm">
+<div class="flex items-center gap-3">
+<!-- Back Arrow -->
+<a class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 hover:text-slate-900 flex items-center justify-center transition border border-slate-200 shadow-sm" href="javascript:void(0)" onclick="handleBack()">
+<i class="fa-solid fa-arrow-left text-sm"></i>
+</a>
+<!-- Title & Connection Pill -->
+<div class="flex items-center gap-2.5">
+<h1 class="text-base sm:text-lg font-bold tracking-tight text-slate-900 flex items-center gap-2">
+<span>Virtual Gamepad</span>
+</h1>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm" id="conn-pill">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+<span id="conn-text">BLE 5.2 Connected</span>
+</span>
+</div>
+</div>
+<!-- Right Quick Actions -->
+<div class="flex items-center gap-2">
+<!-- Device status button -->
+<button class="h-9 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 hover:text-teal-700 transition flex items-center gap-1.5 border border-slate-200 text-xs font-medium shadow-sm" onclick="toggleConnection()" title="Connection Status">
+<i class="fa-brands fa-bluetooth-b text-teal-600 text-sm" id="conn-icon"></i>
+<span class="hidden sm:inline" id="conn-btn-label">Connected</span>
+</button>
+<!-- Code button -->
+<button class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 hover:text-teal-700 transition flex items-center justify-center border border-slate-200 text-xs shadow-sm" onclick="showCodeSnippet()" title="Arduino / ESP32 Code">
+<i class="fa-solid fa-code text-sm"></i>
+</button>
+<!-- Three-dot Menu -->
+<button class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 hover:text-slate-900 transition flex items-center justify-center border border-slate-200 text-xs shadow-sm" onclick="toggleMenu()" title="Gamepad Settings">
+<i class="fa-solid fa-ellipsis-vertical text-sm"></i>
+</button>
+</div>
+</header>
+<!-- POPUP / TOAST NOTIFICATION -->
+<div class="fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-white/95 border border-teal-500/40 text-teal-800 text-xs font-semibold tracking-wide shadow-xl shadow-slate-900/10 pointer-events-none opacity-0 transition-opacity duration-200" id="toast">
+    Signal: Forward
+</div>
+<!-- MAIN CONTROLLER CANVAS AREA (HORIZONTAL LANDSCAPE ORIENTATION) -->
+<main class="flex-1 w-full max-w-6xl mx-auto px-4 py-6 sm:py-10 flex flex-col justify-center items-center">
+<!-- CONTROLLERS GRID: D-PAD (LEFT) + STATUS BADGE (CENTER) + ACTION CLUSTER (RIGHT) -->
+<div class="w-full flex flex-row items-center justify-around gap-4 sm:gap-8 md:gap-14 lg:gap-20 my-auto">
+<!-- LEFT CONTROL PAD: CIRCULAR TACTILE D-PAD CLUSTER / JOYSTICK -->
+<div class="flex flex-col items-center">
+<!-- Control Container Well -->
+<div class="relative w-[240px] h-[240px] sm:w-[280px] sm:h-[280px] flex items-center justify-center control-well p-2">
+<!-- VIEW 1: DIRECTIONAL ARROWS MODE -->
+<div class="w-full h-full relative flex items-center justify-center" id="dpad-container">
+<!-- UP ARROW BUTTON -->
+<button class="absolute top-2 left-1/2 -translate-x-1/2 btn-glossy-3d btn-dpad" data-key="UP" id="btn-up">
+<i class="fa-solid fa-chevron-up text-xl sm:text-2xl text-slate-800 font-extrabold"></i>
+</button>
+<!-- LEFT ARROW BUTTON -->
+<button class="absolute left-2 top-1/2 -translate-y-1/2 btn-glossy-3d btn-dpad" data-key="LEFT" id="btn-left">
+<i class="fa-solid fa-chevron-left text-xl sm:text-2xl text-slate-800 font-extrabold"></i>
+</button>
+<!-- RIGHT ARROW BUTTON -->
+<button class="absolute right-2 top-1/2 -translate-y-1/2 btn-glossy-3d btn-dpad" data-key="RIGHT" id="btn-right">
+<i class="fa-solid fa-chevron-right text-xl sm:text-2xl text-slate-800 font-extrabold"></i>
+</button>
+<!-- DOWN ARROW BUTTON -->
+<button class="absolute bottom-2 left-1/2 -translate-x-1/2 btn-glossy-3d btn-dpad" data-key="DOWN" id="btn-down">
+<i class="fa-solid fa-chevron-down text-xl sm:text-2xl text-slate-800 font-extrabold"></i>
+</button>
+<!-- CENTER PIVOT BUTTON -->
+<div class="w-12 h-12 rounded-full btn-pivot flex items-center justify-center z-10 pointer-events-none">
+<div class="w-3.5 h-3.5 rounded-full bg-slate-400/80 shadow-inner"></div>
+</div>
+</div>
+<!-- VIEW 2: MOVABLE JOYSTICK MODE (HIDDEN INITIALLY) -->
+<div class="hidden w-full h-full items-center justify-center" id="joystick-container">
+<div class="joystick-base flex items-center justify-center" id="joystick-base">
+<div class="joystick-crosshair w-full h-[1px] bg-slate-300"></div>
+<div class="joystick-crosshair h-full w-[1px] bg-slate-300"></div>
+<div class="joystick-crosshair w-32 h-32 rounded-full border border-slate-300"></div>
+<div class="joystick-crosshair w-16 h-16 rounded-full border border-teal-400/40"></div>
+<div class="joystick-thumb" id="joystick-thumb">
+<div class="w-10 h-10 rounded-full border border-slate-200 bg-gradient-to-b from-slate-100 to-slate-200 flex items-center justify-center shadow-inner">
+<div class="w-4 h-4 rounded-full bg-slate-400 shadow-sm"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- DROPDOWN SELECTOR BELOW LEFT PAD -->
+<div class="mt-4 relative" id="control-mode-dropdown-wrapper">
+<button class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white hover:bg-slate-50 active:scale-95 border border-slate-300 hover:border-teal-500 shadow-sm text-slate-700 hover:text-slate-900 transition duration-150 text-xs font-medium cursor-pointer" id="dropdown-btn" onclick="toggleModeDropdown(event)">
+<span class="text-teal-600 text-xs" id="selected-mode-icon"><i class="fa-solid fa-arrows-up-down-left-right"></i></span>
+<span class="tracking-wide" id="selected-mode-label">Directional Arrows</span>
+<i class="fa-solid fa-chevron-down text-[10px] text-slate-500 transition-transform duration-200" id="dropdown-arrow-icon"></i>
+</button>
+<!-- Dropdown Menu List -->
+<div class="hidden absolute top-full mt-1.5 left-1/2 -translate-x-1/2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 z-40" id="dropdown-menu">
+<button class="w-full px-3 py-2 text-left text-xs flex items-center justify-between hover:bg-slate-50 text-slate-700 transition" onclick="selectControlMode('arrows')">
+<span class="flex items-center gap-2.5">
+<i class="fa-solid fa-arrows-up-down-left-right text-teal-600 text-xs w-4 text-center"></i>
+<span class="font-medium text-slate-800">Directional Arrows</span>
+</span>
+<i class="fa-solid fa-check text-teal-600 text-xs" id="check-arrows"></i>
+</button>
+<button class="w-full px-3 py-2 text-left text-xs flex items-center justify-between hover:bg-slate-50 text-slate-700 transition" onclick="selectControlMode('joystick')">
+<span class="flex items-center gap-2.5">
+<i class="fa-regular fa-circle-dot text-teal-600 text-xs w-4 text-center"></i>
+<span class="font-medium text-slate-800">Movable Joystick</span>
+</span>
+<i class="fa-solid fa-check text-teal-600 text-xs hidden" id="check-joystick"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- CENTER STATUS BADGE (STATE: ACTIVE, OUTPUT: IDLE) -->
+<div class="flex flex-col items-center justify-center gap-3 py-4 px-6 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
+<div>
+<span class="text-[10px] text-slate-400 uppercase font-semibold block tracking-wider">STATE</span>
+<span class="text-xs font-bold text-teal-600 uppercase tracking-wider" id="gamepad-state-label">ACTIVE</span>
+</div>
+<div class="w-8 h-px bg-slate-200"></div>
+<div>
+<span class="text-[10px] text-slate-400 uppercase font-semibold block tracking-wider">OUTPUT</span>
+<span class="text-xs font-mono font-bold text-slate-800" id="active-cmd">IDLE</span>
+</div>
+</div>
+<!-- RIGHT ACTION PAD: CIRCULAR PLAYSTATION ACTION KEY CLUSTER -->
+<div class="flex flex-col items-center">
+<div class="relative w-[240px] h-[240px] sm:w-[280px] sm:h-[280px] flex items-center justify-center control-well p-2">
+<!-- TOP: TRIANGLE BUTTON -->
+<button class="absolute top-2 left-1/2 -translate-x-1/2 btn-glossy-3d btn-action" data-key="TRIANGLE" id="btn-triangle">
+<svg class="w-7 h-7 text-slate-800" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewbox="0 0 24 24">
+<polygon points="12 3 21 20 3 20"></polygon>
+</svg>
+</button>
+<!-- LEFT: SQUARE BUTTON -->
+<button class="absolute left-2 top-1/2 -translate-y-1/2 btn-glossy-3d btn-action" data-key="SQUARE" id="btn-square">
+<svg class="w-6 h-6 text-slate-800" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewbox="0 0 24 24">
+<rect height="18" rx="2" width="18" x="3" y="3"></rect>
+</svg>
+</button>
+<!-- RIGHT: CIRCLE BUTTON -->
+<button class="absolute right-2 top-1/2 -translate-y-1/2 btn-glossy-3d btn-action" data-key="CIRCLE" id="btn-circle">
+<svg class="w-6 h-6 text-slate-800" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+</svg>
+</button>
+<!-- BOTTOM: CROSS BUTTON -->
+<button class="absolute bottom-2 left-1/2 -translate-x-1/2 btn-glossy-3d btn-action" data-key="CROSS" id="btn-cross">
+<svg class="w-6 h-6 text-slate-800" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3" viewbox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+</button>
+<!-- CENTER PIVOT BUTTON -->
+<div class="w-12 h-12 rounded-full btn-pivot flex items-center justify-center z-10 pointer-events-none">
+<div class="w-3.5 h-3.5 rounded-full bg-slate-400/80 shadow-inner"></div>
+</div>
+</div>
+<span class="mt-4 text-[11px] font-semibold uppercase tracking-wider text-slate-500">ACTION KEYS</span>
+</div>
+</div>
+</main>
+<!-- BOTTOM CONTROLS: START & PAUSE ACTION BUTTONS -->
+<footer class="w-full bg-white/95 border-t border-slate-200/90 px-6 py-4 flex flex-row items-center justify-center gap-6 z-20 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
+<div class="flex items-center gap-6 sm:gap-10">
+<!-- START BUTTON -->
+<button class="btn-teal-pill px-8 sm:px-10 py-3 rounded-full text-white font-extrabold text-sm tracking-widest uppercase flex items-center gap-2.5 cursor-pointer shadow-md" id="btn-start" onclick="handleStart()">
+<i class="fa-solid fa-play text-xs text-white"></i>
+<span>START</span>
+</button>
+<!-- PAUSE BUTTON -->
+<button class="btn-teal-pill px-8 sm:px-10 py-3 rounded-full text-white font-extrabold text-sm tracking-widest uppercase flex items-center gap-2.5 cursor-pointer shadow-md" id="btn-pause" onclick="handlePause()">
+<i class="fa-solid fa-pause text-xs text-white"></i>
+<span>PAUSE</span>
+</button>
+</div>
+</footer>
+<!-- CODE DIALOG MODAL -->
+<div class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4" id="code-modal">
+<div class="bg-white border border-slate-200 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl">
+<div class="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+<h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+<i class="fa-solid fa-code text-teal-600"></i> Arduino / ESP32 Gamepad Protocol
+</h3>
+<button class="text-slate-400 hover:text-slate-700 text-lg w-7 h-7 rounded-full flex items-center justify-center hover:bg-slate-200 transition" onclick="closeCodeSnippet()">×</button>
+</div>
+<div class="p-4 bg-slate-900 text-xs font-mono text-slate-200 max-h-72 overflow-y-auto">
+<p class="text-slate-400 mb-2">// Sample BLE characteristic packet reception:</p>
+<pre class="text-teal-300 leading-relaxed">void onPacketReceived(char cmd) {
+  switch(cmd) {
+    case 'U': moveForward(); break;
+    case 'D': moveBackward(); break;
+    case 'L': turnLeft(); break;
+    case 'R': turnRight(); break;
+    case 'J': handleAnalog(joyX, joyY); break; // Joystick
+    case 'T': actionTriangle(); break; // Tri
+    case 'S': actionSquare(); break;   // Sqr
+    case 'C': actionCircle(); break;   // Cir
+    case 'X': actionCross(); break;    // X
+    case '1': enableMotors(); break;   // START
+    case '0': haltMotors(); break;     // PAUSE
+  }
+}</pre>
+</div>
+<div class="p-3 bg-slate-50 border-t border-slate-200 flex justify-end">
+<button class="px-4 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-sm transition" onclick="closeCodeSnippet()">Close</button>
+</div>
+</div>
+</div>
+<!-- SCRIPT FOR PRESS INTERACTIONS & JOYSTICK STATE -->
+<script>
+    let isConnected = true;
+    let isPaused = false;
+    let currentMode = 'arrows'; // 'arrows' or 'joystick'
+    const toast = document.getElementById('toast');
+    const activeCmd = document.getElementById('active-cmd');
+    const gamepadStateLabel = document.getElementById('gamepad-state-label');
+
+    function showToast(msg) {
+      toast.innerText = msg;
+      toast.style.opacity = '1';
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.style.opacity = '0';
+      }, 900);
+    }
+
+    function sendCommand(key, name) {
+      if (!isConnected) {
+        showToast('Device Disconnected — Command Ignored');
+        return;
+      }
+      if (isPaused && name !== 'START') {
+        showToast('Gamepad Paused — Press START');
+        return;
+      }
+      activeCmd.innerText = key;
+      showToast('Key: ' + name);
+    }
+
+    // Attach touch & mouse events to action and dpad buttons
+    const buttons = [
+      { id: 'btn-up', key: 'U', name: 'UP' },
+      { id: 'btn-down', key: 'D', name: 'DOWN' },
+      { id: 'btn-left', key: 'L', name: 'LEFT' },
+      { id: 'btn-right', key: 'R', name: 'RIGHT' },
+      { id: 'btn-triangle', key: 'T', name: 'TRIANGLE' },
+      { id: 'btn-square', key: 'S', name: 'SQUARE' },
+      { id: 'btn-circle', key: 'C', name: 'CIRCLE' },
+      { id: 'btn-cross', key: 'X', name: 'CROSS' }
+    ];
+
+    buttons.forEach(item => {
+      const el = document.getElementById(item.id);
+      if (!el) return;
+
+      const triggerPress = (e) => {
+        e.preventDefault();
+        el.classList.add('active');
+        sendCommand(item.key, item.name);
+      };
+
+      const triggerRelease = (e) => {
+        e.preventDefault();
+        el.classList.remove('active');
+        if (activeCmd.innerText === item.key) {
+          activeCmd.innerText = 'IDLE';
+        }
+      };
+
+      el.addEventListener('mousedown', triggerPress);
+      el.addEventListener('mouseup', triggerRelease);
+      el.addEventListener('mouseleave', triggerRelease);
+
+      el.addEventListener('touchstart', triggerPress, { passive: false });
+      el.addEventListener('touchend', triggerRelease, { passive: false });
+    });
+
+    // Dropdown Logic
+    function toggleModeDropdown(event) {
+      event.stopPropagation();
+      const menu = document.getElementById('dropdown-menu');
+      const arrow = document.getElementById('dropdown-arrow-icon');
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        menu.classList.remove('hidden');
+        arrow.style.transform = 'rotate(180deg)';
+      } else {
+        menu.classList.add('hidden');
+        arrow.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    function selectControlMode(mode) {
+      currentMode = mode;
+      const dpadContainer = document.getElementById('dpad-container');
+      const joystickContainer = document.getElementById('joystick-container');
+      const modeIcon = document.getElementById('selected-mode-icon');
+      const modeLabel = document.getElementById('selected-mode-label');
+      const checkArrows = document.getElementById('check-arrows');
+      const checkJoystick = document.getElementById('check-joystick');
+      const menu = document.getElementById('dropdown-menu');
+      const arrow = document.getElementById('dropdown-arrow-icon');
+
+      if (mode === 'arrows') {
+        dpadContainer.classList.remove('hidden');
+        dpadContainer.classList.add('flex');
+        joystickContainer.classList.add('hidden');
+        joystickContainer.classList.remove('flex');
+        
+        modeIcon.innerHTML = '<i class="fa-solid fa-arrows-up-down-left-right"></i>';
+        modeLabel.innerText = 'Directional Arrows';
+        checkArrows.classList.remove('hidden');
+        checkJoystick.classList.add('hidden');
+        showToast('Mode: Directional Arrows');
+      } else {
+        dpadContainer.classList.add('hidden');
+        dpadContainer.classList.remove('flex');
+        joystickContainer.classList.remove('hidden');
+        joystickContainer.classList.add('flex');
+
+        modeIcon.innerHTML = '<i class="fa-regular fa-circle-dot"></i>';
+        modeLabel.innerText = 'Movable Joystick';
+        checkArrows.classList.add('hidden');
+        checkJoystick.classList.remove('hidden');
+        showToast('Mode: Movable Joystick');
+      }
+
+      menu.classList.add('hidden');
+      arrow.style.transform = 'rotate(0deg)';
+    }
+
+    // Close dropdown on outside click
+    window.addEventListener('click', (e) => {
+      const dropdownWrapper = document.getElementById('control-mode-dropdown-wrapper');
+      if (dropdownWrapper && !dropdownWrapper.contains(e.target)) {
+        const menu = document.getElementById('dropdown-menu');
+        const arrow = document.getElementById('dropdown-arrow-icon');
+        if (menu && !menu.classList.contains('hidden')) {
+          menu.classList.add('hidden');
+          if (arrow) arrow.style.transform = 'rotate(0deg)';
+        }
+      }
+    });
+
+    // MOVABLE ANALOG JOYSTICK CONTROLLER LOGIC
+    const joystickBase = document.getElementById('joystick-base');
+    const joystickThumb = document.getElementById('joystick-thumb');
+    let isJoystickDragging = false;
+    const maxRadius = 65;
+
+    function handleJoystickMove(clientX, clientY) {
+      if (!isJoystickDragging) return;
+      const rect = joystickBase.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      let dx = clientX - centerX;
+      let dy = clientY - centerY;
+      const distance = Math.hypot(dx, dy);
+
+      if (distance > maxRadius) {
+        dx = (dx / distance) * maxRadius;
+        dy = (dy / distance) * maxRadius;
+      }
+
+      joystickThumb.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+
+      const normX = Math.round((dx / maxRadius) * 100);
+      const normY = Math.round((-dy / maxRadius) * 100);
+
+      let dirLabel = 'X:' + normX + ' Y:' + normY;
+      if (Math.abs(normX) > 25 || Math.abs(normY) > 25) {
+        if (Math.abs(normY) >= Math.abs(normX)) {
+          dirLabel = (normY > 0 ? 'JOY:UP' : 'JOY:DOWN') + ` (${normY}%)`;
+        } else {
+          dirLabel = (normX > 0 ? 'JOY:RIGHT' : 'JOY:LEFT') + ` (${normX}%)`;
+        }
+      }
+
+      if (!isConnected) {
+        activeCmd.innerText = 'DISCONN';
+      } else if (isPaused) {
+        activeCmd.innerText = 'PAUSED';
+      } else {
+        activeCmd.innerText = dirLabel;
+      }
+    }
+
+    function resetJoystick() {
+      if (!isJoystickDragging) return;
+      isJoystickDragging = false;
+      joystickThumb.classList.remove('dragging');
+      joystickThumb.style.transition = 'transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.2)';
+      joystickThumb.style.transform = 'translate(-50%, -50%)';
+      setTimeout(() => {
+        joystickThumb.style.transition = '';
+      }, 200);
+
+      if (activeCmd.innerText.startsWith('JOY:') || activeCmd.innerText.startsWith('X:')) {
+        activeCmd.innerText = 'IDLE';
+      }
+    }
+
+    // Joystick Mouse Listeners
+    joystickThumb.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      isJoystickDragging = true;
+      joystickThumb.classList.add('dragging');
+      joystickThumb.style.transition = 'none';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isJoystickDragging) {
+        handleJoystickMove(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener('mouseup', resetJoystick);
+
+    // Joystick Touch Listeners
+    joystickThumb.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      isJoystickDragging = true;
+      joystickThumb.classList.add('dragging');
+      joystickThumb.style.transition = 'none';
+    }, { passive: false });
+
+    window.addEventListener('touchmove', (e) => {
+      if (isJoystickDragging && e.touches.length > 0) {
+        handleJoystickMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: false });
+
+    window.addEventListener('touchend', resetJoystick);
+    window.addEventListener('touchcancel', resetJoystick);
+
+    function handleStart() {
+      isPaused = false;
+      gamepadStateLabel.innerText = 'ACTIVE';
+      gamepadStateLabel.className = 'text-xs font-bold text-teal-600 uppercase tracking-wider';
+      activeCmd.innerText = 'START';
+      showToast('Gamepad Mode: Activated (RUN)');
+      setTimeout(() => { if (activeCmd.innerText === 'START') activeCmd.innerText = 'IDLE'; }, 1000);
+    }
+
+    function handlePause() {
+      isPaused = true;
+      gamepadStateLabel.innerText = 'PAUSED';
+      gamepadStateLabel.className = 'text-xs font-bold text-amber-600 uppercase tracking-wider';
+      activeCmd.innerText = 'PAUSE';
+      showToast('Gamepad Mode: Paused (SUSPENDED)');
+    }
+
+    function toggleConnection() {
+      isConnected = !isConnected;
+      const pill = document.getElementById('conn-pill');
+      const text = document.getElementById('conn-text');
+      const icon = document.getElementById('conn-icon');
+      const label = document.getElementById('conn-btn-label');
+
+      if (isConnected) {
+        pill.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm';
+        pill.firstElementChild.className = 'w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse';
+        text.innerText = 'BLE 5.2 Connected';
+        icon.className = 'fa-brands fa-bluetooth-b text-teal-600 text-sm';
+        label.innerText = 'Connected';
+        showToast('Bluetooth ESP32 Connected');
+      } else {
+        pill.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200 shadow-sm';
+        pill.firstElementChild.className = 'w-1.5 h-1.5 rounded-full bg-rose-500';
+        text.innerText = 'Disconnected';
+        icon.className = 'fa-solid fa-unlink text-rose-600 text-sm';
+        label.innerText = 'Disconnected';
+        showToast('Device Disconnected');
+      }
+    }
+
+    function showCodeSnippet() {
+      document.getElementById('code-modal').classList.remove('hidden');
+      document.getElementById('code-modal').classList.add('flex');
+    }
+
+    function closeCodeSnippet() {
+      document.getElementById('code-modal').classList.add('hidden');
+      document.getElementById('code-modal').classList.remove('flex');
+    }
+
+    function toggleMenu() {
+      showToast('Gamepad Settings: Vibration ON, Deadzone 5%');
+    }
+
+    function handleBack() {
+      showToast('Navigating back to Home Dashboard...');
+    }
+  </script>
+</body></html>

@@ -1,0 +1,501 @@
+```html
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#faf9fa">
+
+  <title>Profile</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif:wght@600;700&family=Public+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-container": "#3366cc",
+            "primary-fixed-dim": "#b1c5ff",
+            "primary-fixed": "#d9e2ff",
+            "secondary-container": "#dfe3e8",
+            "surface-container": "#efedee",
+            "secondary": "#5a5f63",
+            "on-tertiary": "#ffffff",
+            "inverse-primary": "#b1c5ff",
+            "surface-container-low": "#f5f3f4",
+            "surface-bright": "#faf9fa",
+            "on-tertiary-fixed": "#211b00",
+            "on-secondary-fixed": "#171c20",
+            "on-background": "#1b1c1d",
+            "tertiary-fixed-dim": "#dcc661",
+            "primary": "#094cb2",
+            "outline": "#737784",
+            "on-primary-fixed": "#001946",
+            "surface": "#faf9fa",
+            "tertiary-container": "#bfab49",
+            "on-error": "#ffffff",
+            "on-primary-container": "#e7ebff",
+            "on-tertiary-container": "#4a3f00",
+            "secondary-fixed": "#dfe3e8",
+            "on-surface": "#1b1c1d",
+            "on-tertiary-fixed-variant": "#524600",
+            "surface-container-highest": "#e3e2e3",
+            "surface-container-high": "#e9e8e9",
+            "surface-variant": "#e3e2e3",
+            "on-secondary": "#ffffff",
+            "outline-variant": "#c3c6d5",
+            "on-secondary-fixed-variant": "#42474b",
+            "background": "#faf9fa",
+            "on-secondary-container": "#606569",
+            "on-primary-fixed-variant": "#00419d",
+            "surface-tint": "#2259bf",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "surface-dim": "#dbdadb",
+            "tertiary": "#6d5e00",
+            "inverse-on-surface": "#f2f0f1",
+            "inverse-surface": "#303031",
+            "on-surface-variant": "#434653",
+            "tertiary-fixed": "#f9e37a",
+            "surface-container-lowest": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-primary": "#ffffff",
+            "secondary-fixed-dim": "#c2c7cc"
+          },
+          borderRadius: {
+            DEFAULT: "0.125rem",
+            lg: "0.25rem",
+            xl: "0.5rem",
+            full: "0.75rem"
+          },
+          fontFamily: {
+            headline: ["Noto Serif", "serif"],
+            display: ["Noto Serif", "serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Public Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .pt-safe {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    main > :first-child {
+      margin-top: 0 !important;
+    }
+
+    main > :last-child {
+      margin-bottom: 0 !important;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    .material-symbols-outlined {
+      font-family: "Material Symbols Outlined";
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-feature-settings: "liga";
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: "liga";
+    }
+  </style>
+</head>
+
+<body class="bg-surface font-body text-on-surface min-h-full flex flex-col antialiased selection:bg-primary-fixed">
+
+  <!-- Top Navigation -->
+  <header class="fixed top-0 w-full z-40 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-16 px-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a
+          aria-label="Back"
+          class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container-high transition-colors"
+          href="#"
+          id="back-btn"
+        >
+          <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+        </a>
+
+        <h1 class="text-xl font-headline font-semibold tracking-tight">
+          Profile
+        </h1>
+      </div>
+
+      <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-white text-[18px]">person</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-surface">
+    <div class="flex flex-col w-full px-5 py-4 max-w-md mx-auto">
+
+      <!-- Profile Header -->
+      <section class="flex flex-col items-center text-center mt-2 mb-6">
+        <div class="relative group cursor-pointer" id="avatar-trigger">
+          <div class="w-28 h-28 rounded-full bg-surface-container-low p-1 shadow-sm flex items-center justify-center">
+            <div class="w-full h-full rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
+              <span class="font-headline font-semibold text-2xl text-primary tracking-wider" id="avatar-initials">AH</span>
+            </div>
+          </div>
+
+          <button
+            aria-label="Change Profile Picture"
+            class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-primary text-on-primary shadow-md flex items-center justify-center hover:bg-primary-container transition-all active:scale-95"
+            id="camera-btn"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[17px]">photo_camera</span>
+          </button>
+        </div>
+
+        <div class="mt-4">
+          <h2 class="text-xl font-headline font-bold tracking-tight" id="display-name">
+            Alex Harrison
+          </h2>
+          <p class="text-sm text-secondary mt-0.5" id="display-email">
+            alex.harrison@ibots.io
+          </p>
+        </div>
+
+        <div class="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed/60 text-primary">
+          <span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+          <span class="text-xs font-label font-semibold tracking-wide uppercase">Robot Operator</span>
+        </div>
+      </section>
+
+      <!-- Account Information -->
+      <section class="w-full bg-surface-container-lowest rounded-xl shadow-sm p-4 space-y-4 mb-6">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-label uppercase tracking-wider text-secondary font-semibold">
+            Account Information
+          </span>
+
+          <span class="flex items-center gap-1 text-[11px] font-label text-tertiary font-medium bg-tertiary-fixed/30 px-2 py-0.5 rounded-full">
+            <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+            Active Link
+          </span>
+        </div>
+
+        <div class="flex items-start gap-3.5 pt-2">
+          <div class="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0 text-primary">
+            <span class="material-symbols-outlined text-[20px]">person</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-label text-secondary font-medium tracking-tight">Full Name</p>
+            <p class="text-sm font-medium mt-0.5 truncate" id="card-name">Alex Harrison</p>
+          </div>
+        </div>
+
+        <div class="h-px w-full bg-surface-container"></div>
+
+        <div class="flex items-start gap-3.5">
+          <div class="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0 text-primary">
+            <span class="material-symbols-outlined text-[20px]">mail</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-label text-secondary font-medium tracking-tight">Email Address</p>
+            <p class="text-sm font-medium mt-0.5 truncate" id="card-email">alex.harrison@ibots.io</p>
+          </div>
+        </div>
+
+        <div class="h-px w-full bg-surface-container"></div>
+
+        <div class="flex items-start gap-3.5 pb-1">
+          <div class="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0 text-primary">
+            <span class="material-symbols-outlined text-[20px]">description</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-label text-secondary font-medium tracking-tight">Description</p>
+            <p class="text-sm font-medium mt-0.5">Robot Operator &amp; Hardware Developer</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Edit Profile Button -->
+      <div class="w-full mb-4">
+        <button
+          class="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-label font-medium text-sm flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-[0.99] transition-all"
+          id="open-edit-btn"
+          type="button"
+        >
+          <span class="material-symbols-outlined text-[18px]">edit</span>
+          <span>Edit Profile</span>
+        </button>
+      </div>
+
+      <!-- Edit Modal -->
+      <div
+        class="fixed inset-0 z-50 bg-on-surface/30 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4"
+        id="edit-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <div class="w-full max-w-md bg-surface-container-lowest rounded-t-2xl sm:rounded-2xl p-6 shadow-xl">
+
+          <div class="flex items-center justify-between pb-4">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[22px]">manage_accounts</span>
+              <h3 class="font-headline font-semibold text-lg" id="modal-title">Edit Profile</h3>
+            </div>
+
+            <button
+              class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-secondary hover:text-on-surface"
+              id="close-modal-btn"
+              type="button"
+              aria-label="Close"
+            >
+              <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+          </div>
+
+          <div class="hidden mb-4 p-2.5 rounded-lg bg-primary-fixed/50 text-primary text-xs font-body items-center gap-2" id="modal-feedback" role="status">
+            <span class="material-symbols-outlined text-[16px]">check_circle</span>
+            <span>Profile updated successfully!</span>
+          </div>
+
+          <form class="space-y-4" id="profile-edit-form">
+            <div>
+              <label class="block text-xs font-label font-semibold text-secondary mb-1" for="input-fullname">
+                Full Name
+              </label>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-2.5 text-secondary text-[20px]">person</span>
+                <input
+                  class="w-full h-11 pl-10 pr-3 rounded-lg bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  id="input-fullname"
+                  name="fullname"
+                  required
+                  maxlength="100"
+                  type="text"
+                  autocomplete="name"
+                  value="Alex Harrison"
+                >
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-label font-semibold text-secondary mb-1" for="input-email">
+                Email Address
+              </label>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-2.5 text-secondary text-[20px]">mail</span>
+                <input
+                  class="w-full h-11 pl-10 pr-3 rounded-lg bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  id="input-email"
+                  name="email"
+                  required
+                  type="email"
+                  autocomplete="email"
+                  value="alex.harrison@ibots.io"
+                >
+              </div>
+            </div>
+
+            <div class="pt-2 flex items-center gap-3">
+              <button
+                class="flex-1 h-11 rounded-lg bg-surface-container-high text-on-surface font-label font-medium text-sm hover:bg-surface-variant"
+                id="cancel-btn"
+                type="button"
+              >
+                Cancel
+              </button>
+
+              <button
+                class="flex-1 h-11 rounded-lg bg-gradient-to-r from-primary to-primary-container text-on-primary font-label font-medium text-sm flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                type="submit"
+              >
+                <span class="material-symbols-outlined text-[18px]">save</span>
+                <span>Save Changes</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="fixed bottom-0 w-full z-40 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.03)]">
+    <div class="flex items-center justify-around h-16 px-2">
+
+      <a class="flex flex-col items-center justify-center w-16 h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#">
+        <span class="material-symbols-outlined text-[22px]">home</span>
+        <span class="text-[11px] font-label mt-0.5 tracking-wide">Home</span>
+      </a>
+
+      <a class="flex flex-col items-center justify-center w-16 h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="devices" href="#">
+        <span class="material-symbols-outlined text-[22px]">precision_manufacturing</span>
+        <span class="text-[11px] font-label mt-0.5 tracking-wide">Devices</span>
+      </a>
+
+      <a class="flex flex-col items-center justify-center w-16 h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="code" href="#">
+        <span class="material-symbols-outlined text-[22px]">terminal</span>
+        <span class="text-[11px] font-label mt-0.5 tracking-wide">Code</span>
+      </a>
+
+      <a class="flex flex-col items-center justify-center w-16 h-14 text-primary font-semibold" data-path="settings" href="#">
+        <span class="material-symbols-outlined text-[22px]">settings</span>
+        <span class="text-[11px] font-label mt-0.5 tracking-wide">Settings</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <script>
+    (() => {
+      const editModal = document.getElementById("edit-modal");
+      const openBtn = document.getElementById("open-edit-btn");
+      const closeBtn = document.getElementById("close-modal-btn");
+      const cancelBtn = document.getElementById("cancel-btn");
+      const editForm = document.getElementById("profile-edit-form");
+      const avatarTrigger = document.getElementById("avatar-trigger");
+      const cameraBtn = document.getElementById("camera-btn");
+      const backBtn = document.getElementById("back-btn");
+
+      const inputName = document.getElementById("input-fullname");
+      const inputEmail = document.getElementById("input-email");
+
+      const displayName = document.getElementById("display-name");
+      const displayEmail = document.getElementById("display-email");
+      const cardName = document.getElementById("card-name");
+      const cardEmail = document.getElementById("card-email");
+      const avatarInitials = document.getElementById("avatar-initials");
+      const feedbackToast = document.getElementById("modal-feedback");
+
+      function openModal() {
+        inputName.value = displayName.textContent.trim();
+        inputEmail.value = displayEmail.textContent.trim();
+
+        feedbackToast.classList.add("hidden");
+        feedbackToast.classList.remove("flex");
+
+        editModal.classList.remove("hidden");
+        editModal.classList.add("flex");
+        inputName.focus();
+      }
+
+      function closeModal() {
+        editModal.classList.add("hidden");
+        editModal.classList.remove("flex");
+        feedbackToast.classList.add("hidden");
+        feedbackToast.classList.remove("flex");
+      }
+
+      function updateInitials(name) {
+        const parts = name.trim().split(/\s+/).filter(Boolean);
+
+        if (parts.length === 0) {
+          return "OP";
+        }
+
+        if (parts.length === 1) {
+          return parts[0].slice(0, 2).toUpperCase();
+        }
+
+        return (
+          parts[0][0] + parts[parts.length - 1][0]
+        ).toUpperCase();
+      }
+
+      openBtn.addEventListener("click", openModal);
+      avatarTrigger.addEventListener("click", openModal);
+
+      // Prevent the camera button from opening the modal twice.
+      cameraBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        openModal();
+      });
+
+      closeBtn.addEventListener("click", closeModal);
+      cancelBtn.addEventListener("click", closeModal);
+
+      editModal.addEventListener("click", (event) => {
+        if (event.target === editModal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !editModal.classList.contains("hidden")) {
+          closeModal();
+        }
+      });
+
+      editForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const updatedName = inputName.value.trim();
+        const updatedEmail = inputEmail.value.trim();
+
+        if (!updatedName || !updatedEmail || !inputEmail.checkValidity()) {
+          editForm.reportValidity();
+          return;
+        }
+
+        displayName.textContent = updatedName;
+        cardName.textContent = updatedName;
+        displayEmail.textContent = updatedEmail;
+        cardEmail.textContent = updatedEmail;
+        avatarInitials.textContent = updateInitials(updatedName);
+
+        feedbackToast.classList.remove("hidden");
+        feedbackToast.classList.add("flex");
+
+        setTimeout(closeModal, 800);
+      });
+
+      backBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        if (window.history.length > 1) {
+          window.history.back();
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
+```

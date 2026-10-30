@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+
+<html lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>iBots Remote Controller</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<!-- FontAwesome for crisp robotics & hardware icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            ibots: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              dark: '#0f172a',
+              slate: '#1e293b',
+              muted: '#64748b',
+              surface: '#f8fafc',
+            }
+          },
+          boxShadow: {
+            'card': '0 4px 20px -2px rgba(15, 23, 42, 0.06)',
+            'card-hover': '0 10px 25px -4px rgba(14, 165, 233, 0.12)',
+            'btn-glow': '0 4px 14px 0 rgba(2, 132, 199, 0.39)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styling -->
+<style data-purpose="base-layout">
+    body {
+      background-color: #0b1120;
+      font-family: 'Inter', -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    
+    /* Custom scrollbar for inner mobile frame */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style data-purpose="card-visuals">
+    /* 3D Hardware isometric card backgrounds & simulation visuals */
+    .tech-grid-pattern {
+      background-size: 16px 16px;
+      background-image: 
+        linear-gradient(to right, rgba(2, 132, 199, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(2, 132, 199, 0.05) 1px, transparent 1px);
+    }
+    
+    .glow-pulse {
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+  </style>
+<!-- END: Custom Styling -->
+<meta content="mobile_tab" name="shell-type"/></head>
+<body class="flex items-center justify-center min-h-screen p-0 sm:p-4 text-slate-800">
+<!-- BEGIN: Mobile Frame Simulation -->
+<div class="relative w-full sm:w-[393px] h-[852px] bg-[#f8fafc] sm:rounded-[48px] overflow-hidden shadow-2xl flex flex-col border-[6px] border-slate-900/80" data-purpose="mobile-viewport">
+<!-- BEGIN: iOS Status Bar -->
+<header class="w-full pt-3 px-7 flex justify-between items-center z-30 select-none bg-white/70 backdrop-blur-md" data-purpose="status-bar">
+<!-- Time -->
+<span class="text-sm font-semibold tracking-tight text-slate-900">9:41</span>
+<!-- Dynamic Island / Speaker notch simulation on mobile -->
+<div class="w-24 h-4 bg-black rounded-full hidden sm:block"></div>
+<!-- Indicators -->
+<div class="flex items-center space-x-1.5 text-xs text-slate-900">
+<i class="fa-solid fa-signal text-[11px]"></i>
+<i class="fa-solid fa-wifi text-[11px]"></i>
+<div class="flex items-center pl-0.5">
+<span class="border border-slate-900 rounded-[4px] px-1 py-0.5 text-[9px] font-bold leading-none flex items-center">
+<span class="w-3.5 h-1.5 bg-slate-900 rounded-[2px] block mr-0.5"></span>
+</span>
+</div>
+</div>
+</header>
+<!-- END: iOS Status Bar -->
+<!-- BEGIN: Main Scrollable Content -->
+<main class="flex-1 overflow-y-auto no-scrollbar pb-24 px-4 pt-2" data-purpose="dashboard-content"><div class="flex flex-col w-full h-full justify-between pb-3 select-none">
+<!-- Top Navigation & Context Bar -->
+<div class="flex items-center justify-between w-full mb-3 px-1">
+<div class="flex items-center gap-2.5">
+<button aria-label="Back" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-container-high active:scale-95 transition-all" onclick="handleNavigateBack()">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<div>
+<h1 class="text-base font-bold font-display tracking-tight text-on-surface leading-tight">Virtual Keypad</h1>
+<p class="text-[10px] font-medium text-secondary font-label tracking-wide uppercase">Serial Command Gateway</p>
+</div>
+</div>
+<!-- Active Hardware Node Chip -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low shadow-sm">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="font-mono text-[10px] font-semibold text-primary uppercase tracking-wider">ESP32-S3</span>
+</div>
+</div>
+<!-- Main Readout Buffer Card -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col justify-between mb-3 relative overflow-hidden">
+<!-- Subtle Archival Aura -->
+<div class="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-primary-fixed/30 blur-2xl pointer-events-none"></div>
+<div class="flex items-center justify-between text-secondary mb-1">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-tertiary">data_array</span>
+<span class="text-[11px] font-label font-semibold uppercase tracking-wider text-secondary">Payload Buffer</span>
+</div>
+<span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant" id="charCountLabel">0 / 16 B</span>
+</div>
+<!-- Value Display Area -->
+<div class="flex items-baseline justify-between py-1 min-h-[52px]">
+<div class="font-mono text-3xl font-extrabold tracking-wider text-on-surface flex items-center truncate" id="displayDigits">
+<span class="text-outline-variant font-normal text-2xl tracking-widest font-sans">—— —— ——</span>
+</div>
+<div class="hidden ml-2 px-2 py-0.5 rounded-full bg-surface-container-high text-[10px] font-mono font-semibold text-primary uppercase" id="txPill">
+        TX READY
+      </div>
+</div>
+<!-- Display Micro-Actions -->
+<div class="flex items-center justify-between pt-2 mt-1 bg-surface-container-low/60 -mx-4 -mb-4 px-4 py-2">
+<span class="text-[10px] font-label text-secondary flex items-center gap-1" id="targetProtocol">
+<span class="material-symbols-outlined text-[13px] text-primary">sensors</span>
+        UART: 115200 bps
+      </span>
+<div class="flex items-center gap-1.5">
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-secondary hover:text-error hover:bg-error-container/40 active:scale-95 transition-all text-[11px] font-bold font-label uppercase flex items-center gap-1" id="btnClear" onclick="clearDisplay()">
+<span class="material-symbols-outlined text-[13px]">clear_all</span>
+          CLR
+        </button>
+<button aria-label="Backspace" class="w-7 h-7 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container-high active:scale-90 transition-all flex items-center justify-center" id="btnBackspace" onclick="backspaceDigit()">
+<span class="material-symbols-outlined text-base">backspace</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Keypad Matrix Grid (3x4 Layout) -->
+<div class="w-full flex-1 flex flex-col justify-center max-w-[340px] mx-auto mb-2"><div class="grid grid-cols-4 gap-2.5 w-full justify-items-center"><!-- Row 1 --><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('1')"><span class="font-headline text-2xl font-bold text-on-surface group-active:text-primary">1</span><span class="text-[9px] font-label font-bold text-outline uppercase tracking-wider leading-none mt-0.5">.</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('2')"><span class="font-headline text-2xl font-bold text-on-surface group-active:text-primary">2</span><span class="text-[9px] font-label font-semibold text-outline tracking-wider leading-none mt-0.5">ABC</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('3')"><span class="font-headline text-2xl font-bold text-on-surface group-active:text-primary">3</span><span class="text-[9px] font-label font-semibold text-outline tracking-wider leading-none mt-0.5">DEF</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('A')"><span class="font-headline text-2xl font-bold text-primary group-active:text-primary-container leading-none">A</span><span class="text-[8px] font-label font-semibold text-outline tracking-tight leading-none mt-1">CMD1</span></button><!-- Row 2 --><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('4')"><span class="font-headline text-2xl font-bold text-on-surface group-active:text-primary">4</span><span class="text-[9px] font-label font-semibold text-outline tracking-wider leading-none mt-0.5">GHI</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('5')"><span class="font-headline text-2xl font-bold text-on-surface group-active:text-primary">5</span><span class="text-[9px] font-label font-semibold text-outline tracking-wider leading-none mt-0.5">JKL</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('6')"><span class="font-headline text-2xl font-bold text-on-surface group-active:text-primary">6</span><span class="text-[9px] font-label font-semibold text-outline tracking-wider leading-none mt-0.5">MNO</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('B')"><span class="font-headline text-2xl font-bold text-primary group-active:text-primary-container leading-none">B</span><span class="text-[8px] font-label font-semibold text-outline tracking-tight leading-none mt-1">CMD2</span></button><!-- Row 3 --><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('7')"><span class="font-headline text-2xl font-bold text-on-surface group-active:text-primary">7</span><span class="text-[9px] font-label font-semibold text-outline tracking-wider leading-none mt-0.5">PQRS</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('8')"><span class="font-headline text-2xl font-bold text-on-surface group-active:text-primary">8</span><span class="text-[9px] font-label font-semibold text-outline tracking-wider leading-none mt-0.5">TUV</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('9')"><span class="font-headline text-2xl font-bold text-on-surface group-active:text-primary">9</span><span class="text-[9px] font-label font-semibold text-outline tracking-wider leading-none mt-0.5">WXYZ</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('C')"><span class="font-headline text-2xl font-bold text-primary group-active:text-primary-container leading-none">C</span><span class="text-[8px] font-label font-semibold text-outline tracking-tight leading-none mt-1">CMD3</span></button><!-- Row 4 --><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('*')"><span class="font-headline text-2xl font-bold text-tertiary group-active:text-primary leading-none pt-1.5">*</span><span class="text-[8px] font-label font-semibold text-outline tracking-tight leading-none mt-1">CMD</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('0')"><span class="font-headline text-2xl font-bold text-on-surface group-active:text-primary">0</span><span class="text-[9px] font-label font-bold text-outline tracking-wider leading-none mt-0.5">+</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('#')"><span class="font-headline text-2xl font-bold text-tertiary group-active:text-primary leading-none">#</span><span class="text-[8px] font-label font-semibold text-outline tracking-tight leading-none mt-1">TERM</span></button><button class="keypad-btn w-full h-[66px] rounded-xl bg-surface-container-lowest hover:bg-surface-container-low shadow-sm active:scale-90 transition-transform duration-100 flex flex-col items-center justify-center group" onclick="appendKey('D')"><span class="font-headline text-2xl font-bold text-primary group-active:text-primary-container leading-none">D</span><span class="text-[8px] font-label font-semibold text-outline tracking-tight leading-none mt-1">EXEC</span></button></div></div>
+<!-- Operational Footer Controls: Local Commit vs Hardware Transmission -->
+<div class="w-full flex items-center gap-2.5 pt-1">
+<!-- Local Enter / Staging Action -->
+<button class="flex-1 py-3 px-4 rounded-xl bg-surface-container-high hover:bg-surface-dim text-on-surface font-label font-semibold text-xs tracking-wide active:scale-98 transition-all flex items-center justify-center gap-1.5" id="btnLocalEnter" onclick="handleLocalEnter()">
+<span class="material-symbols-outlined text-[17px] text-secondary">input</span>
+<span class="">Stage</span>
+</button>
+<!-- Transmit Payload CTA -->
+<button class="flex-[2] py-3 px-4 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-label font-bold text-xs tracking-wider uppercase shadow-md active:scale-98 transition-all flex items-center justify-center gap-2" id="btnSendPayload" onclick="handleSendPayload()">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span class="">Send Packet</span>
+</button>
+</div>
+<!-- Feedback Banner Micro-Toast -->
+<div class="fixed bottom-24 inset-x-8 z-40 bg-inverse-surface text-inverse-on-surface text-[12px] font-label font-medium py-2.5 px-4 rounded-xl shadow-xl flex items-center justify-between opacity-0 pointer-events-none transform translate-y-3 transition-all duration-200" id="keypadToast">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed" id="toastIcon">info</span>
+<span class="truncate" id="toastMsg">Message sent</span>
+</div>
+<span class="text-[10px] font-mono text-outline-variant uppercase">ACK</span>
+</div>
+</div>
+<script>
+  let currentBuffer = "";
+  const maxBufferLength = 16;
+
+  function renderDisplay() {
+    const displayElement = document.getElementById("displayDigits");
+    const countElement = document.getElementById("charCountLabel");
+    const txPill = document.getElementById("txPill");
+
+    if (!currentBuffer || currentBuffer.length === 0) {
+      displayElement.innerHTML = `<span class="text-outline-variant font-normal text-2xl tracking-widest font-sans">—— —— ——</span>`;
+      countElement.textContent = "0 / 16 B";
+      txPill.classList.add("hidden");
+    } else {
+      // Formatted with readable spaced characters for clear verification
+      const formatted = currentBuffer.split("").join(" ");
+      displayElement.textContent = formatted;
+      countElement.textContent = `${currentBuffer.length} / 16 B`;
+      txPill.classList.remove("hidden");
+    }
+  }
+
+  function appendKey(val) {
+    if (currentBuffer.length >= maxBufferLength) {
+      triggerKeypadToast("Buffer full (16 bytes maximum)", "warning");
+      hapticTap();
+      return;
+    }
+    currentBuffer += val;
+    renderDisplay();
+    hapticTap();
+  }
+
+  function backspaceDigit() {
+    if (currentBuffer.length > 0) {
+      currentBuffer = currentBuffer.slice(0, -1);
+      renderDisplay();
+      hapticTap();
+    }
+  }
+
+  function clearDisplay() {
+    if (currentBuffer.length > 0) {
+      currentBuffer = "";
+      renderDisplay();
+      triggerKeypadToast("Buffer cleared", "delete");
+      hapticTap();
+    }
+  }
+
+  function handleLocalEnter() {
+    if (!currentBuffer) {
+      triggerKeypadToast("Input is empty", "error");
+      return;
+    }
+    hapticTap();
+    triggerKeypadToast(`Staged payload: [${currentBuffer}]`, "check_circle");
+  }
+
+  function handleSendPayload() {
+    if (!currentBuffer) {
+      triggerKeypadToast("Enter digits prior to transmit", "priority_high");
+      return;
+    }
+
+    const payload = currentBuffer;
+    hapticTap();
+    
+    // Animate Send Button briefly
+    const sendBtn = document.getElementById("btnSendPayload");
+    const originalText = sendBtn.innerHTML;
+    sendBtn.innerHTML = `
+      <span class="material-symbols-outlined text-[18px] animate-spin">sync</span>
+      <span>Transmitting...</span>
+    `;
+
+    setTimeout(() => {
+      sendBtn.innerHTML = originalText;
+      triggerKeypadToast(`TX: [${payload}] delivered`, "bolt");
+      
+      // Echo command to main shell if parent simulator available
+      if (typeof window.sendSimulatedCommand === "function") {
+        window.sendSimulatedCommand(`KEYPAD_DATA_${payload}`);
+      } else if (typeof showToast === "function") {
+        showToast(`Transmitted payload: ${payload}`);
+      }
+
+      // Auto-clear or keep depending on telemetry requirement (clear for security)
+      currentBuffer = "";
+      renderDisplay();
+    }, 450);
+  }
+
+  function handleNavigateBack() {
+    if (typeof showToast === "function") {
+      showToast("Returning to Controller Hub");
+    } else {
+      triggerKeypadToast("Returning to dashboard", "arrow_back");
+    }
+  }
+
+  function hapticTap() {
+    if (window.navigator && window.navigator.vibrate) {
+      window.navigator.vibrate(10);
+    }
+  }
+
+  let toastTimer;
+  function triggerKeypadToast(msg, icon = "info") {
+    const toast = document.getElementById("keypadToast");
+    const label = document.getElementById("toastMsg");
+    const iconEl = document.getElementById("toastIcon");
+
+    if (!toast || !label) return;
+
+    label.textContent = msg;
+    iconEl.textContent = icon;
+
+    toast.classList.remove("opacity-0", "pointer-events-none", "translate-y-3");
+    toast.classList.add("opacity-100", "translate-y-0");
+
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.add("opacity-0", "pointer-events-none", "translate-y-3");
+      toast.classList.remove("opacity-100", "translate-y-0");
+    }, 2000);
+  }
+
+  // Keyboard accessibility hook
+  document.addEventListener("keydown", (e) => {
+    if (e.key >= "0" && e.key <= "9") appendKey(e.key);
+    else if (e.key === "*" || e.key === "#") appendKey(e.key);
+    else if (e.key === "Backspace") backspaceDigit();
+    else if (e.key === "Enter") handleSendPayload();
+    else if (e.key === "Escape") clearDisplay();
+  });
+</script></main>
+<!-- END: Main Scrollable Content -->
+<!-- BEGIN: Docked Bottom Navigation Bar -->
+<nav class="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 pt-2 pb-5 px-6 z-20 shadow-lg" data-purpose="bottom-navigation">
+<ul class="flex items-center justify-between">
+<!-- Tab 1: Home (Active) -->
+<li class="flex-1">
+<button class="w-full flex flex-col items-center group text-sky-600" onclick="setActiveNav(this, 'Home')">
+<div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors bg-sky-100">
+<i class="fa-solid fa-house text-sm"></i>
+</div>
+<span class="text-[10px] font-medium font-bold text-sky-600">Home</span>
+</button>
+</li>
+<!-- Tab 2: Devices -->
+<li class="flex-1">
+<button class="w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors" onclick="setActiveNav(this, 'Devices')">
+<div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors">
+<i class="fa-solid fa-microchip text-sm"></i>
+</div>
+<span class="text-[10px] font-medium">Devices</span>
+</button>
+</li>
+<!-- Tab 3: Code examples -->
+<li class="flex-1"><button class="w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors" onclick="setActiveNav(this, 'Code')"><div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors"><i class="fa-solid fa-code text-sm"></i></div><span class="text-[10px] font-medium leading-none text-center">Code</span></button></li>
+<!-- Tab 4: Settings -->
+<li class="flex-1">
+<button class="w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors" onclick="setActiveNav(this, 'Settings')">
+<div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors">
+<i class="fa-solid fa-gear text-sm"></i>
+</div>
+<span class="text-[10px] font-medium">Settings</span>
+</button>
+</li>
+</ul>
+<!-- iOS Home Indicator bar -->
+<div class="w-32 h-1 bg-slate-900 rounded-full mx-auto mt-2 opacity-80"></div>
+</nav>
+<!-- END: Docked Bottom Navigation Bar -->
+<!-- BEGIN: Tool Launch Modal Dialog -->
+<div class="absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-all p-3 hidden" id="toolModal">
+<div class="w-full bg-white rounded-[28px] p-5 shadow-2xl border border-slate-100 transform transition-transform animate-in slide-in-from-bottom duration-200">
+<div class="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-3"></div>
+<div class="flex items-center space-x-3 mb-3">
+<div class="w-11 h-11 rounded-2xl flex items-center justify-center text-white shadow-sm" id="modalIconContainer" style="background-color: rgb(245, 158, 11);">
+<i class="fa-solid fa-lightbulb text-lg" id="modalIcon"></i>
+</div>
+<div>
+<h4 class="text-base font-bold text-slate-900" id="modalTitle">LED &amp; RGB Control</h4>
+<span class="text-[11px] font-medium text-emerald-600 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Ready to send payload
+            </span>
+</div>
+</div>
+<p class="text-xs text-slate-500 mb-4 leading-relaxed" id="modalDesc">Neopixel WS2812B / FastLED lighting effects, color wheel picker, and brightness slider.</p>
+<!-- Dynamic Quick Controls Preview -->
+<div class="bg-slate-50 rounded-2xl p-3 border border-slate-100 mb-4">
+<div class="flex justify-between items-center text-xs mb-2">
+<span class="text-slate-500 font-mono text-[11px]">Command Echo:</span>
+<span class="text-sky-600 font-mono text-[11px] font-bold">STATUS: OK</span>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 active:bg-slate-100" onclick="sendSimulatedCommand('CMD_PING')">Ping</button>
+<button class="flex-1 py-2 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 active:bg-slate-100" onclick="sendSimulatedCommand('CMD_CALIBRATE')">Calibrate</button>
+<button class="flex-1 py-2 bg-rose-50 text-rose-600 border border-rose-100 rounded-xl text-xs font-semibold active:bg-rose-100" onclick="sendSimulatedCommand('CMD_HALT')">Stop</button>
+</div>
+</div>
+<button class="w-full py-3 bg-slate-900 text-white font-semibold text-xs rounded-xl active:bg-slate-800 transition-colors" onclick="closeToolModal()">
+          Dismiss
+        </button>
+</div>
+</div>
+<!-- END: Tool Launch Modal Dialog -->
+<!-- BEGIN: Quick Toast Notification -->
+<!-- END: Quick Toast Notification -->
+</div>
+<!-- END: Mobile Frame Simulation -->
+<!-- BEGIN: Interactive Dashboard Logic -->
+<script data-purpose="connection-and-tabs-logic">
+    // State management
+    let connectionState = 'disconnected'; // 'disconnected' | 'connecting' | 'connected'
+    let currentProtocol = 'Bluetooth (Classic)';
+
+    // Protocol switcher
+    function selectProtocol(buttonElement, protocolName) {
+      currentProtocol = protocolName;
+      
+      // Update Tab Visuals
+      const allTabs = document.querySelectorAll('.protocol-tab');
+      allTabs.forEach(tab => {
+        tab.className = "protocol-tab flex flex-col items-center justify-center py-2.5 px-1 rounded-xl text-slate-600 hover:text-slate-900 transition-all";
+        const icon = tab.querySelector('i');
+        if (icon) icon.className = icon.className.replace('text-sky-600', 'text-slate-400');
+      });
+
+      buttonElement.className = "protocol-tab flex flex-col items-center justify-center py-2.5 px-1 rounded-xl bg-white text-sky-600 shadow-sm border border-sky-100/60 transition-all";
+      const activeIcon = buttonElement.querySelector('i');
+      if (activeIcon) {
+        activeIcon.classList.remove('text-slate-400');
+        activeIcon.classList.add('text-sky-600');
+      }
+
+      document.getElementById('activeProtocolLabel').textContent = protocolName;
+      showToast(`Protocol switched to ${protocolName}`);
+    }
+
+    // Toggle Connection State
+    function toggleDeviceConnection() {
+      const btn = document.getElementById('connectDeviceBtn');
+      const btnLabel = document.getElementById('btnLabel');
+      const btnIcon = document.getElementById('btnIcon');
+      const badge = document.getElementById('statusBadge');
+      const dot = document.getElementById('statusIndicatorDot');
+      const statusText = document.getElementById('statusText');
+      const rssi = document.getElementById('deviceRssi');
+
+      if (connectionState === 'disconnected') {
+        // Switch to connecting state
+        connectionState = 'connecting';
+        btn.disabled = true;
+        btn.classList.remove('from-sky-500', 'to-sky-600');
+        btn.classList.add('from-amber-500', 'to-amber-600');
+        btnLabel.textContent = 'Connecting to ' + currentProtocol + '...';
+        btnIcon.className = 'fa-solid fa-circle-notch fa-spin text-xs';
+        
+        statusText.textContent = 'Connecting...';
+        badge.className = 'flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-600 text-xs font-semibold';
+        dot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-ping';
+
+        // Simulate successful handshake
+        setTimeout(() => {
+          connectionState = 'connected';
+          btn.disabled = false;
+          btn.classList.remove('from-amber-500', 'to-amber-600');
+          btn.classList.add('from-rose-500', 'to-rose-600');
+          btnLabel.textContent = 'Disconnect Device';
+          btnIcon.className = 'fa-solid fa-power-off text-xs';
+
+          statusText.textContent = 'Connected (ESP32-S3)';
+          badge.className = 'flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-semibold';
+          dot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+          rssi.classList.remove('hidden');
+
+          showToast('Paired with iBots ESP32 Module!');
+        }, 1200);
+
+      } else {
+        // Disconnect immediately
+        connectionState = 'disconnected';
+        btn.classList.remove('from-rose-500', 'to-rose-600');
+        btn.classList.add('from-sky-500', 'to-sky-600');
+        btnLabel.textContent = 'Connect Device +';
+        btnIcon.className = 'fa-solid fa-plus text-xs';
+
+        statusText.textContent = 'Disconnected';
+        badge.className = 'flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-semibold';
+        dot.className = 'w-2 h-2 rounded-full bg-slate-400';
+        rssi.classList.add('hidden');
+
+        showToast('Device disconnected');
+      }
+    }
+
+    // Modal Interaction for Tools
+    function openToolModal(title, desc, iconClass, colorHex) {
+      const modal = document.getElementById('toolModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalDesc = document.getElementById('modalDesc');
+      const modalIcon = document.getElementById('modalIcon');
+      const iconContainer = document.getElementById('modalIconContainer');
+
+      modalTitle.textContent = title;
+      modalDesc.textContent = desc;
+      modalIcon.className = `fa-solid ${iconClass} text-lg`;
+      iconContainer.style.backgroundColor = colorHex;
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeToolModal() {
+      document.getElementById('toolModal').classList.add('hidden');
+    }
+
+    // Send Simulated Command
+    function sendSimulatedCommand(cmd) {
+      if (connectionState !== 'connected') {
+        showToast('Please connect device first!');
+      } else {
+        showToast(`Sent packet: ${cmd}`);
+      }
+    }
+
+    // Scan Discovery trigger
+    function triggerDiscovery() {
+      showToast('Scanning 2.4GHz spectrum for iBots...');
+    }
+
+    // Toast Utility
+    let toastTimeout;
+    function showToast(message) {
+      const toast = document.getElementById('toastMessage');
+      const text = document.getElementById('toastText');
+      text.textContent = message;
+      toast.classList.remove('hidden');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2200);
+    }
+
+    // Bottom Navigation State Switcher
+    function setActiveNav(btnElement, navName) {
+      const allNavBtns = document.querySelectorAll('nav button');
+      allNavBtns.forEach(b => {
+        b.className = 'w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors';
+        const pill = b.querySelector('div');
+        pill.classList.remove('bg-sky-100');
+        const span = b.querySelector('span');
+        span.classList.remove('font-bold', 'text-sky-600');
+        span.classList.add('font-medium');
+      });
+
+      btnElement.className = 'w-full flex flex-col items-center group text-sky-600';
+      const activePill = btnElement.querySelector('div');
+      activePill.classList.add('bg-sky-100');
+      const activeSpan = btnElement.querySelector('span');
+      activeSpan.classList.add('font-bold', 'text-sky-600');
+
+      showToast(`Navigated to ${navName}`);
+    }
+  </script>
+<!-- END: Interactive Dashboard Logic -->
+</body></html>

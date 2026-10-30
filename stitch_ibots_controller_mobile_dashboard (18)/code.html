@@ -1,0 +1,491 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Gyro Control — iBots</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Phosphor Icons for consistent clean hardware/UI icons -->
+<script src="https://unpkg.com/@phosphor-icons/web"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/thin/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/light/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/duotone/style.css">
+<script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              500: '#3b82f6',
+              600: '#0284c7',
+              700: '#0369a1',
+              dark: '#003580'
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Custom styled range slider thumb for consistent sleek mobile look */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+    input[type=range]:focus {
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: #e2e8f0;
+      border-radius: 9999px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      background: #0284c7;
+      cursor: pointer;
+      -webkit-appearance: none;
+      margin-top: -8px;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.4), 0 0 0 2px #ffffff;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+    input[type=range]:active::-webkit-slider-thumb {
+      transform: scale(1.15);
+      background: #0369a1;
+    }
+    input[type=range]::-moz-range-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: #e2e8f0;
+      border-radius: 9999px;
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      background: #0284c7;
+      cursor: pointer;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.4);
+    }
+  </style>
+<meta content="mobile_tab" name="shell-type">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen flex flex-col justify-between selection:bg-sky-100 selection:text-sky-800 pb-20">
+<!-- Main Container (Mobile Portrait Framed View) -->
+<div class="w-full max-w-md mx-auto flex flex-col min-h-screen bg-slate-50 shadow-sm relative">
+<!-- Top App Bar / Header -->
+<header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200/80 px-4 py-3.5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button aria-label="Go Back" class="w-9 h-9 rounded-full flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:scale-95 transition-all" onclick="window.history.back()">
+<i class="ph ph-arrow-left text-xl font-bold"></i>
+</button>
+<div>
+<h1 class="text-lg font-bold text-slate-900 tracking-tight leading-tight">Gyro Control</h1>
+</div>
+</div>
+<!-- Quick Reset All Button -->
+<button class="px-2.5 py-1 text-xs font-semibold text-slate-600 hover:text-sky-600 bg-slate-100 hover:bg-sky-50 rounded-lg border border-slate-200 transition-colors flex items-center gap-1 active:scale-95" onclick="resetAllServos()">
+<i class="ph ph-arrow-counter-clockwise"></i>
+<span class="">Center All</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 p-4 space-y-3.5"><div class="flex flex-col w-full space-y-4 font-body pb-6">
+<!-- Status & Quick Connectivity Bar (Bento Header Tile) -->
+<div class="w-full bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center text-sky-600 shadow-inner">
+<span class="material-symbols-outlined text-2xl">screen_rotation</span>
+</div>
+<div>
+<h2 class="text-sm font-bold text-slate-900 leading-tight">Gyro Telemetry Link</h2>
+<span class="text-xs font-semibold text-slate-400">ESP32-S3 • Bluetooth LE</span>
+</div>
+</div>
+<!-- Link State Indicator -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="text-[11px] font-bold text-emerald-700 tracking-wide uppercase">24ms Latency</span>
+</div>
+</div>
+<!-- Main Toggle Card with Integrated Helper -->
+<div class="w-full bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between gap-4">
+<div class="flex flex-col">
+<span class="text-base font-bold text-slate-900 leading-tight">Enable Gyro Control</span>
+</div>
+<!-- Modern Interactive Toggle Switch -->
+<button aria-checked="true" class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full p-0.5 transition-colors duration-300 ease-in-out focus:outline-none bg-sky-600 shadow-inner items-center" id="gyroToggleBtn" onclick="toggleGyroMode()" role="switch">
+<span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition duration-300 ease-in-out translate-x-5" id="toggleKnob"></span>
+</button>
+</div>
+<!-- Active Status Sub-bar -->
+
+
+</div>
+<!-- Interactive Gimbal & Attitude Visualizer Card -->
+<div class="w-full bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center relative overflow-hidden">
+<!-- Visualizer Header / Mode Badges -->
+<div class="w-full flex items-center justify-between mb-2">
+<div class="flex items-center gap-1.5 text-slate-400 text-xs font-semibold">
+<span class="material-symbols-outlined text-base">explore</span>
+<span class="">Attitude Matrix</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-sky-100 text-sky-800" id="axisTagX">ROLL</span>
+<span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-sky-100 text-sky-800" id="axisTagY">PITCH</span>
+</div>
+</div>
+<!-- Virtual Gimbal Horizon Ring Container -->
+<div class="relative w-64 h-64 flex items-center justify-center my-2">
+<!-- Background Pitch Reference Grid Lines (SVG) -->
+<svg class="absolute inset-0 w-full h-full text-slate-200" fill="none" viewBox="0 0 200 200">
+<circle cx="100" cy="100" r="90" stroke="currentColor" stroke-dasharray="3 3" stroke-width="1.5"></circle>
+<circle cx="100" cy="100" r="60" stroke="currentColor" stroke-dasharray="2 2" stroke-width="1"></circle>
+<line stroke="currentColor" stroke-dasharray="4 4" stroke-width="1" x1="100" x2="100" y1="15" y2="185"></line>
+<line stroke="currentColor" stroke-dasharray="4 4" stroke-width="1" x1="15" x2="185" y1="100" y2="100"></line>
+</svg>
+<!-- Cardinal Compass Directional Pointers -->
+<span class="absolute top-1 text-[10px] font-black text-slate-400">FWD</span>
+<span class="absolute bottom-1 text-[10px] font-black text-slate-400">REV</span>
+<span class="absolute left-2 text-[10px] font-black text-slate-400">L</span>
+<span class="absolute right-2 text-[10px] font-black text-slate-400">R</span>
+<!-- Dynamic Tilt Target Ring (Center Leveling Bubble) -->
+<div class="absolute w-12 h-12 rounded-full bg-sky-500/15 flex items-center justify-center transition-transform duration-100 ease-out pointer-events-none" id="horizonBubble" style="transform: translate(8.64px, 12.8px);">
+<div class="w-3.5 h-3.5 rounded-full bg-sky-600 shadow-md"></div>
+</div>
+<!-- Stylized 3D Phone Model / Silhouette Layer -->
+<div class="relative w-28 h-48 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-800 shadow-2xl p-1.5 flex flex-col justify-between items-center transition-transform duration-150 ease-out transform rotate-[-4deg] translate-y-[-3px]" id="phoneModel" style="transform: rotate(5.76deg) translateY(6.4px);">
+<!-- Phone Camera Notch / Speaker pill -->
+<div class="w-8 h-2 rounded-full bg-slate-950/80 mt-1"></div>
+<!-- Screen Content Area (Simulated Robot Pose) -->
+<div class="w-full h-34 rounded-xl bg-slate-950 flex flex-col items-center justify-center p-2 relative overflow-hidden">
+<!-- Digital Crosshair -->
+<span class="material-symbols-outlined text-sky-400 text-3xl font-light opacity-90 animate-pulse">adjust</span>
+<span class="text-[9px] font-mono font-bold text-sky-300 mt-1">IMU 6-DOF</span>
+<!-- Direction Glow Rays -->
+<div class="absolute inset-0 bg-radial from-sky-500/20 to-transparent pointer-events-none"></div>
+</div>
+<!-- Phone Home Bar -->
+<div class="w-10 h-1 rounded-full bg-slate-600 mb-1"></div>
+</div>
+</div>
+<!-- Live Axis Value Readouts (Bento Row) -->
+<div class="grid grid-cols-3 gap-2 w-full mt-2">
+<!-- Pitch Card -->
+<div class="bg-slate-50 rounded-xl p-2.5 flex flex-col items-center">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pitch (X)</span>
+<div class="flex items-baseline gap-0.5 mt-0.5">
+<span class="text-base font-black text-slate-900 font-mono" id="pitchDisplay">-8.0</span>
+<span class="text-xs font-bold text-slate-500">°</span>
+</div>
+<span class="text-[10px] font-bold text-sky-600 flex items-center gap-0.5 mt-0.5">
+<span class="material-symbols-outlined text-xs">arrow_upward</span> FWD
+        </span>
+</div>
+<!-- Roll Card -->
+<div class="bg-slate-50 rounded-xl p-2.5 flex flex-col items-center">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Roll (Y)</span>
+<div class="flex items-baseline gap-0.5 mt-0.5">
+<span class="text-base font-black text-slate-900 font-mono" id="rollDisplay">+4.8</span>
+<span class="text-xs font-bold text-slate-500">°</span>
+</div>
+<span class="text-[10px] font-bold text-indigo-600 flex items-center gap-0.5 mt-0.5">
+<span class="material-symbols-outlined text-xs">arrow_back</span> LEFT
+        </span>
+</div>
+<!-- Yaw / Heading Card -->
+<div class="bg-slate-50 rounded-xl p-2.5 flex flex-col items-center">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Yaw (Z)</span>
+<div class="flex items-baseline gap-0.5 mt-0.5">
+<span class="text-base font-black text-slate-900 font-mono" id="yawDisplay">86.0</span>
+<span class="text-xs font-bold text-slate-500">°</span>
+</div>
+<span class="text-[10px] font-bold text-emerald-600 flex items-center gap-0.5 mt-0.5">
+<span class="material-symbols-outlined text-xs">navigation</span> EAST
+        </span>
+</div>
+</div>
+</div>
+<!-- Tuning & Calibration Section -->
+<div class="w-full bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-4">
+<!-- Sensitivity Slider Header -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sky-600 text-lg">tune</span>
+<span class="text-sm font-bold text-slate-900">Steering Sensitivity</span>
+</div>
+<span class="text-xs font-extrabold text-sky-600 bg-sky-50 px-2.5 py-0.5 rounded-lg" id="sensitivityText">1.5x (Medium)</span>
+</div>
+<!-- Interactive Slider -->
+<div class="flex flex-col gap-1.5">
+<input class="w-full h-2 rounded-lg bg-slate-100 accent-sky-600 cursor-pointer" id="sensitivitySlider" max="3" min="1" oninput="updateSensitivity(this.value)" step="1" type="range" value="2">
+<div class="flex justify-between items-center text-[11px] font-bold text-slate-400 px-1">
+<span class="">Low (0.8x)</span>
+<span class="">Balanced (1.5x)</span>
+<span class="">High (2.4x)</span>
+</div>
+</div>
+<!-- Quick Action / Re-center Neutral State -->
+<button class="w-full bg-slate-100 hover:bg-sky-50 active:scale-[0.98] transition-all duration-150 text-slate-700 hover:text-sky-700 font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-2" onclick="zeroOrientation()">
+<span class="material-symbols-outlined text-base">my_location</span>
+<span class="">Calibrate Neutral Zero</span>
+</button>
+</div>
+<!-- Emergency STOP Action Tile (High Priority Tactile Thumb Zone) -->
+<div class="w-full pt-1">
+<button class="w-full bg-red-600 hover:bg-red-700 active:scale-95 text-white font-black text-sm tracking-wide uppercase py-4 rounded-2xl shadow-lg shadow-red-500/25 flex items-center justify-center gap-2.5 transition-all" id="emergencyStopBtn" onclick="triggerEmergencyStop()">
+<span class="material-symbols-outlined text-2xl font-bold">front_hand</span>
+<span class="">EMERGENCY STOP (MOTOR HALT)</span>
+</button>
+</div>
+<!-- Calibration Toast Message Modal (Floating feedback) -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white backdrop-blur px-4 py-2 rounded-xl text-xs font-bold shadow-xl flex items-center gap-2 opacity-0 pointer-events-none transition-opacity duration-300 z-50" id="feedbackToast">
+<span class="material-symbols-outlined text-emerald-400 text-sm">check_circle</span>
+<span id="toastMsg" class="">Sensors Zeroed to Flat Neutral</span>
+</div>
+</div>
+<script>
+  let gyroActive = true;
+  let simulatedInterval = null;
+
+  // Toggle Gyro Switch State
+  function toggleGyroMode() {
+    gyroActive = !gyroActive;
+    const btn = document.getElementById('gyroToggleBtn');
+    const knob = document.getElementById('toggleKnob');
+    const statusPill = document.getElementById('statusPill');
+    const statusLabel = document.getElementById('statusLabel');
+    const phone = document.getElementById('phoneModel');
+    const bubble = document.getElementById('horizonBubble');
+
+    if (gyroActive) {
+      btn.className = "relative inline-flex h-7 w-13 shrink-0 cursor-pointer rounded-full p-0.5 transition-colors duration-300 ease-in-out focus:outline-none bg-sky-600 shadow-inner";
+      knob.className = "pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition duration-300 ease-in-out translate-x-6";
+      statusPill.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-100/70 text-emerald-800 text-xs font-bold transition-all duration-300";
+      statusLabel.textContent = "Gyro Active & Streaming";
+      phone.style.opacity = "1";
+      startLiveTelemetry();
+      showToast("Gyro telemetry active");
+    } else {
+      btn.className = "relative inline-flex h-7 w-13 shrink-0 cursor-pointer rounded-full p-0.5 transition-colors duration-300 ease-in-out focus:outline-none bg-slate-300 shadow-inner";
+      knob.className = "pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition duration-300 ease-in-out translate-x-0";
+      statusPill.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 text-slate-500 text-xs font-bold transition-all duration-300";
+      statusLabel.textContent = "Gyro Control Paused";
+      phone.style.transform = "rotate(0deg) translateY(0px)";
+      phone.style.opacity = "0.6";
+      bubble.style.transform = "translate(0px, 0px)";
+      clearInterval(simulatedInterval);
+      showToast("Motion control paused");
+    }
+  }
+
+  // Update Sensitivity Slider Readout
+  function updateSensitivity(step) {
+    const textElem = document.getElementById('sensitivityText');
+    if (step == 1) {
+      textElem.textContent = "0.8x (Smooth / Low)";
+    } else if (step == 2) {
+      textElem.textContent = "1.5x (Medium)";
+    } else {
+      textElem.textContent = "2.4x (Aggressive / High)";
+    }
+  }
+
+  // Calibrate & Reset Orientation Values
+  function zeroOrientation() {
+    document.getElementById('pitchDisplay').innerText = "0.0";
+    document.getElementById('rollDisplay').innerText = "0.0";
+    document.getElementById('yawDisplay').innerText = "0.0";
+
+    const phone = document.getElementById('phoneModel');
+    const bubble = document.getElementById('horizonBubble');
+    phone.style.transform = "rotate(0deg) translateY(0px)";
+    bubble.style.transform = "translate(0px, 0px)";
+
+    showToast("Attitude calibrated to (0.0°, 0.0°)");
+  }
+
+  // Emergency Halt Procedure
+  function triggerEmergencyStop() {
+    const stopBtn = document.getElementById('emergencyStopBtn');
+    stopBtn.classList.add('bg-red-900', 'scale-95');
+    setTimeout(() => {
+      stopBtn.classList.remove('bg-red-900', 'scale-95');
+    }, 200);
+
+    // Stop active gyro streaming
+    if (gyroActive) {
+      toggleGyroMode();
+    }
+    showToast("EMERGENCY BRAKE: Motors locked!");
+  }
+
+  // Subtle floating toast helper
+  function showToast(message) {
+    const toast = document.getElementById('feedbackToast');
+    const msg = document.getElementById('toastMsg');
+    msg.textContent = message;
+    toast.style.opacity = '1';
+    toast.style.pointerEvents = 'auto';
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.pointerEvents = 'none';
+    }, 2200);
+  }
+
+  // Live dynamic tilt loop for playful interactive realism
+  function startLiveTelemetry() {
+    if (simulatedInterval) clearInterval(simulatedInterval);
+    let tick = 0;
+    simulatedInterval = setInterval(() => {
+      if (!gyroActive) return;
+      tick += 0.08;
+      const pitch = (Math.sin(tick) * 11 + 2).toFixed(1);
+      const roll = (Math.cos(tick * 0.8) * 8).toFixed(1);
+      const yaw = ((88.0 + Math.sin(tick * 0.3) * 6)).toFixed(1);
+
+      document.getElementById('pitchDisplay').innerText = (pitch > 0 ? "+" : "") + pitch;
+      document.getElementById('rollDisplay').innerText = (roll > 0 ? "+" : "") + roll;
+      document.getElementById('yawDisplay').innerText = yaw;
+
+      const phone = document.getElementById('phoneModel');
+      const bubble = document.getElementById('horizonBubble');
+
+      if (phone && bubble) {
+        phone.style.transform = `rotate(${roll * 1.2}deg) translateY(${-pitch * 0.8}px)`;
+        bubble.style.transform = `translate(${roll * 1.8}px, ${-pitch * 1.6}px)`;
+      }
+    }, 120);
+  }
+
+  // Init runtime
+  startLiveTelemetry();
+</script></main>
+<!-- Standard 4-Tab Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-slate-200 px-6 py-2.5 flex items-center justify-between z-30 shadow-lg">
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-sky-600 transition-colors group" href="#">
+<i class="ph ph-squares-four text-2xl group-hover:scale-105 transition-transform"></i>
+<span class="text-[11px] font-semibold">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-sky-600 transition-colors group" href="#">
+<i class="ph ph-cpu text-2xl group-hover:scale-105 transition-transform"></i>
+<span class="text-[11px] font-semibold">Devices</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-sky-600 transition-colors group" href="#">
+<i class="ph ph-code text-2xl group-hover:scale-105 transition-transform"></i>
+<span class="text-[11px] font-semibold">Code</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-sky-600 transition-colors group" href="#">
+<i class="ph ph-sliders text-2xl group-hover:scale-105 transition-transform"></i>
+<span class="text-[11px] font-semibold">Settings</span>
+</a>
+</nav>
+</div>
+<script>
+    // Letters queue for sequential naming
+    const availableLetters = 'DEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    let activeDynamicLetters = [];
+
+    // Live angle update
+    function updateAngle(letter, val) {
+      const displayElem = document.getElementById(`val-${letter}`);
+      if (displayElem) {
+        displayElem.innerText = val;
+      }
+    }
+
+    // Add new movement card
+    function addMovement() {
+      if (availableLetters.length === 0) {
+        alert("Maximum number of movements reached (A-Z).");
+        return;
+      }
+
+      const nextLetter = availableLetters.shift();
+      activeDynamicLetters.push(nextLetter);
+
+      const container = document.getElementById('slidersList');
+      const card = document.createElement('div');
+      card.id = `card-${nextLetter}`;
+      card.className = "bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm hover:shadow-md transition-all animate-fade-in";
+      card.innerHTML = `
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 font-bold text-sm flex items-center justify-center border border-sky-100 shadow-inner">
+              ${nextLetter}
+            </span>
+            <div>
+              <span class="text-sm font-bold text-slate-800">Movement ${nextLetter}</span>
+              <span class="text-[11px] block text-slate-400 font-medium">Auxiliary Servo / Joint</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="flex items-baseline gap-1 bg-slate-50 px-3 py-1 rounded-xl border border-slate-100">
+              <span id="val-${nextLetter}" class="text-lg font-black text-sky-600 font-mono tracking-tight">90</span>
+              <span class="text-xs font-semibold text-slate-500">°</span>
+            </div>
+            <!-- Remove Button for dynamic movement -->
+            <button onclick="removeMovement('${nextLetter}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-rose-400 hover:text-rose-600 hover:bg-rose-50 active:scale-95 transition-all" title="Remove Movement ${nextLetter}">
+              <i class="ph ph-trash text-base"></i>
+            </button>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-medium text-slate-400 font-mono w-5">0°</span>
+          <div class="flex-1 relative">
+            <input type="range" id="slider-${nextLetter}" min="0" max="180" value="90" oninput="updateAngle('${nextLetter}', this.value)" class="w-full">
+          </div>
+          <span class="text-xs font-medium text-slate-400 font-mono w-7 text-right">180°</span>
+        </div>
+      `;
+
+      container.appendChild(card);
+
+      // Smooth scroll to newly added card
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Remove added movement card (A, B, C are protected)
+    function removeMovement(letter) {
+      const card = document.getElementById(`card-${letter}`);
+      if (card) {
+        card.remove();
+        // Remove from active list
+        activeDynamicLetters = activeDynamicLetters.filter(l => l !== letter);
+        // Put letter back and re-sort available letters
+        availableLetters.push(letter);
+        availableLetters.sort();
+      }
+    }
+
+    // Center all sliders back to 90 degrees
+    function resetAllServos() {
+      const allLetters = ['A', 'B', 'C', ...activeDynamicLetters];
+      allLetters.forEach(l => {
+        const slider = document.getElementById(`slider-${l}`);
+        if (slider) {
+          slider.value = 90;
+          updateAngle(l, 90);
+        }
+      });
+    }
+  </script>
+
+
+</body></html>

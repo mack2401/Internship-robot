@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Voice Control — iBots</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter & Public Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Public+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- FontAwesome for crisp robotics & hardware icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "error": "#ba1a1a",
+          "primary-container": "#3366cc",
+          "surface-tint": "#2259bf",
+          "secondary-fixed-dim": "#c2c7cc",
+          "surface-container-low": "#f5f3f4",
+          "background": "#faf9fa",
+          "primary": "#094cb2",
+          "secondary-container": "#dfe3e8",
+          "surface-dim": "#dbdadb",
+          "on-surface-variant": "#434653",
+          "inverse-primary": "#b1c5ff",
+          "on-error": "#ffffff",
+          "inverse-surface": "#303031",
+          "surface-bright": "#faf9fa",
+          "surface-container": "#efedee",
+          "surface": "#faf9fa",
+          "on-background": "#1b1c1d",
+          "surface-container-lowest": "#ffffff",
+          "on-secondary": "#ffffff",
+          "surface-variant": "#e3e2e3",
+          "outline": "#737784",
+          "secondary-fixed": "#dfe3e8",
+          "on-surface": "#1b1c1d",
+          "on-primary": "#ffffff",
+          "surface-container-high": "#e9e8e9",
+          "surface-container-highest": "#e3e2e3",
+          "secondary": "#5a5f63"
+        },
+        fontFamily: {
+          sans: ['Inter', '-apple-system', 'sans-serif'],
+          label: ['Public Sans', 'sans-serif']
+        },
+        boxShadow: {
+          'soft-glow': '0 20px 45px -10px rgba(9, 76, 178, 0.08), 0 8px 24px -6px rgba(0, 0, 0, 0.04)',
+          'mic-button': '0 25px 50px -12px rgba(15, 23, 42, 0.08), 0 8px 20px -6px rgba(15, 23, 42, 0.04)',
+          'pill': '0 2px 10px rgba(0, 0, 0, 0.03)'
+        }
+      }
+    }
+  }
+</script>
+<!-- Custom Styling -->
+<style data-purpose="base-layout">
+  body {
+    background-color: #0b1120;
+    font-family: 'Inter', -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
+<meta content="mobile_tab" name="shell-type"/></head>
+<body class="flex items-center justify-center min-h-screen p-0 sm:p-4 text-slate-800 bg-slate-950 font-sans">
+<!-- BEGIN: Mobile Frame Simulation -->
+<div class="relative w-full sm:w-[393px] h-[852px] bg-white sm:rounded-[48px] overflow-hidden shadow-2xl flex flex-col border-[6px] border-slate-900/80" data-purpose="mobile-viewport">
+<!-- BEGIN: iOS Status Bar -->
+<header class="w-full pt-3 px-7 flex justify-between items-center z-30 select-none bg-white" data-purpose="status-bar">
+<span class="text-sm font-semibold tracking-tight text-slate-900">9:41</span>
+<div class="w-24 h-4 bg-black rounded-full hidden sm:block"></div>
+<div class="flex items-center space-x-1.5 text-xs text-slate-900">
+<i class="fa-solid fa-signal text-[11px]"></i>
+<i class="fa-solid fa-wifi text-[11px]"></i>
+<div class="flex items-center pl-0.5">
+<span class="border border-slate-900 rounded-[4px] px-1 py-0.5 text-[9px] font-bold leading-none flex items-center">
+<span class="w-3.5 h-1.5 bg-slate-900 rounded-[2px] block mr-0.5"></span>
+</span>
+</div>
+</div>
+</header>
+<!-- END: iOS Status Bar -->
+<!-- BEGIN: Main Scrollable Content -->
+<main class="flex-1 overflow-y-auto no-scrollbar flex flex-col justify-between px-6 pt-2 pb-24" data-purpose="dashboard-content">
+<!-- Top Bar Navigation Header -->
+<header class="flex items-center justify-between pt-1">
+<button aria-label="Go back" class="w-10 h-10 rounded-full border border-slate-100 flex items-center justify-center text-slate-700 active:bg-slate-50 transition-colors shadow-sm" onclick="handleBackNavigation()" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<div class="text-center">
+<h1 class="text-[17px] font-bold tracking-tight text-slate-900">Voice Control</h1>
+<p class="text-[10px] tracking-[0.14em] uppercase text-slate-500 font-medium mt-0.5">ESP32 TELEMETRY LINKED</p>
+</div>
+<button aria-label="Available voice commands" class="w-10 h-10 rounded-full border border-slate-100 flex items-center justify-center text-slate-700 active:bg-slate-50 transition-colors shadow-sm" onclick="openVoiceCommandsModal()" type="button">
+<span class="material-symbols-outlined text-[20px]">info</span>
+</button>
+</header>
+<!-- Central Interactive Section -->
+<section class="flex flex-col items-center justify-center my-auto w-full py-4 relative">
+<!-- 'TAP TO SPEAK' Pill -->
+<div class="mb-14 flex flex-col items-center">
+<div class="px-7 py-2.5 rounded-full bg-white border border-slate-100/90 shadow-pill flex items-center gap-2 cursor-pointer transition-all duration-300" id="statusBadgeContainer" onclick="toggleListeningState()">
+<span class="w-2 h-2 rounded-full bg-slate-400 hidden" id="statusPingDot"></span>
+<span class="font-label text-xs font-semibold tracking-wider text-slate-700 uppercase" id="statusDisplayText">TAP TO SPEAK</span>
+</div>
+<!-- Live Waveform indicator -->
+<div class="flex items-center gap-1.5 h-6 mt-3 opacity-0 transition-opacity duration-300" id="audioWaveBars">
+<span class="w-1 bg-sky-500 rounded-full animate-[bounce_0.8s_infinite_100ms] h-2"></span>
+<span class="w-1 bg-sky-600 rounded-full animate-[bounce_0.8s_infinite_300ms] h-4"></span>
+<span class="w-1 bg-sky-500 rounded-full animate-[bounce_0.8s_infinite_150ms] h-6"></span>
+<span class="w-1 bg-sky-400 rounded-full animate-[bounce_0.8s_infinite_400ms] h-3"></span>
+<span class="w-1 bg-sky-600 rounded-full animate-[bounce_0.8s_infinite_200ms] h-5"></span>
+</div>
+</div>
+<!-- Large Circular Microphone Button -->
+<div class="relative flex items-center justify-center w-64 h-64">
+<!-- Pulse animation rings for active listening -->
+<div class="absolute inset-0 rounded-full bg-sky-400/10 scale-100 opacity-0 pointer-events-none transition-all duration-700" id="pulseRingOuter"></div>
+<div class="absolute inset-4 rounded-full bg-sky-400/20 scale-100 opacity-0 pointer-events-none transition-all duration-500" id="pulseRingInner"></div>
+<!-- Main Circular Button -->
+<button aria-label="Microphone Voice Input" class="relative w-52 h-52 rounded-full bg-white text-slate-800 shadow-mic-button flex items-center justify-center transition-all duration-300 active:scale-95 group focus:outline-none border border-slate-100/60" id="micButton" onclick="toggleListeningState()" type="button">
+<span class="material-symbols-outlined text-[68px] relative z-10 transition-transform duration-300 text-slate-800 group-active:scale-90" id="micIcon">
+            mic
+          </span>
+</button>
+</div>
+<!-- Guide Text & Recognition Output -->
+<div class="mt-14 text-center px-4 max-w-xs">
+<p class="text-xs text-slate-600 font-normal leading-relaxed tracking-normal" id="instructionLabel">
+          Tap the microphone and speak a command.
+        </p>
+<p class="font-mono text-xs font-semibold text-sky-600 mt-2 opacity-0 transition-opacity duration-300" id="recognizedCommandEcho">
+          “...”
+        </p>
+</div>
+</section>
+<!-- Bottom Spacing placeholder -->
+<div class="h-2 w-full pointer-events-none"></div>
+<!-- Voice Commands Modal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200" id="voiceCommandModal">
+<div class="w-full max-w-xs bg-white rounded-2xl p-5 shadow-2xl flex flex-col transform scale-95 transition-transform duration-200 max-h-[82vh]" id="voiceModalContent">
+<div class="flex items-center justify-between pb-3 border-b border-slate-100">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-sky-50 flex items-center justify-center text-sky-600">
+<span class="material-symbols-outlined text-[16px]">record_voice_over</span>
+</div>
+<h2 class="font-bold text-sm text-slate-900">Available Commands</h2>
+</div>
+<button aria-label="Close dialog" class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800" onclick="closeVoiceCommandsModal()" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<div class="overflow-y-auto pr-1 mt-3 space-y-1.5 no-scrollbar">
+<div class="p-2.5 rounded-xl bg-slate-50 flex items-center justify-between">
+<span class="text-xs font-medium text-slate-800">“Move forward”</span>
+<span class="material-symbols-outlined text-sm text-sky-600">arrow_upward</span>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 flex items-center justify-between">
+<span class="text-xs font-medium text-slate-800">“Move backward”</span>
+<span class="material-symbols-outlined text-sm text-sky-600">arrow_downward</span>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 flex items-center justify-between">
+<span class="text-xs font-medium text-slate-800">“Turn left”</span>
+<span class="material-symbols-outlined text-sm text-sky-600">turn_left</span>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 flex items-center justify-between">
+<span class="text-xs font-medium text-slate-800">“Turn right”</span>
+<span class="material-symbols-outlined text-sm text-sky-600">turn_right</span>
+</div>
+<div class="p-2.5 rounded-xl bg-rose-50/80 flex items-center justify-between">
+<span class="text-xs font-medium text-rose-700">“Stop the car”</span>
+<span class="material-symbols-outlined text-sm text-rose-600">stop_circle</span>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 flex items-center justify-between">
+<span class="text-xs font-medium text-slate-800">“Turn on the lights”</span>
+<span class="material-symbols-outlined text-sm text-amber-500">lightbulb</span>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 flex items-center justify-between">
+<span class="text-xs font-medium text-slate-800">“Turn off the lights”</span>
+<span class="material-symbols-outlined text-sm text-slate-400">light_off</span>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 flex items-center justify-between">
+<span class="text-xs font-medium text-slate-800">“Start dance mode”</span>
+<span class="material-symbols-outlined text-sm text-sky-600">celebration</span>
+</div>
+</div>
+<div class="pt-3 mt-1">
+<button class="w-full py-2.5 rounded-xl bg-slate-900 text-white text-xs font-semibold tracking-wide active:opacity-90 transition-opacity" onclick="closeVoiceCommandsModal()" type="button">
+            Got it
+          </button>
+</div>
+</div>
+</div>
+</main>
+<!-- END: Main Scrollable Content -->
+<!-- BEGIN: Docked Bottom Navigation Bar (Standardized 4-tab: Home, Devices, Code, Settings) -->
+<nav class="absolute bottom-0 inset-x-0 bg-white border-t border-slate-100 pt-2 pb-5 px-6 z-20 shadow-lg" data-purpose="bottom-navigation">
+<ul class="flex items-center justify-between">
+<!-- Tab 1: Home (Active) -->
+<li class="flex-1">
+<button class="w-full flex flex-col items-center group text-sky-600" onclick="setActiveNav(this, 'Home')">
+<div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors bg-sky-100">
+<i class="fa-solid fa-house text-sm"></i>
+</div>
+<span class="text-[10px] font-bold text-sky-600">Home</span>
+</button>
+</li>
+<!-- Tab 2: Devices -->
+<li class="flex-1">
+<button class="w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors" onclick="setActiveNav(this, 'Devices')">
+<div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors">
+<i class="fa-solid fa-microchip text-sm"></i>
+</div>
+<span class="text-[10px] font-medium">Devices</span>
+</button>
+</li>
+<!-- Tab 3: Code -->
+<li class="flex-1">
+<button class="w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors" onclick="setActiveNav(this, 'Code')">
+<div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors">
+<i class="fa-solid fa-code text-sm"></i>
+</div>
+<span class="text-[10px] font-medium leading-none text-center">Code</span>
+</button>
+</li>
+<!-- Tab 4: Settings -->
+<li class="flex-1">
+<button class="w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors" onclick="setActiveNav(this, 'Settings')">
+<div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors">
+<i class="fa-solid fa-gear text-sm"></i>
+</div>
+<span class="text-[10px] font-medium">Settings</span>
+</button>
+</li>
+</ul>
+<!-- iOS Home Indicator bar -->
+<div class="w-32 h-1 bg-slate-900 rounded-full mx-auto mt-2 opacity-80"></div>
+</nav>
+<!-- END: Docked Bottom Navigation Bar -->
+<!-- Toast Notification Overlay -->
+<div class="absolute top-16 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white text-xs px-4 py-2 rounded-full shadow-lg pointer-events-none transition-all duration-300 opacity-0 transform -translate-y-2" id="toastMessage">
+<span id="toastText">Action triggered</span>
+</div>
+</div>
+<!-- END: Mobile Frame Simulation -->
+<!-- Interaction Logic -->
+<script>
+  let isListening = false;
+  let simulatedStreamTimer = null;
+
+  const sampleResponses = [
+    "Move forward",
+    "Turn left",
+    "Turn on the lights",
+    "Start dance mode",
+    "Stop the car"
+  ];
+
+  function toggleListeningState() {
+    const btn = document.getElementById('micButton');
+    const micIcon = document.getElementById('micIcon');
+    const statusBadge = document.getElementById('statusBadgeContainer');
+    const statusDot = document.getElementById('statusPingDot');
+    const statusText = document.getElementById('statusDisplayText');
+    const audioWaves = document.getElementById('audioWaveBars');
+    const outerRing = document.getElementById('pulseRingOuter');
+    const innerRing = document.getElementById('pulseRingInner');
+    const echoText = document.getElementById('recognizedCommandEcho');
+
+    isListening = !isListening;
+
+    if (isListening) {
+      btn.classList.add('scale-105', 'border-sky-500/40', 'bg-sky-50/40');
+      micIcon.classList.remove('text-slate-800');
+      micIcon.classList.add('text-sky-600');
+
+      statusBadge.classList.add('bg-sky-50', 'border-sky-200');
+      statusDot.classList.remove('hidden');
+      statusDot.classList.add('bg-sky-600', 'animate-ping');
+      statusText.classList.remove('text-slate-700');
+      statusText.classList.add('text-sky-700');
+      statusText.textContent = "LISTENING...";
+
+      audioWaves.classList.remove('opacity-0');
+      outerRing.classList.remove('opacity-0', 'scale-100');
+      outerRing.classList.add('opacity-100', 'scale-125', 'animate-ping');
+      innerRing.classList.remove('opacity-0', 'scale-100');
+      innerRing.classList.add('opacity-100', 'scale-110');
+
+      echoText.classList.add('opacity-0');
+      showToast('Microphone active. Say a command...');
+
+      clearTimeout(simulatedStreamTimer);
+      simulatedStreamTimer = setTimeout(() => {
+        if (isListening) {
+          const randomCmd = sampleResponses[Math.floor(Math.random() * sampleResponses.length)];
+          echoText.innerHTML = `&ldquo;${randomCmd}&rdquo;`;
+          echoText.classList.remove('opacity-0');
+          showToast(`Recognized: "${randomCmd}"`);
+          toggleListeningState();
+        }
+      }, 2600);
+
+    } else {
+      clearTimeout(simulatedStreamTimer);
+
+      btn.classList.remove('scale-105', 'border-sky-500/40', 'bg-sky-50/40');
+      micIcon.classList.remove('text-sky-600');
+      micIcon.classList.add('text-slate-800');
+
+      statusBadge.classList.remove('bg-sky-50', 'border-sky-200');
+      statusDot.classList.add('hidden');
+      statusDot.classList.remove('bg-sky-600', 'animate-ping');
+      statusText.classList.remove('text-sky-700');
+      statusText.classList.add('text-slate-700');
+      statusText.textContent = "TAP TO SPEAK";
+
+      audioWaves.classList.add('opacity-0');
+      outerRing.classList.add('opacity-0', 'scale-100');
+      outerRing.classList.remove('opacity-100', 'scale-125', 'animate-ping');
+      innerRing.classList.add('opacity-0', 'scale-100');
+      innerRing.classList.remove('opacity-100', 'scale-110');
+    }
+  }
+
+  function openVoiceCommandsModal() {
+    const modal = document.getElementById('voiceCommandModal');
+    const content = document.getElementById('voiceModalContent');
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+    content.classList.remove('scale-95');
+    content.classList.add('scale-100');
+  }
+
+  function closeVoiceCommandsModal() {
+    const modal = document.getElementById('voiceCommandModal');
+    const content = document.getElementById('voiceModalContent');
+    modal.classList.add('opacity-0', 'pointer-events-none');
+    content.classList.remove('scale-100');
+    content.classList.add('scale-95');
+  }
+
+  function handleBackNavigation() {
+    showToast('Returning to Controller...');
+  }
+
+  let toastTimeout;
+  function showToast(message) {
+    const toast = document.getElementById('toastMessage');
+    const text = document.getElementById('toastText');
+    text.textContent = message;
+    toast.classList.remove('opacity-0', '-translate-y-2');
+    toast.classList.add('opacity-100', 'translate-y-0');
+
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toast.classList.remove('opacity-100', 'translate-y-0');
+      toast.classList.add('opacity-0', '-translate-y-2');
+    }, 2000);
+  }
+
+  function setActiveNav(btnElement, navName) {
+    const allNavBtns = document.querySelectorAll('nav button');
+    allNavBtns.forEach(b => {
+      b.className = 'w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors';
+      const pill = b.querySelector('div');
+      pill.classList.remove('bg-sky-100');
+      const span = b.querySelector('span');
+      span.classList.remove('font-bold', 'text-sky-600');
+      span.classList.add('font-medium');
+    });
+
+    btnElement.className = 'w-full flex flex-col items-center group text-sky-600';
+    const activePill = btnElement.querySelector('div');
+    activePill.classList.add('bg-sky-100');
+    const activeSpan = btnElement.querySelector('span');
+    activeSpan.classList.add('font-bold', 'text-sky-600');
+
+    showToast(`Switched to ${navName}`);
+  }
+</script>
+</body></html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>iBots RC Landscape Controller</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<!-- FontAwesome and Material Symbols -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            ibots: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              dark: '#0f172a',
+              slate: '#1e293b',
+              muted: '#64748b',
+              surface: '#f8fafc',
+            }
+          },
+          boxShadow: {
+            'card': '0 4px 20px -2px rgba(15, 23, 42, 0.05)',
+            'thumb': '0 6px 16px -2px rgba(2, 132, 199, 0.12), 0 2px 6px -1px rgba(0,0,0,0.06)',
+            'btn-glow': '0 4px 14px 0 rgba(2, 132, 199, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #0b1120;
+      font-family: 'Inter', -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Custom range slider styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: #e2e8f0;
+      border-radius: 9999px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #0284c7;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(2, 132, 199, 0.4);
+      transition: transform 0.1s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:active {
+      transform: scale(1.25);
+    }
+</style>
+</head>
+<body class="w-full h-screen overflow-hidden bg-[#f8fafc] font-sans text-slate-800 p-0 m-0">
+<!-- BEGIN: Landscape RC Controller Frame -->
+<div class="relative w-full h-full bg-[#f8fafc] overflow-hidden flex flex-col" data-purpose="landscape-viewport">
+<!-- BEGIN: Compact Top Header Bar -->
+<header class="w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-5 py-2.5 flex items-center justify-between z-20 shrink-0 gap-3">
+<!-- Left: Navigation and Identity -->
+<div class="flex items-center gap-3">
+<button aria-label="Return to Dashboard" class="w-8 h-8 rounded-full bg-slate-100 active:bg-slate-200 text-sky-700 flex items-center justify-center transition-colors shadow-sm" onclick="window.history.back ? window.history.back() : null" type="button">
+<span class="material-symbols-outlined text-[19px]">arrow_back</span>
+</button>
+<div class="flex items-center gap-2">
+<h1 class="text-sm font-bold tracking-tight text-slate-900 leading-none whitespace-nowrap">Car Controller</h1>
+<span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 border border-emerald-200/60 text-[10px] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            CONNECTED • BLE 5.2
+          </span>
+</div>
+</div>
+<!-- Center: Speed Cap Trim Slider -->
+<div class="flex items-center gap-2 bg-slate-50 border border-slate-200/70 rounded-full px-3 py-1 shadow-sm max-w-xs w-full">
+<span class="material-symbols-outlined text-[16px] text-sky-600 shrink-0">speed</span>
+<div class="flex flex-col shrink-0 min-w-[70px]">
+<span class="text-[8px] font-bold uppercase tracking-wider text-slate-400 leading-none">Speed Cap</span>
+<span class="text-[11px] font-bold text-slate-800 leading-none mt-0.5" id="speedOutput">75% (Norm)</span>
+</div>
+<input class="w-full h-1.5 cursor-pointer accent-sky-600" id="speedSlider" max="100" min="20" oninput="updateSpeedVal(this.value)" step="5" type="range" value="75"/>
+</div>
+<!-- Right: Telemetry (Battery & Latency) -->
+<div class="flex items-center gap-2">
+<div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200/70 px-2.5 py-1 rounded-full shadow-sm text-xs">
+<span class="material-symbols-outlined text-emerald-600 text-[15px]">battery_charging_full</span>
+<span class="font-bold text-slate-800 text-[11px]">8.4V</span>
+<span class="text-slate-300 text-[10px]">•</span>
+<span class="material-symbols-outlined text-sky-600 text-[14px]">wifi_tethering</span>
+<span class="font-semibold text-slate-500 text-[11px]">12ms</span>
+</div>
+</div>
+</header>
+<!-- END: Compact Top Header Bar -->
+<!-- BEGIN: Main Horizontal Controller Arena -->
+<main class="flex-1 w-full px-5 py-3 grid grid-cols-12 gap-4 items-stretch overflow-hidden select-none" data-purpose="gamepad-layout">
+<!-- LEFT POD: Forward & Backward (Left Thumb Control) -->
+<div class="col-span-4 flex flex-col gap-2.5 h-full">
+<!-- Forward Button -->
+<button class="flex-1 w-full bg-white active:bg-sky-600 active:text-white rounded-2xl border border-slate-200/70 shadow-sm flex flex-col items-center justify-center transition-all duration-100 select-none touch-none group hover:border-sky-300" id="btnForward" type="button"><div class="flex items-center justify-center w-full h-full"><img alt="Forward" class="w-12 h-12 object-contain -rotate-90 select-none pointer-events-none" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyEMc9YXP1P8iafUc7m1F5EAAtUfQP0Mmoej5t0wInCeQwFlTVIbdwm_xJUh3eBZ87MXf5-Cv6QV_YSCiWOCle8qU-2_W5-zxvL0fedqpTmaeifgP7WNDL-MNKHpL8Lzr4tg3BCMoN5i4ySiEhOCJpIZ-3McJywKapeNIVsydFDwLF2bT5SYs3IvWJkDXKObQlnSbIsTZoI7WKWOAZFa0sbRFXsq8L9mZ9DQYv6AQDZAdNMHBX5ljynCqd4LyW0bvLU2s" style="transform: rotate(-90deg);"/></div></button>
+<!-- Backward Button -->
+<button class="flex-1 w-full bg-white active:bg-sky-600 active:text-white rounded-2xl border border-slate-200/70 shadow-sm flex flex-col items-center justify-center transition-all duration-100 select-none touch-none group hover:border-sky-300" id="btnBackward" type="button"><div class="flex items-center justify-center w-full h-full"><img alt="Backward" class="w-12 h-12 object-contain rotate-90 select-none pointer-events-none" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyEMc9YXP1P8iafUc7m1F5EAAtUfQP0Mmoej5t0wInCeQwFlTVIbdwm_xJUh3eBZ87MXf5-Cv6QV_YSCiWOCle8qU-2_W5-zxvL0fedqpTmaeifgP7WNDL-MNKHpL8Lzr4tg3BCMoN5i4ySiEhOCJpIZ-3McJywKapeNIVsydFDwLF2bT5SYs3IvWJkDXKObQlnSbIsTZoI7WKWOAZFa0sbRFXsq8L9mZ9DQYv6AQDZAdNMHBX5ljynCqd4LyW0bvLU2s" style="transform: rotate(90deg);"/></div></button>
+</div>
+<!-- CENTER POD: Sleek & Compact Utility Column (Stop, Horn, Lights, Dance) -->
+<div class="col-span-4 flex flex-col items-center justify-between h-full px-2 py-0.5">
+<!-- Top Status Micro Pill -->
+<div class="w-full flex items-center justify-center gap-1 py-1 px-2.5 rounded-full bg-slate-200/60 text-[10px] font-bold text-slate-600 uppercase tracking-wider shrink-0 mb-1" id="motionStatus"><span class="w-1.5 h-1.5 rounded-full bg-sky-600"></span> IDLE • STANDBY</div>
+<!-- Emergency STOP Button (Noticeably sleeker & compact) -->
+<button class="w-full max-w-[210px] py-2 px-3 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white rounded-xl flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95 shrink-0" id="btnStop" onclick="triggerEmergencyStop()" type="button">
+<span class="material-symbols-outlined text-lg">front_hand</span>
+<span class="text-xs font-extrabold tracking-widest uppercase">STOP</span>
+</button>
+<!-- Horn Button (Press & Hold, Compact) -->
+<button class="w-full max-w-[210px] py-1.5 px-3 bg-white active:bg-slate-100 border border-slate-200/80 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all select-none touch-none shrink-0" id="btnHorn" type="button">
+<span class="material-symbols-outlined text-sky-600 text-lg transition-transform" id="hornIcon">campaign</span>
+<span class="text-[10px] uppercase font-bold tracking-wider text-slate-600">Horn</span>
+</button>
+<!-- Light Toggle Button (Compact) -->
+<button class="w-full max-w-[210px] py-1.5 px-3 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-between shadow-sm transition-all shrink-0" id="btnLight" onclick="toggleHeadlights()" type="button">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-slate-500 text-base transition-colors" id="lightIcon">light_mode</span>
+<span class="text-[10px] uppercase font-bold tracking-wider text-slate-600" id="lightLabel">Lights OFF</span>
+</div>
+<span class="w-2 h-2 rounded-full bg-slate-300 transition-colors" id="lightDot"></span>
+</button>
+<!-- Dance Mode Choreography Button (Compact) -->
+<button class="w-full max-w-[210px] py-1.5 px-3 bg-slate-100 hover:bg-slate-200/70 border border-slate-200/70 rounded-xl flex items-center justify-between shadow-sm transition-all shrink-0" id="btnDance" onclick="toggleDanceMode()" type="button">
+<div class="flex items-center gap-1.5 text-amber-700">
+<span class="material-symbols-outlined text-base animate-bounce" id="danceIcon">smart_toy</span>
+<span class="text-[10px] font-bold tracking-wider uppercase">Dance</span>
+</div>
+<span class="text-[9px] font-semibold text-slate-500" id="danceStatusPill">Auto Ready</span>
+</button>
+<!-- Subtle System Indicator Pill -->
+</div>
+<!-- RIGHT POD: Left Turn & Right Turn (Right Thumb Control) -->
+<div class="col-span-4 flex flex-row gap-2.5 h-full items-stretch"><button class="flex-1 h-full bg-white active:bg-sky-600 active:text-white rounded-2xl border border-slate-200/70 shadow-sm flex flex-col items-center justify-center transition-all duration-100 select-none touch-none group hover:border-sky-300" id="btnLeft" type="button"><div class="flex items-center justify-center w-full h-full"><img alt="Left Turn" class="w-12 h-12 object-contain rotate-180 select-none pointer-events-none" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyEMc9YXP1P8iafUc7m1F5EAAtUfQP0Mmoej5t0wInCeQwFlTVIbdwm_xJUh3eBZ87MXf5-Cv6QV_YSCiWOCle8qU-2_W5-zxvL0fedqpTmaeifgP7WNDL-MNKHpL8Lzr4tg3BCMoN5i4ySiEhOCJpIZ-3McJywKapeNIVsydFDwLF2bT5SYs3IvWJkDXKObQlnSbIsTZoI7WKWOAZFa0sbRFXsq8L9mZ9DQYv6AQDZAdNMHBX5ljynCqd4LyW0bvLU2s" style="transform: rotate(180deg);"/></div></button><button class="flex-1 h-full bg-white active:bg-sky-600 active:text-white rounded-2xl border border-slate-200/70 shadow-sm flex flex-col items-center justify-center transition-all duration-100 select-none touch-none group hover:border-sky-300" id="btnRight" type="button"><div class="flex items-center justify-center w-full h-full"><img alt="Right Turn" class="w-12 h-12 object-contain select-none pointer-events-none" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyEMc9YXP1P8iafUc7m1F5EAAtUfQP0Mmoej5t0wInCeQwFlTVIbdwm_xJUh3eBZ87MXf5-Cv6QV_YSCiWOCle8qU-2_W5-zxvL0fedqpTmaeifgP7WNDL-MNKHpL8Lzr4tg3BCMoN5i4ySiEhOCJpIZ-3McJywKapeNIVsydFDwLF2bT5SYs3IvWJkDXKObQlnSbIsTZoI7WKWOAZFa0sbRFXsq8L9mZ9DQYv6AQDZAdNMHBX5ljynCqd4LyW0bvLU2s"/></div></button></div>
+</main>
+<!-- END: Main Horizontal Controller Arena -->
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white px-3 py-1.5 rounded-full text-xs shadow-lg transition-opacity pointer-events-none hidden z-50 flex items-center gap-2" id="toastMessage">
+<span class="material-symbols-outlined text-sm text-sky-400">info</span>
+<span class="" id="toastText">Action triggered</span>
+</div>
+</div>
+<!-- END: Landscape RC Controller Frame -->
+<!-- Controller Interactive Logic -->
+<script>
+  (function initCarController() {
+    let activeCommands = new Set();
+    let headlightsActive = false;
+    let danceInterval = null;
+    let danceStep = 0;
+
+    const motionStatus = document.getElementById('motionStatus');
+    const hornIcon = document.getElementById('hornIcon');
+    const lightIcon = document.getElementById('lightIcon');
+    const lightDot = document.getElementById('lightDot');
+    const lightLabel = document.getElementById('lightLabel');
+    const btnDance = document.getElementById('btnDance');
+    const danceStatusPill = document.getElementById('danceStatusPill');
+
+    window.updateSpeedVal = function(val) {
+      document.getElementById('speedOutput').textContent = val + '% (Norm)';
+      showToast('Speed trim adjusted to ' + val + '%');
+    };
+
+    function updateTelemetryVisuals() {
+      if (activeCommands.size === 0) {
+        motionStatus.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-sky-600"></span> IDLE • STANDBY';
+        motionStatus.className = "w-full flex items-center justify-center gap-1 py-1 px-2.5 rounded-full bg-slate-200/60 text-[10px] font-bold text-slate-600 uppercase tracking-wider shrink-0 mb-1";
+        return;
+      }
+
+      let labelParts = [];
+      if (activeCommands.has('F')) labelParts.push('FORWARD');
+      if (activeCommands.has('B')) labelParts.push('REVERSE');
+      if (activeCommands.has('L')) labelParts.push('STEER-L');
+      if (activeCommands.has('R')) labelParts.push('STEER-R');
+
+      motionStatus.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span> ${labelParts.join(' + ') || 'ENGAGED'}`;
+      motionStatus.className = "w-full flex items-center justify-center gap-1 py-1 px-2.5 rounded-full bg-sky-100 text-[10px] font-bold text-sky-700 uppercase tracking-wider shrink-0 mb-1 border border-sky-200";
+    }
+
+    // Attach Touch and Pointer Events for Thumb Controls
+    function setupHoldButton(btnId, cmdCode) {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+
+      const startAction = (e) => {
+        e.preventDefault();
+        if (danceInterval) stopDanceMode();
+        activeCommands.add(cmdCode);
+        updateTelemetryVisuals();
+        if (window.navigator && window.navigator.vibrate) {
+          window.navigator.vibrate(12);
+        }
+      };
+
+      const endAction = (e) => {
+        e.preventDefault();
+        activeCommands.delete(cmdCode);
+        updateTelemetryVisuals();
+      };
+
+      btn.addEventListener('pointerdown', startAction);
+      btn.addEventListener('pointerup', endAction);
+      btn.addEventListener('pointercancel', endAction);
+      btn.addEventListener('pointerleave', endAction);
+    }
+
+    setupHoldButton('btnForward', 'F');
+    setupHoldButton('btnBackward', 'B');
+    setupHoldButton('btnLeft', 'L');
+    setupHoldButton('btnRight', 'R');
+
+    // Horn Press & Hold Handler
+    const btnHorn = document.getElementById('btnHorn');
+    const startHorn = (e) => {
+      e.preventDefault();
+      hornIcon.classList.add('text-amber-500', 'scale-125');
+      showToast('BEEP! Horn Active');
+      if (window.navigator && window.navigator.vibrate) window.navigator.vibrate([30, 20, 30]);
+    };
+    const endHorn = (e) => {
+      e.preventDefault();
+      hornIcon.classList.remove('text-amber-500', 'scale-125');
+    };
+    btnHorn.addEventListener('pointerdown', startHorn);
+    btnHorn.addEventListener('pointerup', endHorn);
+    btnHorn.addEventListener('pointercancel', endHorn);
+    btnHorn.addEventListener('pointerleave', endHorn);
+
+    // Light Toggle
+    window.toggleHeadlights = function() {
+      headlightsActive = !headlightsActive;
+      if (headlightsActive) {
+        lightIcon.classList.add('text-amber-500');
+        lightDot.classList.remove('bg-slate-300');
+        lightDot.classList.add('bg-amber-400');
+        lightLabel.textContent = 'Lights ON';
+        showToast('LED Headlights Activated');
+      } else {
+        lightIcon.classList.remove('text-amber-500');
+        lightDot.classList.add('bg-slate-300');
+        lightDot.classList.remove('bg-amber-400');
+        lightLabel.textContent = 'Lights OFF';
+        showToast('LED Headlights Deactivated');
+      }
+    };
+
+    // Emergency Stop
+    window.triggerEmergencyStop = function() {
+      activeCommands.clear();
+      if (danceInterval) stopDanceMode();
+      updateTelemetryVisuals();
+      motionStatus.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-600"></span> EMERGENCY HALT';
+      motionStatus.className = "w-full flex items-center justify-center gap-1 py-1 px-2.5 rounded-full bg-red-100 text-[10px] font-bold text-red-600 uppercase tracking-wider shrink-0 mb-1 border border-red-200";
+      showToast('Emergency Motors Brake Activated');
+      if (window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate([80, 40, 80]);
+      }
+    };
+
+    // Dance Mode Choreography
+    const danceSteps = [
+      ['F', 'L'],
+      ['B', 'R'],
+      ['F', 'R'],
+      ['B', 'L'],
+      ['F'],
+      ['B']
+    ];
+
+    function stopDanceMode() {
+      clearInterval(danceInterval);
+      danceInterval = null;
+      btnDance.classList.remove('bg-sky-600', 'text-white');
+      btnDance.classList.add('bg-slate-100');
+      danceStatusPill.textContent = 'Auto Ready';
+      activeCommands.clear();
+      updateTelemetryVisuals();
+    }
+
+    window.toggleDanceMode = function() {
+      if (danceInterval) {
+        stopDanceMode();
+        showToast('Dance routine stopped');
+      } else {
+        btnDance.classList.remove('bg-slate-100');
+        btnDance.classList.add('bg-sky-600', 'text-white');
+        danceStatusPill.textContent = 'Active';
+        danceStep = 0;
+        showToast('Choreography Routine Started!');
+
+        danceInterval = setInterval(() => {
+          activeCommands.clear();
+          const currentStep = danceSteps[danceStep % danceSteps.length];
+          currentStep.forEach(cmd => activeCommands.add(cmd));
+          updateTelemetryVisuals();
+          danceStep++;
+        }, 450);
+      }
+    };
+
+    // Toast Utility
+    let toastTimeout;
+    function showToast(message) {
+      const toast = document.getElementById('toastMessage');
+      const text = document.getElementById('toastText');
+      if (!toast || !text) return;
+      text.textContent = message;
+      toast.classList.remove('hidden');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 1800);
+    }
+  })();
+</script>
+</body></html>

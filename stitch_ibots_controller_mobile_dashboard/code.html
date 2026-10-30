@@ -1,0 +1,1090 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>iBots Remote Controller</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet">
+<!-- FontAwesome for crisp robotics & hardware icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            ibots: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              dark: '#0f172a',
+              slate: '#1e293b',
+              muted: '#64748b',
+              surface: '#f8fafc',
+            }
+          },
+          boxShadow: {
+            'card': '0 4px 20px -2px rgba(15, 23, 42, 0.06)',
+            'card-hover': '0 10px 25px -4px rgba(14, 165, 233, 0.12)',
+            'btn-glow': '0 4px 14px 0 rgba(2, 132, 199, 0.39)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styling -->
+<style data-purpose="base-layout">
+    body {
+      background-color: #0b1120;
+      font-family: 'Inter', -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    
+    /* Custom scrollbar for inner mobile frame */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style data-purpose="card-visuals">
+    /* 3D Hardware isometric card backgrounds & simulation visuals */
+    .tech-grid-pattern {
+      background-size: 16px 16px;
+      background-image: 
+        linear-gradient(to right, rgba(2, 132, 199, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(2, 132, 199, 0.05) 1px, transparent 1px);
+    }
+    
+    .glow-pulse {
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+  </style>
+<!-- END: Custom Styling -->
+</head>
+<body class="flex items-center justify-center min-h-screen p-0 sm:p-4 text-slate-800 bg-slate-950 font-sans">
+<!-- BEGIN: Mobile Frame Simulation -->
+<div class="relative w-full sm:w-[393px] h-[852px] bg-[#f8fafc] sm:rounded-[48px] overflow-hidden shadow-2xl flex flex-col border-[6px] border-slate-900/80" data-purpose="mobile-viewport">
+<!-- BEGIN: iOS Status Bar -->
+<header class="w-full pt-3 px-7 flex justify-between items-center z-30 select-none bg-white/70 backdrop-blur-md" data-purpose="status-bar">
+<!-- Time -->
+<span class="text-sm font-semibold tracking-tight text-slate-900">9:41</span>
+<!-- Dynamic Island / Speaker notch simulation on mobile -->
+<div class="w-24 h-4 bg-black rounded-full hidden sm:block"></div>
+<!-- Indicators -->
+<div class="flex items-center space-x-1.5 text-xs text-slate-900">
+<i class="fa-solid fa-signal text-[11px]"></i>
+<i class="fa-solid fa-wifi text-[11px]"></i>
+<div class="flex items-center pl-0.5">
+<span class="border border-slate-900 rounded-[4px] px-1 py-0.5 text-[9px] font-bold leading-none flex items-center">
+<span class="w-3.5 h-1.5 bg-slate-900 rounded-[2px] block mr-0.5"></span>
+</span>
+</div>
+</div>
+</header>
+<!-- END: iOS Status Bar -->
+<!-- BEGIN: Main Scrollable Content -->
+<main class="flex-1 overflow-y-auto no-scrollbar pb-24 px-4 pt-2" data-purpose="dashboard-content">
+<!-- BEGIN: Brand Header -->
+<section class="flex items-center justify-between py-3 px-1" data-purpose="brand-header">
+<div class="flex items-center gap-2.5">
+<img alt="iBots Logo" class="h-9 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFs2LbIXZIrz5J2at025gNIxQRRMEJ7U2h82bJQL1Ad1pz1Xz0cKMzfb13ER6AcXZvqnjKp3SpOh9QF4yi4VF6qi0DhSW-opHyNv1wYtgVHl65XC1H6ZPqe-nvajhzlYzFku2JlRK3yWCyP2cBbcvWs7gWo5lZjs4bftrceSQMbp4IEt1ctNkzbMwsX0GP3oxUxJ3BXSiFRR--o68jnRj3wsGP-8BrxK9ioA6cP4x-WebiUbaHKeKLs-YYwzp4cpOfcqs">
+<span class="text-base font-bold text-slate-900 tracking-tight">iBots Remote Controller</span>
+</div>
+</section>
+<!-- END: Brand Header -->
+<!-- BEGIN: Device Connection Card -->
+<section class="mt-2 bg-white rounded-[24px] p-4 border border-slate-100 shadow-card" data-purpose="connection-management">
+<!-- Top Status Row -->
+<div class="flex items-center justify-between mb-3.5">
+<div class="flex items-center space-x-2.5">
+<div class="w-8 h-8 rounded-xl bg-sky-50 flex items-center justify-center text-sky-600">
+<i class="fa-solid fa-microchip text-base"></i>
+</div>
+<h2 class="text-base font-bold text-slate-900">Your device</h2>
+</div>
+<!-- Connection Status Badge -->
+<div class="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-semibold transition-all duration-300" id="statusBadge">
+<span class="w-2 h-2 rounded-full bg-slate-400" id="statusIndicatorDot"></span>
+<span class="" id="statusText">Disconnected</span>
+</div>
+</div>
+<!-- Protocol Switcher Tabs -->
+<div class="grid grid-cols-3 gap-2 p-1 bg-slate-50 rounded-2xl border border-slate-100" id="protocolTabsGroup">
+<!-- Bluetooth Classic -->
+<button class="protocol-tab flex flex-col items-center justify-center py-2.5 px-1 rounded-xl bg-white text-sky-600 shadow-sm border border-sky-100/60 transition-all" data-protocol="bt-classic" onclick="selectProtocol(this, 'Bluetooth (Classic)')">
+<i class="fa-brands fa-bluetooth-b text-sm mb-1 text-sky-600"></i>
+<span class="text-[11px] font-bold leading-tight">Bluetooth</span>
+<span class="text-[9px] text-slate-400 font-medium">(Classic)</span>
+</button>
+<!-- BLE -->
+<button class="protocol-tab flex flex-col items-center justify-center py-2.5 px-1 rounded-xl text-slate-600 hover:text-slate-900 transition-all" data-protocol="ble" onclick="selectProtocol(this, 'BLE 5.2')">
+<i class="fa-brands fa-bluetooth text-sm mb-1 text-slate-400"></i>
+<span class="text-[11px] font-bold leading-tight">BLE</span>
+<span class="text-[9px] text-slate-400 font-medium">Low energy</span>
+</button>
+<!-- Wi-Fi -->
+<button class="protocol-tab flex flex-col items-center justify-center py-2.5 px-1 rounded-xl text-slate-600 hover:text-slate-900 transition-all" data-protocol="wifi" onclick="selectProtocol(this, 'Wi-Fi AP')">
+<i class="fa-solid fa-wifi text-sm mb-1 text-slate-400"></i>
+<span class="text-[11px] font-bold leading-tight">Wi-Fi</span>
+<span class="text-[9px] text-slate-400 font-medium">Wireless</span>
+</button>
+</div>
+<!-- Target Module Information (Dynamic) -->
+<div class="mt-3 flex items-center justify-between text-[11px] text-slate-400 px-1 font-mono" id="connectionMetaRow">
+<span class="">Target: <strong class="text-slate-700" id="activeProtocolLabel">Bluetooth (Classic)</strong></span>
+<span class="hidden text-emerald-600 font-medium" id="deviceRssi"><i class="fa-solid fa-signal mr-1"></i>-48 dBm</span>
+</div>
+<!-- Primary Action Button -->
+<button class="mt-3.5 w-full py-3.5 px-4 rounded-[16px] bg-gradient-to-r from-sky-500 to-sky-600 text-white font-bold text-sm tracking-wide shadow-btn-glow active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer" id="connectDeviceBtn" onclick="toggleDeviceConnection()">
+<i class="fa-solid fa-plus text-xs" id="btnIcon"></i>
+<span class="" id="btnLabel">+ Connect Device +</span>
+</button>
+</section>
+<!-- END: Device Connection Card -->
+<!-- BEGIN: Control Center Header -->
+<section class="mt-6 mb-3 flex items-center justify-between px-1" data-purpose="section-header">
+<h2 class="text-lg font-bold text-[#0f172a] tracking-tight">Your control center</h2>
+<span class="text-xs font-semibold px-2.5 py-1 bg-slate-200/60 text-slate-600 rounded-full font-mono">11 tools</span>
+</section>
+<!-- END: Control Center Header -->
+<!-- BEGIN: 9 Feature Tools Grid -->
+<section class="grid grid-cols-2 gap-3 pb-4" data-purpose="tools-grid">
+<!-- CARD 1: Car Controller -->
+<article class="group bg-white rounded-[20px] p-3 border border-slate-100 shadow-card hover:shadow-card-hover hover:border-sky-200 transition-all cursor-pointer flex flex-col justify-between" onclick="openToolModal('car')">
+<div class="h-28 rounded-xl bg-gradient-to-b from-sky-50/70 to-slate-50 flex items-center justify-center p-2 relative overflow-hidden">
+<div class="absolute inset-0 tech-grid-pattern opacity-60"></div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-16 h-10 bg-slate-800 rounded-lg shadow-md flex items-center justify-center relative border-b-4 border-sky-500">
+<div class="w-8 h-4 bg-sky-400 rounded-sm opacity-80 mb-1"></div>
+<div class="absolute -left-2 top-1 w-2.5 h-8 bg-slate-900 rounded-full border border-slate-700"></div>
+<div class="absolute -right-2 top-1 w-2.5 h-8 bg-slate-900 rounded-full border border-slate-700"></div>
+</div>
+<div class="flex gap-4 -mt-1 text-[9px] text-cyan-400">
+<i class="fa-solid fa-circle-dot"></i>
+<i class="fa-solid fa-circle-dot"></i>
+</div>
+</div>
+</div>
+<div class="mt-2.5 px-0.5">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-sky-600 transition-colors text-center">Car Controller</h3>
+</div>
+</article>
+<!-- CARD 2: Virtual Gamepad -->
+<article class="group bg-white rounded-[20px] p-3 border border-slate-100 shadow-card hover:shadow-card-hover hover:border-indigo-200 transition-all cursor-pointer flex flex-col justify-between" onclick="openToolModal('gamepad')">
+<div class="h-28 rounded-xl bg-gradient-to-b from-indigo-50/60 to-slate-50 flex items-center justify-center p-2 relative overflow-hidden">
+<div class="absolute inset-0 tech-grid-pattern opacity-50"></div>
+<div class="relative z-10 w-20 h-11 bg-slate-900 rounded-[18px] p-1 flex items-center justify-between px-2.5 shadow-md border-b-2 border-indigo-400">
+<div class="w-4 h-4 rounded-full bg-cyan-400 shadow-sm flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-slate-900 rounded-full"></div>
+</div>
+<div class="flex gap-1">
+<div class="w-1.5 h-1.5 bg-slate-600 rounded-full"></div>
+<div class="w-1.5 h-1.5 bg-slate-600 rounded-full"></div>
+</div>
+<div class="w-4 h-4 rounded-full bg-cyan-400 shadow-sm flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-slate-900 rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="mt-2.5 px-0.5">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors text-center">Virtual Gamepad</h3>
+</div>
+</article>
+<!-- CARD 3: LED & RGB Control -->
+<article class="group bg-white rounded-[20px] p-3 border border-slate-100 shadow-card hover:shadow-card-hover hover:border-amber-200 transition-all cursor-pointer flex flex-col justify-between" onclick="openToolModal('led')">
+<div class="h-28 rounded-xl bg-gradient-to-b from-amber-50/60 to-slate-50 flex items-center justify-center p-2 relative overflow-hidden">
+<div class="absolute inset-0 tech-grid-pattern opacity-50"></div>
+<div class="relative z-10 w-20 h-10 bg-slate-900 rounded-lg p-1.5 flex items-center justify-around border-b-2 border-emerald-500">
+<span class="w-3.5 h-5 rounded-t-full bg-pink-500 shadow-sm shadow-pink-500/50 glow-pulse"></span>
+<span class="w-3.5 h-5 rounded-t-full bg-cyan-400 shadow-sm shadow-cyan-400/50 glow-pulse" style="animation-delay: 0.3s"></span>
+<span class="w-3.5 h-5 rounded-t-full bg-amber-400 shadow-sm shadow-amber-400/50 glow-pulse" style="animation-delay: 0.6s"></span>
+</div>
+</div>
+<div class="mt-2.5 px-0.5">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors text-center">LED &amp; RGB Control</h3>
+</div>
+</article>
+<!-- CARD 4: Switch Panel -->
+<article class="group bg-white rounded-[20px] p-3 border border-slate-100 shadow-card hover:shadow-card-hover hover:border-emerald-200 transition-all cursor-pointer flex flex-col justify-between" onclick="openToolModal('switch')">
+<div class="h-28 rounded-xl bg-gradient-to-b from-emerald-50/60 to-slate-50 flex items-center justify-center p-2 relative overflow-hidden">
+<div class="absolute inset-0 tech-grid-pattern opacity-50"></div>
+<div class="relative z-10 w-20 h-11 bg-slate-900 rounded-xl p-2 flex items-center justify-around shadow-md border-b-2 border-cyan-400">
+<div class="flex flex-col items-center">
+<div class="w-1 h-3 bg-cyan-400 rounded-full"></div>
+<div class="w-2.5 h-2.5 bg-slate-700 rounded-full -mt-1"></div>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-2.5 h-2.5 bg-slate-700 rounded-full -mb-1"></div>
+<div class="w-1 h-3 bg-slate-500 rounded-full"></div>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-1 h-3 bg-cyan-400 rounded-full"></div>
+<div class="w-2.5 h-2.5 bg-slate-700 rounded-full -mt-1"></div>
+</div>
+</div>
+</div>
+<div class="mt-2.5 px-0.5">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-600 transition-colors text-center">Switch Panel</h3>
+</div>
+</article>
+<!-- CARD 5: Text Terminal -->
+<article class="group bg-white rounded-[20px] p-3 border border-slate-100 shadow-card hover:shadow-card-hover hover:border-sky-200 transition-all cursor-pointer flex flex-col justify-between" onclick="openToolModal('terminal')">
+<div class="h-28 rounded-xl bg-gradient-to-b from-sky-50/60 to-slate-50 flex items-center justify-center p-2 relative overflow-hidden">
+<div class="absolute inset-0 tech-grid-pattern opacity-50"></div>
+<div class="relative z-10 w-22 h-12 bg-slate-950 rounded-lg p-2 font-mono text-[9px] text-emerald-400 border border-slate-800 shadow-md flex flex-col justify-center">
+<div class="flex items-center space-x-1 mb-1">
+<span class="w-1.5 h-1.5 rounded-full bg-red-400 inline-block"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+</div>
+</div>
+</div>
+<div class="mt-2.5 px-0.5">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-sky-600 transition-colors text-center">Text Terminal</h3>
+</div>
+</article>
+<!-- CARD 6: Voice Control -->
+<article class="group bg-white rounded-[20px] p-3 border border-slate-100 shadow-card hover:shadow-card-hover hover:border-purple-200 transition-all cursor-pointer flex flex-col justify-between" onclick="openToolModal('voice')">
+<div class="h-28 rounded-xl bg-gradient-to-b from-purple-50/60 to-slate-50 flex items-center justify-center p-2 relative overflow-hidden">
+<div class="absolute inset-0 tech-grid-pattern opacity-50"></div>
+<div class="relative z-10 flex items-center space-x-1.5">
+<span class="w-1 h-3 bg-purple-300 rounded-full"></span>
+<span class="w-1 h-6 bg-purple-400 rounded-full"></span>
+<div class="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center shadow-lg">
+<i class="fa-solid fa-microphone text-xs"></i>
+</div>
+<span class="w-1 h-6 bg-purple-400 rounded-full"></span>
+<span class="w-1 h-3 bg-purple-300 rounded-full"></span>
+</div>
+</div>
+<div class="mt-2.5 px-0.5">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-purple-600 transition-colors text-center">Voice Control</h3>
+</div>
+</article>
+<!-- CARD 7: Virtual Keypad -->
+<article class="group bg-white rounded-[20px] p-3 border border-slate-100 shadow-card hover:shadow-card-hover hover:border-teal-200 transition-all cursor-pointer flex flex-col justify-between" onclick="openToolModal('keypad')">
+<div class="h-28 rounded-xl bg-gradient-to-b from-teal-50/60 to-slate-50 flex items-center justify-center p-2 relative overflow-hidden">
+<div class="absolute inset-0 tech-grid-pattern opacity-50"></div>
+<div class="relative z-10 w-16 h-14 bg-slate-900 rounded-lg p-1.5 grid grid-cols-3 gap-1 shadow-md border-b-2 border-teal-400">
+<div class="bg-slate-700 rounded text-[7px] text-white flex items-center justify-center font-mono font-bold">1</div>
+<div class="bg-slate-700 rounded text-[7px] text-white flex items-center justify-center font-mono font-bold">2</div>
+<div class="bg-slate-700 rounded text-[7px] text-white flex items-center justify-center font-mono font-bold">3</div>
+<div class="bg-slate-700 rounded text-[7px] text-white flex items-center justify-center font-mono font-bold">4</div>
+<div class="bg-teal-500 rounded text-[7px] text-white flex items-center justify-center font-mono font-bold">5</div>
+<div class="bg-slate-700 rounded text-[7px] text-white flex items-center justify-center font-mono font-bold">6</div>
+</div>
+</div>
+<div class="mt-2.5 px-0.5">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-teal-600 transition-colors text-center">Virtual Keypad</h3>
+</div>
+</article>
+<!-- CARD 8: Telemetry -->
+<article class="group bg-white rounded-[20px] p-3 border border-slate-100 shadow-card hover:shadow-card-hover hover:border-pink-200 transition-all cursor-pointer flex flex-col justify-between" onclick="openToolModal('telemetry')">
+<div class="h-28 rounded-xl bg-gradient-to-b from-pink-50/60 to-slate-50 flex items-center justify-center p-2 relative overflow-hidden">
+<div class="absolute inset-0 tech-grid-pattern opacity-50"></div>
+<div class="relative z-10 w-20 h-12 bg-slate-950 rounded-lg p-1.5 flex flex-col justify-end border border-slate-800 shadow-md overflow-hidden">
+<div class="flex items-end justify-between h-7 w-full px-1">
+<span class="w-1.5 bg-pink-500 rounded-t h-3"></span>
+<span class="w-1.5 bg-sky-400 rounded-t h-5"></span>
+<span class="w-1.5 bg-pink-500 rounded-t h-2"></span>
+<span class="w-1.5 bg-sky-400 rounded-t h-6"></span>
+<span class="w-1.5 bg-cyan-300 rounded-t h-4"></span>
+</div>
+</div>
+</div>
+<div class="mt-2.5 px-0.5">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-pink-600 transition-colors text-center">Telemetry</h3>
+</div>
+</article>
+<!-- CARD 9: ESP32 Cam -->
+<article class="group bg-white rounded-[20px] p-3 border border-slate-100 shadow-card hover:shadow-card-hover hover:border-cyan-200 transition-all cursor-pointer flex flex-col justify-between" onclick="openToolModal('cam')">
+<div class="h-28 rounded-xl bg-gradient-to-b from-sky-50/60 to-slate-50 flex items-center justify-center p-2 relative overflow-hidden">
+<div class="absolute inset-0 tech-grid-pattern opacity-50"></div>
+<div class="relative z-10 w-20 h-14 bg-slate-900 rounded-xl p-1.5 flex flex-col items-center justify-center shadow-md border-b-2 border-cyan-400">
+<div class="w-9 h-9 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center shadow-inner relative">
+<div class="w-5 h-5 rounded-full bg-slate-800 border-2 border-cyan-400 flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-cyan-300 shadow-sm shadow-cyan-400/50 glow-pulse"></div>
+</div>
+<div class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-amber-400 shadow-sm"></div>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<div class="w-1 h-1 rounded-full bg-emerald-400"></div>
+<div class="w-8 h-1 rounded-full bg-slate-800"></div>
+</div>
+</div>
+</div>
+<div class="mt-2.5 px-0.5">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-cyan-600 transition-colors text-center">ESP32 Cam</h3>
+</div>
+</article>
+<article class="group bg-white rounded-[20px] p-3 border border-slate-100 shadow-card hover:shadow-card-hover hover:border-cyan-200 transition-all cursor-pointer flex flex-col justify-between" onclick="showToast('Opening Robotic Arm Controller...')"><div class="h-28 rounded-xl bg-gradient-to-b from-sky-50/60 to-slate-50 flex items-center justify-center p-2 relative overflow-hidden"><div class="absolute inset-0 tech-grid-pattern opacity-50"></div><div class="relative z-10 flex items-center justify-center w-24 h-20"><svg class="w-20 h-20" fill="none" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><ellipse cx="40" cy="65" rx="22" ry="6" fill="#0f172a"></ellipse><rect x="26" y="58" width="28" height="7" rx="3.5" fill="#1e293b" stroke="#334155" stroke-width="1.5"></rect><circle cx="40" cy="61" r="2.5" fill="#38bdf8"></circle><rect x="35" y="46" width="10" height="14" rx="4" fill="#0f172a" stroke="#0ea5e9" stroke-width="1.5"></rect><rect x="32" y="32" width="9" height="17" rx="4" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" transform="rotate(24 36 40)"></rect><circle cx="35" cy="47" r="3.5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"></circle><circle cx="35" cy="47" r="1.5" fill="#38bdf8"></circle><circle cx="43" cy="30" r="3.5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"></circle><circle cx="43" cy="30" r="1.5" fill="#38bdf8"></circle><rect x="43" y="22" width="7" height="13" rx="3" fill="#0f172a" stroke="#0ea5e9" stroke-width="1.5" transform="rotate(-35 46 28)"></rect><circle cx="51" cy="21" r="3" fill="#0284c7"></circle><path d="M48 18 C46 13, 50 9, 53 10 C53 12, 51 14, 52 17" fill="#38bdf8" stroke="#0284c7" stroke-width="1"></path><path d="M54 20 C58 17, 60 21, 57 24 C55 23, 55 21, 53 21" fill="#38bdf8" stroke="#0284c7" stroke-width="1"></path><circle cx="52" cy="18" r="1.5" fill="#22d3ee"></circle></svg></div></div><div class="mt-2.5 px-0.5"><h3 class="text-sm font-bold text-slate-900 group-hover:text-cyan-600 transition-colors text-center">Robotic Arm</h3></div></article><article class="group bg-white rounded-[20px] p-3 border border-slate-100 shadow-card hover:shadow-card-hover hover:border-cyan-200 transition-all cursor-pointer flex flex-col justify-between" onclick="showToast('Opening Gyro Control...')"><div class="h-28 rounded-xl bg-gradient-to-b from-sky-50/60 to-slate-50 flex items-center justify-center p-2 relative overflow-hidden"><div class="absolute inset-0 tech-grid-pattern opacity-50"></div><div class="relative z-10 flex items-center justify-center w-24 h-20"><svg class="w-20 h-20" fill="none" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="34" stroke="#334155" stroke-dasharray="2 3" stroke-width="1"></circle><ellipse cx="40" cy="40" rx="28" ry="16" stroke="#0ea5e9" stroke-width="2"></ellipse><ellipse cx="40" cy="40" rx="16" ry="28" stroke="#38bdf8" stroke-width="2" transform="rotate(35 40 40)"></ellipse><rect fill="#0f172a" height="22" rx="6" stroke="#1e293b" stroke-width="1.5" width="22" x="29" y="29"></rect><circle cx="40" cy="40" fill="#0284c7" r="6"></circle><circle cx="40" cy="40" fill="#22d3ee" r="3.5"></circle><line stroke="#38bdf8" stroke-dasharray="2 2" stroke-width="1.5" x1="23" x2="57" y1="40" y2="40"></line><line stroke="#0ea5e9" stroke-dasharray="2 2" stroke-width="1.5" x1="40" x2="40" y1="23" y2="57"></line><circle cx="40" cy="24" fill="#38bdf8" r="2"></circle><circle cx="56" cy="40" fill="#0ea5e9" r="2"></circle><circle cx="40" cy="56" fill="#38bdf8" r="2"></circle><circle cx="24" cy="40" fill="#0ea5e9" r="2"></circle></svg></div></div><div class="mt-2.5 px-0.5"><h3 class="text-sm font-bold text-slate-900 group-hover:text-cyan-600 transition-colors text-center">Gyro Control</h3></div></article></section>
+<!-- END: 9 Feature Tools Grid -->
+</main>
+<!-- END: Main Scrollable Content -->
+<!-- BEGIN: Docked Bottom Navigation Bar -->
+<nav class="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 pt-2 pb-5 px-6 z-20 shadow-lg" data-purpose="bottom-navigation">
+<ul class="flex items-center justify-between">
+<!-- Tab 1: Home (Active) -->
+<li class="flex-1">
+<button class="w-full flex flex-col items-center group text-sky-600" onclick="setActiveNav(this, 'Home')">
+<div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors bg-sky-100">
+<i class="fa-solid fa-house text-sm"></i>
+</div>
+<span class="text-[10px] font-bold text-sky-600">Home</span>
+</button>
+</li>
+<!-- Tab 2: Devices -->
+<li class="flex-1">
+<button class="w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors" onclick="setActiveNav(this, 'Devices')">
+<div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors">
+<i class="fa-solid fa-microchip text-sm"></i>
+</div>
+<span class="text-[10px] font-medium">Devices</span>
+</button>
+</li>
+<!-- Tab 3: Code -->
+<li class="flex-1">
+<button class="w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors" onclick="setActiveNav(this, 'Code')">
+<div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors">
+<i class="fa-solid fa-code text-sm"></i>
+</div>
+<span class="text-[10px] font-medium leading-none text-center">Code</span>
+</button>
+</li>
+<!-- Tab 4: Settings -->
+<li class="flex-1">
+<button class="w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors" onclick="setActiveNav(this, 'Settings')">
+<div class="w-12 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors">
+<i class="fa-solid fa-gear text-sm"></i>
+</div>
+<span class="text-[10px] font-medium">Settings</span>
+</button>
+</li>
+</ul>
+<!-- iOS Home Indicator bar -->
+<div class="w-32 h-1 bg-slate-900 rounded-full mx-auto mt-2 opacity-80"></div>
+</nav>
+<!-- END: Docked Bottom Navigation Bar -->
+<!-- BEGIN: Interactive Full-Screen Preview Sheet Modals -->
+<div class="absolute inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex flex-col justify-end transition-all duration-300 hidden" id="toolModalContainer">
+<div class="w-full h-[92%] bg-[#0b1229] border-t border-slate-700/60 rounded-t-[32px] shadow-2xl flex flex-col overflow-hidden text-slate-100" id="toolSheet">
+<!-- Sheet Top Header / Drag pill & Close button -->
+<div class="pt-3 pb-2 px-5 border-b border-slate-800/80 flex items-center justify-between shrink-0 bg-[#0f1733]/90">
+<div class="flex items-center space-x-2.5">
+<div class="w-8 h-8 rounded-xl flex items-center justify-center text-white" id="sheetIconBadge">
+<i class="fa-solid fa-gear text-sm" id="sheetHeaderIcon"></i>
+</div>
+<div>
+<h3 class="text-sm font-bold text-white tracking-tight" id="sheetHeaderTitle">Tool View</h3>
+<p class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="" id="sheetHeaderSubtitle">ESP32 Ready</span>
+</p>
+</div>
+</div>
+<!-- Top Close Button -->
+<button class="px-3 py-1.5 rounded-xl bg-slate-800/90 text-slate-300 hover:text-white hover:bg-slate-700 text-xs font-semibold flex items-center gap-1.5 border border-slate-700/60 transition-colors" onclick="closeToolModal()">
+<i class="fa-solid fa-chevron-left text-[11px]"></i>
+<span class="">Back</span>
+</button>
+</div>
+<!-- Sheet Scrollable Interactive Content Area -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar" id="sheetBody">
+<!-- 1. Car Controller Content -->
+<div class="tool-content hidden flex flex-col gap-3" id="content-car"><div class="flex items-center justify-between px-3 py-1.5 rounded-xl bg-sky-950/70 border border-sky-800 text-xs font-mono"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span><span class="text-cyan-300 font-bold uppercase tracking-wider">Landscape RC Controller</span><span class="text-[10px] text-slate-400">• Dual Thumb Mode</span></div><div class="flex items-center gap-2"><span class="text-[10px] text-slate-300">Orientation:</span><button class="px-2 py-0.5 rounded bg-sky-600 text-white text-[10px] font-semibold border border-sky-400/40 shadow-sm" onclick="showToast('Landscape Controller Mode Engaged')" type="button"><i class="fa-solid fa-arrows-rotate mr-1"></i>Horizontal Widescreen</button></div></div><div class="p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border border-slate-800 shadow-2xl"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center"><div class="flex flex-col items-center bg-slate-950/80 p-3 rounded-2xl border border-slate-800/80"><span class="text-[10px] font-mono text-sky-400 mb-2 font-bold tracking-wider">LEFT THUMBPAD (STEER)</span><div class="flex flex-col items-center gap-1.5"><button class="w-12 h-12 rounded-xl bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white shadow-lg active:scale-95 flex flex-col items-center justify-center border border-sky-400/40 transition-all" onclick="handleCarAction('FORWARD')"><i class="fa-solid fa-arrow-up text-base"></i><span class="text-[8px] font-bold mt-0.5">FWD</span></button><div class="flex items-center gap-2"><button class="w-12 h-12 rounded-xl bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white shadow-lg active:scale-95 flex flex-col items-center justify-center border border-sky-400/40 transition-all" onclick="handleCarAction('LEFT')"><i class="fa-solid fa-arrow-left text-base"></i><span class="text-[8px] font-bold mt-0.5">LT</span></button><div class="w-8 h-8 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-sky-400 text-xs"><i class="fa-solid fa-circle-dot text-[10px]"></i></div><button class="w-12 h-12 rounded-xl bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white shadow-lg active:scale-95 flex flex-col items-center justify-center border border-sky-400/40 transition-all" onclick="handleCarAction('RIGHT')"><i class="fa-solid fa-arrow-right text-base"></i><span class="text-[8px] font-bold mt-0.5">RT</span></button></div><button class="w-12 h-12 rounded-xl bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white shadow-lg active:scale-95 flex flex-col items-center justify-center border border-sky-400/40 transition-all" onclick="handleCarAction('BACKWARD')"><i class="fa-solid fa-arrow-down text-base"></i><span class="text-[8px] font-bold mt-0.5">REV</span></button></div></div><div class="flex flex-col items-center justify-between p-3 rounded-2xl bg-slate-900/90 border border-slate-800 h-full"><div class="w-full flex justify-between items-center mb-1"><span class="text-[10px] font-mono text-slate-400 font-semibold">CENTER HUD</span><span class="text-[10px] px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-mono" id="carActiveState">STATE: IDLE</span></div><div class="my-2 w-full flex flex-col items-center"><div class="text-xs font-mono font-bold text-sky-400 flex items-center gap-1"><i class="fa-solid fa-gauge-high text-xs"></i><span class="" id="carSpeedVal">180 PWM</span></div><input class="w-full mt-2 accent-sky-500 cursor-pointer" max="255" min="0" oninput="document.getElementById('carSpeedVal').innerText = this.value + ' PWM'; sendSimulatedCommand('SPEED:' + this.value)" type="range" value="180"><div class="w-full flex justify-between text-[9px] text-slate-500 font-mono mt-0.5"><span class="">0 PWM</span><span class="">255 PWM</span></div></div><button class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white font-bold text-xs tracking-wider shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 border border-rose-400/50" onclick="handleCarAction('STOP')"><i class="fa-solid fa-hand text-xs"></i><span class="">EMERGENCY BRAKE</span></button></div><div class="flex flex-col items-center bg-slate-950/80 p-3 rounded-2xl border border-slate-800/80"><span class="text-[10px] font-mono text-cyan-400 mb-2 font-bold tracking-wider">RIGHT THUMBPAD (THROTTLE &amp; GEAR)</span><div class="grid grid-cols-2 gap-2 w-full"><button class="py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 active:bg-cyan-700 text-white shadow-md active:scale-95 flex flex-col items-center justify-center border border-cyan-400/40 text-[10px] font-bold font-mono transition-all" onclick="sendSimulatedCommand('CAR_GEAR_HIGH')"><i class="fa-solid fa-bolt text-xs mb-1"></i>TURBO</button><button class="py-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-200 shadow-md active:scale-95 flex flex-col items-center justify-center border border-slate-700 text-[10px] font-bold font-mono transition-all" onclick="sendSimulatedCommand('CAR_HEADLIGHTS')"><i class="fa-solid fa-lightbulb text-xs mb-1"></i>LIGHTS</button><button class="py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white shadow-md active:scale-95 flex flex-col items-center justify-center border border-emerald-500 text-[10px] font-bold font-mono transition-all" onclick="sendSimulatedCommand('CAR_CRUISE')"><i class="fa-solid fa-road text-xs mb-1"></i>CRUISE</button><button class="py-3 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 shadow-md active:scale-95 flex flex-col items-center justify-center border border-amber-400 text-[10px] font-bold font-mono transition-all" onclick="sendSimulatedCommand('CAR_HORN')"><i class="fa-solid fa-bullhorn text-xs mb-1"></i>HORN</button></div></div></div></div></div>
+<!-- 2. Virtual Gamepad Content -->
+<div class="tool-content hidden flex flex-col gap-3" id="content-gamepad"><div class="flex items-center justify-between px-3 py-1.5 rounded-xl bg-indigo-950/70 border border-indigo-800 text-xs font-mono"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span><span class="text-indigo-300 font-bold uppercase tracking-wider">Landscape Gamepad Controller</span><span class="text-[10px] text-slate-400">• Dual Thumbpad Layout</span></div><div class="flex items-center gap-2"><span class="text-[10px] text-slate-300">Layout:</span><button class="px-2 py-0.5 rounded bg-indigo-600 text-white text-[10px] font-semibold border border-indigo-400/40 shadow-sm" onclick="showToast('Landscape Gamepad Mode Engaged')" type="button"><i class="fa-solid fa-gamepad mr-1"></i>Horizontal Widescreen</button></div></div><div class="p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border border-slate-800 shadow-2xl"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center"><div class="flex flex-col items-center bg-slate-950/80 p-3 rounded-2xl border border-slate-800/80"><span class="text-[10px] text-indigo-400 font-mono mb-2 font-bold tracking-wider">LEFT D-PAD</span><div class="grid grid-cols-3 gap-1 w-32 h-32 p-1 bg-slate-900 rounded-2xl border border-slate-800 shadow-inner"><div></div><button class="bg-slate-800 active:bg-indigo-600 rounded-lg flex items-center justify-center text-slate-200 active:text-white transition-all shadow-sm" onclick="sendSimulatedCommand('DPAD_UP')"><i class="fa-solid fa-caret-up text-base"></i></button><div></div><button class="bg-slate-800 active:bg-indigo-600 rounded-lg flex items-center justify-center text-slate-200 active:text-white transition-all shadow-sm" onclick="sendSimulatedCommand('DPAD_LEFT')"><i class="fa-solid fa-caret-left text-base"></i></button><div class="bg-slate-950 rounded-lg flex items-center justify-center"><div class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse"></div></div><button class="bg-slate-800 active:bg-indigo-600 rounded-lg flex items-center justify-center text-slate-200 active:text-white transition-all shadow-sm" onclick="sendSimulatedCommand('DPAD_RIGHT')"><i class="fa-solid fa-caret-right text-base"></i></button><div></div><button class="bg-slate-800 active:bg-indigo-600 rounded-lg flex items-center justify-center text-slate-200 active:text-white transition-all shadow-sm" onclick="sendSimulatedCommand('DPAD_DOWN')"><i class="fa-solid fa-caret-down text-base"></i></button><div></div></div></div><div class="flex flex-col items-center justify-between p-3 rounded-2xl bg-slate-900/90 border border-slate-800 h-full"><span class="text-[10px] text-slate-400 font-mono uppercase tracking-wider">BUMPERS &amp; TRIGGERS</span><div class="w-full grid grid-cols-2 gap-2 my-2"><button class="py-2 px-2 rounded-xl bg-slate-800 active:bg-indigo-600 text-slate-200 font-mono text-xs font-bold border border-slate-700 shadow-sm" onclick="sendSimulatedCommand('TRIGGER_L1')">L1 / L2</button><button class="py-2 px-2 rounded-xl bg-slate-800 active:bg-indigo-600 text-slate-200 font-mono text-xs font-bold border border-slate-700 shadow-sm" onclick="sendSimulatedCommand('TRIGGER_R1')">R1 / R2</button></div><div class="flex gap-2 w-full pt-1 border-t border-slate-800"><button class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] font-semibold active:scale-95 transition-all flex items-center justify-center gap-1 border border-slate-700" onclick="sendSimulatedCommand('SELECT_TRIGGER')"><i class="fa-solid fa-terminal text-[9px]"></i>SELECT</button><button class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] font-semibold active:scale-95 transition-all flex items-center justify-center gap-1 border border-slate-700" onclick="sendSimulatedCommand('START_TRIGGER')"><i class="fa-solid fa-play text-[9px]"></i>START</button></div></div><div class="flex flex-col items-center bg-slate-950/80 p-3 rounded-2xl border border-slate-800/80"><span class="text-[10px] text-pink-400 font-mono mb-2 font-bold tracking-wider">RIGHT ACTION MATRIX</span><div class="grid grid-cols-3 gap-1 w-32 h-32 p-1 bg-slate-900 rounded-2xl border border-slate-800 shadow-inner"><div></div><button class="bg-emerald-950/70 border border-emerald-600 text-emerald-400 active:bg-emerald-600 active:text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-sm transition-all" onclick="sendSimulatedCommand('BTN_TRIANGLE')">▲</button><div></div><button class="bg-pink-950/70 border border-pink-600 text-pink-400 active:bg-pink-600 active:text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-sm transition-all" onclick="sendSimulatedCommand('BTN_SQUARE')">■</button><div class="bg-slate-950 rounded-lg flex items-center justify-center"><div class="w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse"></div></div><button class="bg-rose-950/70 border border-rose-600 text-rose-400 active:bg-rose-600 active:text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-sm transition-all" onclick="sendSimulatedCommand('BTN_CIRCLE')">●</button><div></div><button class="bg-sky-950/70 border border-sky-600 text-sky-400 active:bg-sky-600 active:text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-sm transition-all" onclick="sendSimulatedCommand('BTN_CROSS')">✖</button><div></div></div></div></div></div></div>
+<!-- 3. LED & RGB Control Content -->
+<div class="tool-content hidden space-y-4" id="content-led">
+<!-- Bulb State Card -->
+<div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col items-center">
+<div class="w-24 h-24 rounded-full flex items-center justify-center mb-3 transition-all duration-300" id="bulbDisplayContainer" style="background-color: rgba(234, 179, 8, 0.2); box-shadow: 0 0 35px rgba(234, 179, 8, 0.5);">
+<i class="fa-solid fa-lightbulb text-5xl transition-all duration-300" id="bulbIcon" style="color: #eab308; filter: drop-shadow(0 0 12px #eab308);"></i>
+</div>
+<div class="text-center mb-3">
+<span class="text-xs font-mono text-slate-400">Payload State: </span>
+<span class="text-sm font-bold font-mono text-amber-400" id="bulbStateLabel">CMD: '1' (ON)</span>
+</div>
+<button class="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs tracking-wide shadow-md active:scale-95 transition-all flex items-center gap-2" id="bulbToggleBtn" onclick="toggleBulbPower()">
+<i class="fa-solid fa-power-off"></i> Toggle ON / OFF
+          </button>
+</div>
+<!-- Brightness Slider -->
+<div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs font-semibold text-slate-300">Bulb Intensity</span>
+<span class="text-xs font-mono font-bold text-amber-400" id="ledIntensityVal">80%</span>
+</div>
+<input class="w-full accent-amber-500 cursor-pointer" max="100" min="0" oninput="document.getElementById('ledIntensityVal').innerText = this.value + '%'; sendSimulatedCommand('BRIGHTNESS:' + this.value)" type="range" value="80">
+</div>
+<!-- RGB Presets -->
+<div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800">
+<span class="text-xs font-semibold text-slate-300 block mb-2.5">RGB Preset Palette</span>
+<div class="grid grid-cols-5 gap-2">
+<button class="h-10 rounded-xl bg-red-500 active:scale-95 shadow-md border-2 border-transparent focus:border-white transition-all flex items-center justify-center text-white text-[10px] font-bold" onclick="setBulbColor('#ef4444', 'RED')">RED</button>
+<button class="h-10 rounded-xl bg-emerald-500 active:scale-95 shadow-md border-2 border-transparent focus:border-white transition-all flex items-center justify-center text-white text-[10px] font-bold" onclick="setBulbColor('#10b981', 'GRN')">GRN</button>
+<button class="h-10 rounded-xl bg-sky-500 active:scale-95 shadow-md border-2 border-transparent focus:border-white transition-all flex items-center justify-center text-white text-[10px] font-bold" onclick="setBulbColor('#0ea5e9', 'BLU')">BLU</button>
+<button class="h-10 rounded-xl bg-amber-400 active:scale-95 shadow-md border-2 border-transparent focus:border-white transition-all flex items-center justify-center text-slate-900 text-[10px] font-bold" onclick="setBulbColor('#fbbf24', 'YEL')">YEL</button>
+<button class="h-10 rounded-xl bg-purple-500 active:scale-95 shadow-md border-2 border-transparent focus:border-white transition-all flex items-center justify-center text-white text-[10px] font-bold" onclick="setBulbColor('#a855f7', 'MAG')">MAG</button>
+</div>
+</div>
+</div>
+<!-- 4. Switch Panel Content -->
+<div class="tool-content hidden space-y-4" id="content-switch">
+<div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800">
+<div class="flex justify-between items-center mb-3">
+<span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider font-mono">10-Channel Relays</span>
+<button class="text-[11px] text-emerald-400 hover:underline font-mono" onclick="toggleAllRelays(true)">All ON</button>
+<button class="text-[11px] text-slate-400 hover:underline font-mono" onclick="toggleAllRelays(false)">All OFF</button>
+</div>
+<!-- 10 Relays Grid -->
+<div class="grid grid-cols-2 gap-2.5" id="relayGrid"><div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] font-bold text-slate-200">Relay #1</div>
+            <div class="text-[9px] text-slate-500 font-mono" id="relay-status-1">STATUS: OFF</div>
+          </div>
+          <button class="w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative" id="relay-btn-1" onclick="toggleSingleRelay(1)">
+            <div class="w-5 h-5 rounded-full bg-slate-400 shadow transform transition-transform" id="relay-knob-1"></div>
+          </button>
+        </div><div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] font-bold text-slate-200">Relay #2</div>
+            <div class="text-[9px] text-slate-500 font-mono" id="relay-status-2">STATUS: OFF</div>
+          </div>
+          <button class="w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative" id="relay-btn-2" onclick="toggleSingleRelay(2)">
+            <div class="w-5 h-5 rounded-full bg-slate-400 shadow transform transition-transform" id="relay-knob-2"></div>
+          </button>
+        </div><div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] font-bold text-slate-200">Relay #3</div>
+            <div class="text-[9px] text-slate-500 font-mono" id="relay-status-3">STATUS: OFF</div>
+          </div>
+          <button class="w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative" id="relay-btn-3" onclick="toggleSingleRelay(3)">
+            <div class="w-5 h-5 rounded-full bg-slate-400 shadow transform transition-transform" id="relay-knob-3"></div>
+          </button>
+        </div><div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] font-bold text-slate-200">Relay #4</div>
+            <div class="text-[9px] text-slate-500 font-mono" id="relay-status-4">STATUS: OFF</div>
+          </div>
+          <button class="w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative" id="relay-btn-4" onclick="toggleSingleRelay(4)">
+            <div class="w-5 h-5 rounded-full bg-slate-400 shadow transform transition-transform" id="relay-knob-4"></div>
+          </button>
+        </div><div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] font-bold text-slate-200">Relay #5</div>
+            <div class="text-[9px] text-slate-500 font-mono" id="relay-status-5">STATUS: OFF</div>
+          </div>
+          <button class="w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative" id="relay-btn-5" onclick="toggleSingleRelay(5)">
+            <div class="w-5 h-5 rounded-full bg-slate-400 shadow transform transition-transform" id="relay-knob-5"></div>
+          </button>
+        </div><div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] font-bold text-slate-200">Relay #6</div>
+            <div class="text-[9px] text-slate-500 font-mono" id="relay-status-6">STATUS: OFF</div>
+          </div>
+          <button class="w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative" id="relay-btn-6" onclick="toggleSingleRelay(6)">
+            <div class="w-5 h-5 rounded-full bg-slate-400 shadow transform transition-transform" id="relay-knob-6"></div>
+          </button>
+        </div><div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] font-bold text-slate-200">Relay #7</div>
+            <div class="text-[9px] text-slate-500 font-mono" id="relay-status-7">STATUS: OFF</div>
+          </div>
+          <button class="w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative" id="relay-btn-7" onclick="toggleSingleRelay(7)">
+            <div class="w-5 h-5 rounded-full bg-slate-400 shadow transform transition-transform" id="relay-knob-7"></div>
+          </button>
+        </div><div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] font-bold text-slate-200">Relay #8</div>
+            <div class="text-[9px] text-slate-500 font-mono" id="relay-status-8">STATUS: OFF</div>
+          </div>
+          <button class="w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative" id="relay-btn-8" onclick="toggleSingleRelay(8)">
+            <div class="w-5 h-5 rounded-full bg-slate-400 shadow transform transition-transform" id="relay-knob-8"></div>
+          </button>
+        </div><div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] font-bold text-slate-200">Relay #9</div>
+            <div class="text-[9px] text-slate-500 font-mono" id="relay-status-9">STATUS: OFF</div>
+          </div>
+          <button class="w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative" id="relay-btn-9" onclick="toggleSingleRelay(9)">
+            <div class="w-5 h-5 rounded-full bg-slate-400 shadow transform transition-transform" id="relay-knob-9"></div>
+          </button>
+        </div><div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] font-bold text-slate-200">Relay #10</div>
+            <div class="text-[9px] text-slate-500 font-mono" id="relay-status-10">STATUS: OFF</div>
+          </div>
+          <button class="w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative" id="relay-btn-10" onclick="toggleSingleRelay(10)">
+            <div class="w-5 h-5 rounded-full bg-slate-400 shadow transform transition-transform" id="relay-knob-10"></div>
+          </button>
+        </div></div>
+</div>
+</div>
+<!-- 5. Text Terminal Content -->
+<div class="tool-content hidden space-y-3" id="content-terminal">
+<div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 font-mono text-xs flex flex-col h-72">
+<div class="flex items-center justify-between pb-2 border-b border-slate-800 text-[10px] text-slate-400">
+<span class="flex items-center gap-1.5"><i class="fa-solid fa-terminal text-sky-400"></i> UART 115200 8-N-1</span>
+<button class="hover:text-white" onclick="document.getElementById('terminalOutput').innerHTML = ''; showToast('Console cleared')">Clear</button>
+</div>
+<div class="flex-1 overflow-y-auto py-2 space-y-1 font-mono text-[11px] text-emerald-400" id="terminalOutput">
+<div class="text-slate-500">[SYS] Ready. Connected via iBots UART channel.</div>
+<div class="text-sky-400">&gt; AT+VERSION?</div>
+<div class="text-slate-300">ESP32-S3-WROOM-1 v2.4</div>
+</div>
+<div class="pt-2 border-t border-slate-800 flex gap-2">
+<input class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500" id="terminalInput" onkeydown="if(event.key==='Enter') sendTerminalCommand()" placeholder="Type AT command or payload..." type="text">
+<button class="px-4 py-2 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white rounded-xl text-xs font-bold font-sans active:scale-95 transition-all" onclick="sendTerminalCommand()">Send</button>
+</div>
+</div>
+</div>
+<!-- 6. Voice Control Content -->
+<div class="tool-content hidden space-y-4" id="content-voice">
+<div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col items-center">
+<div class="relative flex items-center justify-center my-4">
+<div class="w-24 h-24 rounded-full bg-purple-600/30 animate-ping absolute"></div>
+<button class="w-20 h-20 rounded-full bg-gradient-to-tr from-purple-700 to-indigo-500 text-white flex items-center justify-center shadow-xl active:scale-95 transition-all relative z-10" id="micRecordBtn" onclick="toggleVoiceListening()">
+<i class="fa-solid fa-microphone text-2xl" id="micIcon"></i>
+</button>
+</div>
+<span class="text-sm font-bold text-white mb-1" id="voiceStatusText">Tap Mic to Speak</span>
+<span class="text-[11px] text-purple-300 font-mono">Listening for phrases: "Forward", "Light On", "Stop"</span>
+</div>
+<div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800">
+<span class="text-xs font-semibold text-slate-300 block mb-2 font-mono">Recognized Phrases Log</span>
+<div class="space-y-1.5 font-mono text-[11px]" id="voiceHistoryLog">
+<div class="p-2 rounded-lg bg-slate-950 text-slate-300 flex justify-between">
+<span class="">"Turn On Lights"</span>
+<span class="text-emerald-400">MATCH (CMD_LED_1)</span>
+</div>
+<div class="p-2 rounded-lg bg-slate-950 text-slate-300 flex justify-between">
+<span class="">"Move Forward 2m"</span>
+<span class="text-sky-400">MATCH (CMD_FWD_2)</span>
+</div>
+</div>
+<button class="mt-3 w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-mono" onclick="simulateVoicePhrase()">
+            + Test Simulated Voice Trigger
+          </button>
+</div>
+</div>
+<!-- 7. Virtual Keypad Content -->
+<div class="tool-content hidden space-y-4" id="content-keypad">
+<div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800">
+<!-- Display Bar -->
+<div class="bg-slate-950 rounded-xl p-3 border border-slate-800 mb-3 flex items-center justify-between">
+<span class="text-[10px] text-slate-500 font-mono">OUTPUT:</span>
+<span class="font-mono text-base font-bold text-teal-400 tracking-widest" id="keypadDisplay">--</span>
+<button class="text-xs text-rose-400 hover:text-rose-300" onclick="clearKeypad()"><i class="fa-solid fa-delete-left"></i></button>
+</div>
+<!-- 4x4 Keypad Grid -->
+<div class="grid grid-cols-4 gap-2 mb-3">
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('1')">1</button>
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('2')">2</button>
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('3')">3</button>
+<button class="py-3 rounded-xl bg-teal-950 text-teal-300 border border-teal-800 active:bg-teal-600 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('A')">A</button>
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('4')">4</button>
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('5')">5</button>
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('6')">6</button>
+<button class="py-3 rounded-xl bg-teal-950 text-teal-300 border border-teal-800 active:bg-teal-600 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('B')">B</button>
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('7')">7</button>
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('8')">8</button>
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('9')">9</button>
+<button class="py-3 rounded-xl bg-teal-950 text-teal-300 border border-teal-800 active:bg-teal-600 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('C')">C</button>
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('*')">*</button>
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('0')">0</button>
+<button class="py-3 rounded-xl bg-slate-800 active:bg-teal-600 text-slate-200 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('#')">#</button>
+<button class="py-3 rounded-xl bg-teal-950 text-teal-300 border border-teal-800 active:bg-teal-600 font-mono font-bold text-sm shadow active:scale-95" onclick="appendKeypad('D')">D</button>
+</div>
+<button class="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl text-xs active:scale-95 transition-all shadow-md" onclick="sendKeypadPayload()">
+            Send Keypad Sequence
+          </button>
+</div>
+</div>
+<!-- 8. Telemetry Content -->
+<div class="tool-content hidden space-y-4" id="content-telemetry">
+<div class="grid grid-cols-2 gap-3">
+<!-- Distance Ultrasonic -->
+<div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between">
+<span class="text-[10px] text-slate-400 font-mono uppercase">Ultrasonic Sonar</span>
+<div class="my-2">
+<span class="text-3xl font-extrabold text-pink-400 font-mono" id="telemetryDist">44</span>
+<span class="text-xs text-slate-400 font-mono"> cm</span>
+</div>
+<div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
+<div class="bg-pink-500 h-full w-[44%]"></div>
+</div>
+</div>
+<!-- Battery Gauge -->
+<div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between">
+<span class="text-[10px] text-slate-400 font-mono uppercase">Battery Gauge</span>
+<div class="my-2">
+<span class="text-3xl font-extrabold text-emerald-400 font-mono" id="telemetryBatt">85</span>
+<span class="text-xs text-slate-400 font-mono"> %</span>
+</div>
+<div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full w-[85%]"></div>
+</div>
+</div>
+</div>
+<!-- Telemetry Signal & IMU Sensors -->
+<div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2.5">
+<span class="text-xs font-semibold text-slate-300 block font-mono">Live Link &amp; Gyro Telemetry</span>
+<div class="flex justify-between items-center text-xs font-mono py-1 border-b border-slate-800">
+<span class="text-slate-400">RSSI Signal Strength</span>
+<span class="text-emerald-400 font-bold"><i class="fa-solid fa-signal mr-1"></i> -48 dBm (Strong)</span>
+</div>
+<div class="flex justify-between items-center text-xs font-mono py-1 border-b border-slate-800">
+<span class="text-slate-400">IMU Pitch / Roll</span>
+<span class="text-sky-400">+1.2° / -0.4°</span>
+</div>
+<div class="flex justify-between items-center text-xs font-mono py-1">
+<span class="text-slate-400">Module Core Temp</span>
+<span class="text-amber-400">38.4 °C</span>
+</div>
+</div>
+</div>
+<!-- 9. ESP32 Cam Content -->
+<div class="tool-content hidden space-y-4" id="content-cam">
+<!-- Video HUD Window -->
+<div class="rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden relative shadow-lg">
+<!-- Video Stream Simulation Screen -->
+<div class="h-44 bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 tech-grid-pattern opacity-40"></div>
+<!-- Crosshair overlay -->
+<div class="w-16 h-16 border border-cyan-400/40 rounded-full flex items-center justify-center relative">
+<div class="w-2 h-2 bg-cyan-400 rounded-full glow-pulse"></div>
+<div class="absolute w-full h-[1px] bg-cyan-400/30"></div>
+<div class="absolute h-full w-[1px] bg-cyan-400/30"></div>
+</div>
+<!-- Live beacon badge -->
+<div class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-rose-950/80 border border-rose-500 text-rose-300 text-[10px] font-mono font-bold flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
+              LIVE MJPEG
+            </div>
+<!-- FPS counter -->
+<div class="absolute top-2.5 right-2.5 text-[10px] font-mono text-cyan-300 bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800">
+              24.2 FPS
+            </div>
+</div>
+<!-- Camera Controls Toolbar -->
+<div class="p-3 bg-slate-900/90 border-t border-slate-800 flex items-center justify-between gap-2">
+<button class="flex-1 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all" onclick="sendSimulatedCommand('CAM_SNAP_PHOTO')">
+<i class="fa-solid fa-camera"></i> Snap Photo
+            </button>
+<button class="flex-1 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all" id="camRecordBtn" onclick="toggleCamRecord()">
+<i class="fa-solid fa-circle text-[10px]"></i> Record
+            </button>
+</div>
+</div>
+<!-- Resolution & Flash settings -->
+<div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-300 font-semibold">Camera Resolution</span>
+<select class="bg-slate-950 border border-slate-700 rounded-lg text-xs text-cyan-300 px-2 py-1 font-mono focus:outline-none" onchange="sendSimulatedCommand('CAM_RES:' + this.value)">
+<option>QVGA (320x240)</option>
+<option selected="">VGA (640x480)</option>
+<option>SVGA (800x600)</option>
+<option>UXGA (1600x1200)</option>
+</select>
+</div>
+<div class="flex justify-between items-center text-xs pt-2 border-t border-slate-800">
+<span class="text-slate-300 font-semibold">Onboard Flash LED</span>
+<button class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono" onclick="sendSimulatedCommand('CAM_FLASH_TOGGLE')">Toggle Flash</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Sheet Bottom Sticky Back Button -->
+<div class="p-3 border-t border-slate-800/80 bg-[#0f1733] shrink-0">
+<button class="w-full py-3 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-100 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-2 border border-slate-700/60" onclick="closeToolModal()">
+<i class="fa-solid fa-arrow-left"></i>
+<span class="">Back to Dashboard</span>
+</button>
+</div>
+</div>
+</div>
+<!-- END: Interactive Full-Screen Preview Sheet Modals -->
+<!-- BEGIN: Quick Toast Notification -->
+<div class="absolute bottom-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white border border-slate-700/70 text-xs font-mono px-4 py-2 rounded-full shadow-2xl hidden flex items-center gap-2 pointer-events-none" id="toastMessage">
+<span class="w-2 h-2 rounded-full bg-sky-400"></span>
+<span class="" id="toastText">Action triggered</span>
+</div>
+<!-- END: Quick Toast Notification -->
+</div>
+<!-- END: Mobile Frame Simulation -->
+<!-- BEGIN: Interactive Dashboard Logic -->
+<script data-purpose="connection-and-tabs-logic">
+    // State management
+    let connectionState = 'disconnected'; // 'disconnected' | 'connecting' | 'connected'
+    let currentProtocol = 'Bluetooth (Classic)';
+
+    // Protocol switcher
+    function selectProtocol(buttonElement, protocolName) {
+      currentProtocol = protocolName;
+      
+      // Update Tab Visuals
+      const allTabs = document.querySelectorAll('.protocol-tab');
+      allTabs.forEach(tab => {
+        tab.className = "protocol-tab flex flex-col items-center justify-center py-2.5 px-1 rounded-xl text-slate-600 hover:text-slate-900 transition-all";
+        const icon = tab.querySelector('i');
+        if (icon) icon.className = icon.className.replace('text-sky-600', 'text-slate-400');
+      });
+
+      buttonElement.className = "protocol-tab flex flex-col items-center justify-center py-2.5 px-1 rounded-xl bg-white text-sky-600 shadow-sm border border-sky-100/60 transition-all";
+      const activeIcon = buttonElement.querySelector('i');
+      if (activeIcon) {
+        activeIcon.classList.remove('text-slate-400');
+        activeIcon.classList.add('text-sky-600');
+      }
+
+      document.getElementById('activeProtocolLabel').textContent = protocolName;
+      showToast(`Protocol switched to ${protocolName}`);
+    }
+
+    // Toggle Connection State
+    function toggleDeviceConnection() {
+      const btn = document.getElementById('connectDeviceBtn');
+      const btnLabel = document.getElementById('btnLabel');
+      const btnIcon = document.getElementById('btnIcon');
+      const badge = document.getElementById('statusBadge');
+      const dot = document.getElementById('statusIndicatorDot');
+      const statusText = document.getElementById('statusText');
+      const rssi = document.getElementById('deviceRssi');
+
+      if (connectionState === 'disconnected') {
+        // Switch to connecting state
+        connectionState = 'connecting';
+        btn.disabled = true;
+        btn.classList.remove('from-sky-500', 'to-sky-600');
+        btn.classList.add('from-amber-500', 'to-amber-600');
+        btnLabel.textContent = 'Connecting to ' + currentProtocol + '...';
+        btnIcon.className = 'fa-solid fa-circle-notch fa-spin text-xs';
+        
+        statusText.textContent = 'Connecting...';
+        badge.className = 'flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-600 text-xs font-semibold';
+        dot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-ping';
+
+        // Simulate successful handshake
+        setTimeout(() => {
+          connectionState = 'connected';
+          btn.disabled = false;
+          btn.classList.remove('from-amber-500', 'to-amber-600');
+          btn.classList.add('from-rose-500', 'to-rose-600');
+          btnLabel.textContent = 'Disconnect Device';
+          btnIcon.className = 'fa-solid fa-power-off text-xs';
+
+          statusText.textContent = 'Connected (ESP32-S3)';
+          badge.className = 'flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-semibold';
+          dot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+          rssi.classList.remove('hidden');
+
+          showToast('Paired with iBots ESP32 Module!');
+        }, 1200);
+
+      } else {
+        // Disconnect immediately
+        connectionState = 'disconnected';
+        btn.classList.remove('from-rose-500', 'to-rose-600');
+        btn.classList.add('from-sky-500', 'to-sky-600');
+        btnLabel.textContent = '+ Connect Device +';
+        btnIcon.className = 'fa-solid fa-plus text-xs';
+
+        statusText.textContent = 'Disconnected';
+        badge.className = 'flex items-center space-x-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-semibold';
+        dot.className = 'w-2 h-2 rounded-full bg-slate-400';
+        rssi.classList.add('hidden');
+
+        showToast('Device disconnected');
+      }
+    }
+
+    // Modal Interaction for All 9 Tools
+    const toolMeta = {
+      'car': { title: 'Car Controller', icon: 'fa-car-side', color: '#0ea5e9', sub: 'Direction & Speed Trim' },
+      'gamepad': { title: 'Virtual Gamepad', icon: 'fa-gamepad', color: '#6366f1', sub: 'Dual D-Pad & Triggers' },
+      'led': { title: 'LED & RGB Control', icon: 'fa-lightbulb', color: '#f59e0b', sub: 'Neopixel / Bulb Driver' },
+      'switch': { title: 'Switch Panel', icon: 'fa-toggle-on', color: '#10b981', sub: '10-Channel Relays' },
+      'terminal': { title: 'Text Terminal', icon: 'fa-terminal', color: '#0284c7', sub: 'UART Serial Console' },
+      'voice': { title: 'Voice Control', icon: 'fa-microphone', color: '#8b5cf6', sub: 'Speech Recognition' },
+      'keypad': { title: 'Virtual Keypad', icon: 'fa-grip', color: '#059669', sub: '4x4 Matrix Input' },
+      'telemetry': { title: 'Telemetry', icon: 'fa-chart-line', color: '#ec4899', sub: 'Sensors & Live Gauges' },
+      'cam': { title: 'ESP32 Cam', icon: 'fa-video', color: '#06b6d4', sub: 'MJPEG Video Stream' }
+    };
+
+    function openToolModal(toolKey) {
+      const container = document.getElementById('toolModalContainer');
+      const meta = toolMeta[toolKey] || toolMeta['car'];
+
+      document.getElementById('sheetHeaderTitle').textContent = meta.title;
+      document.getElementById('sheetHeaderSubtitle').textContent = meta.sub;
+      document.getElementById('sheetHeaderIcon').className = `fa-solid ${meta.icon} text-sm`;
+      document.getElementById('sheetIconBadge').style.backgroundColor = meta.color;
+
+      // Hide all contents then reveal the selected one
+      document.querySelectorAll('.tool-content').forEach(el => el.classList.add('hidden'));
+      const activeContent = document.getElementById(`content-${toolKey}`);
+      if (activeContent) {
+        activeContent.classList.remove('hidden');
+      }
+
+      container.classList.remove('hidden');
+    }
+
+    function closeToolModal() {
+      document.getElementById('toolModalContainer').classList.add('hidden');
+    }
+
+    // Car Actions
+    function handleCarAction(dir) {
+      document.getElementById('carActiveState').innerText = `STATE: ${dir}`;
+      sendSimulatedCommand(`CAR_${dir}`);
+    }
+
+    // LED Bulb Toggle
+    let bulbPower = true;
+    function toggleBulbPower() {
+      bulbPower = !bulbPower;
+      const bulbContainer = document.getElementById('bulbDisplayContainer');
+      const bulbIcon = document.getElementById('bulbIcon');
+      const label = document.getElementById('bulbStateLabel');
+
+      if (bulbPower) {
+        bulbContainer.style.backgroundColor = 'rgba(234, 179, 8, 0.2)';
+        bulbContainer.style.boxShadow = '0 0 35px rgba(234, 179, 8, 0.5)';
+        bulbIcon.style.color = '#eab308';
+        bulbIcon.style.filter = 'drop-shadow(0 0 12px #eab308)';
+        label.textContent = "CMD: '1' (ON)";
+        label.className = "text-sm font-bold font-mono text-amber-400";
+        sendSimulatedCommand('LED_STATE: 1');
+      } else {
+        bulbContainer.style.backgroundColor = 'rgba(30, 41, 59, 0.4)';
+        bulbContainer.style.boxShadow = 'none';
+        bulbIcon.style.color = '#475569';
+        bulbIcon.style.filter = 'none';
+        label.textContent = "CMD: '0' (OFF)";
+        label.className = "text-sm font-bold font-mono text-slate-500";
+        sendSimulatedCommand('LED_STATE: 0');
+      }
+    }
+
+    function setBulbColor(hex, name) {
+      const bulbContainer = document.getElementById('bulbDisplayContainer');
+      const bulbIcon = document.getElementById('bulbIcon');
+      bulbPower = true;
+      bulbContainer.style.backgroundColor = `${hex}33`;
+      bulbContainer.style.boxShadow = `0 0 35px ${hex}88`;
+      bulbIcon.style.color = hex;
+      bulbIcon.style.filter = `drop-shadow(0 0 12px ${hex})`;
+      document.getElementById('bulbStateLabel').textContent = `COLOR: ${name} (${hex})`;
+      sendSimulatedCommand(`RGB_SET: ${name}`);
+    }
+
+    // 10 Relay Toggles Setup
+    function initRelays() {
+      const grid = document.getElementById('relayGrid');
+      grid.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        const item = document.createElement('div');
+        item.className = 'p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between';
+        item.innerHTML = `
+          <div>
+            <div class="text-[11px] font-bold text-slate-200">Relay #${i}</div>
+            <div class="text-[9px] text-slate-500 font-mono" id="relay-status-${i}">STATUS: OFF</div>
+          </div>
+          <button class="w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative" id="relay-btn-${i}" onclick="toggleSingleRelay(${i})">
+            <div class="w-5 h-5 rounded-full bg-slate-400 shadow transform transition-transform" id="relay-knob-${i}"></div>
+          </button>
+        `;
+        grid.appendChild(item);
+      }
+    }
+
+    let relayStates = {};
+    function toggleSingleRelay(index) {
+      relayStates[index] = !relayStates[index];
+      const btn = document.getElementById(`relay-btn-${index}`);
+      const knob = document.getElementById(`relay-knob-${index}`);
+      const status = document.getElementById(`relay-status-${index}`);
+
+      if (relayStates[index]) {
+        btn.className = "w-10 h-6 rounded-full bg-emerald-500 p-0.5 transition-colors relative";
+        knob.className = "w-5 h-5 rounded-full bg-white shadow transform translate-x-4 transition-transform";
+        status.textContent = "STATUS: ON";
+        status.className = "text-[9px] text-emerald-400 font-mono";
+        sendSimulatedCommand(`RELAY_${index}_ON`);
+      } else {
+        btn.className = "w-10 h-6 rounded-full bg-slate-800 p-0.5 transition-colors relative";
+        knob.className = "w-5 h-5 rounded-full bg-slate-400 shadow transform translate-x-0 transition-transform";
+        status.textContent = "STATUS: OFF";
+        status.className = "text-[9px] text-slate-500 font-mono";
+        sendSimulatedCommand(`RELAY_${index}_OFF`);
+      }
+    }
+
+    function toggleAllRelays(state) {
+      for (let i = 1; i <= 10; i++) {
+        if (relayStates[i] !== state) {
+          toggleSingleRelay(i);
+        }
+      }
+    }
+
+    // Terminal logic
+    function sendTerminalCommand() {
+      const input = document.getElementById('terminalInput');
+      const val = input.value.trim();
+      if (!val) return;
+      const out = document.getElementById('terminalOutput');
+      const userCmd = document.createElement('div');
+      userCmd.className = "text-sky-400";
+      userCmd.textContent = `> ${val}`;
+      out.appendChild(userCmd);
+
+      const resp = document.createElement('div');
+      resp.className = "text-emerald-400";
+      resp.textContent = `[ACK] OK: ${val} executed`;
+      out.appendChild(resp);
+
+      input.value = '';
+      out.scrollTop = out.scrollHeight;
+      sendSimulatedCommand(`UART: ${val}`);
+    }
+
+    // Voice simulation
+    let isListening = false;
+    function toggleVoiceListening() {
+      isListening = !isListening;
+      const icon = document.getElementById('micIcon');
+      const text = document.getElementById('voiceStatusText');
+      if (isListening) {
+        icon.className = "fa-solid fa-ear-listen text-2xl animate-pulse";
+        text.textContent = "Listening to audio stream...";
+        showToast("Voice microphone active");
+      } else {
+        icon.className = "fa-solid fa-microphone text-2xl";
+        text.textContent = "Tap Mic to Speak";
+      }
+    }
+
+    function simulateVoicePhrase() {
+      const phrases = ['"Forward 50cm"', '"Turn Off All Lights"', '"Activate Alarm"', '"Speed 200"'];
+      const chosen = phrases[Math.floor(Math.random() * phrases.length)];
+      const log = document.getElementById('voiceHistoryLog');
+      const row = document.createElement('div');
+      row.className = "p-2 rounded-lg bg-slate-950 text-slate-300 flex justify-between";
+      row.innerHTML = `<span>${chosen}</span><span class="text-purple-400 font-mono">MATCHED</span>`;
+      log.prepend(row);
+      showToast(`Recognized: ${chosen}`);
+      sendSimulatedCommand(`VOICE_EXEC: ${chosen}`);
+    }
+
+    // Keypad Logic
+    let keypadBuffer = "";
+    function appendKeypad(char) {
+      if (keypadBuffer.length >= 12) return;
+      keypadBuffer += char;
+      document.getElementById('keypadDisplay').textContent = keypadBuffer;
+    }
+    function clearKeypad() {
+      keypadBuffer = "";
+      document.getElementById('keypadDisplay').textContent = "--";
+    }
+    function sendKeypadPayload() {
+      if (!keypadBuffer) {
+        showToast("Enter digits first");
+        return;
+      }
+      sendSimulatedCommand(`KEYPAD_PAYLOAD: ${keypadBuffer}`);
+      showToast(`Sent keycode: ${keypadBuffer}`);
+      clearKeypad();
+    }
+
+    // Cam Recording
+    let camRecording = false;
+    function toggleCamRecord() {
+      camRecording = !camRecording;
+      const btn = document.getElementById('camRecordBtn');
+      if (camRecording) {
+        btn.innerHTML = '<i class="fa-solid fa-stop text-[10px]"></i> Stop Rec';
+        showToast('Recording MJPEG video to SD...');
+      } else {
+        btn.innerHTML = '<i class="fa-solid fa-circle text-[10px]"></i> Record';
+        showToast('Video saved');
+      }
+    }
+
+    // Send Simulated Command
+    function sendSimulatedCommand(cmd) {
+      if (connectionState !== 'connected') {
+        showToast(`Previewing cmd: ${cmd} (Connect for live hardware)`);
+      } else {
+        showToast(`Sent packet: ${cmd}`);
+      }
+    }
+
+    // Toast Utility
+    let toastTimeout;
+    function showToast(message) {
+      const toast = document.getElementById('toastMessage');
+      const text = document.getElementById('toastText');
+      text.textContent = message;
+      toast.classList.remove('hidden');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2200);
+    }
+
+    // Bottom Navigation State Switcher
+    function setActiveNav(btnElement, navName) {
+      const allNavBtns = document.querySelectorAll('nav button');
+      allNavBtns.forEach(b => {
+        b.className = 'w-full flex flex-col items-center group text-slate-400 hover:text-slate-600 transition-colors';
+        const pill = b.querySelector('div');
+        pill.classList.remove('bg-sky-100');
+        const span = b.querySelector('span');
+        span.classList.remove('font-bold', 'text-sky-600');
+        span.classList.add('font-medium');
+      });
+
+      btnElement.className = 'w-full flex flex-col items-center group text-sky-600';
+      const activePill = btnElement.querySelector('div');
+      activePill.classList.add('bg-sky-100');
+      const activeSpan = btnElement.querySelector('span');
+      activeSpan.classList.add('font-bold', 'text-sky-600');
+
+      showToast(`Navigated to ${navName}`);
+    }
+
+    // Initialize relays on boot
+    initRelays();
+  </script>
+<!-- END: Interactive Dashboard Logic -->
+
+
+
+
+</body></html>

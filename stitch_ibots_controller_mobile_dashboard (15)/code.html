@@ -1,0 +1,809 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#f8fafc;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "primary": "#2563eb", "primary-dark": "#1d4ed8" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" }, "spacing": { "gutter-lg": "1.5rem", "space-lg": "1.5rem", "gutter-sm": "0.75rem", "space-xl": "2rem", "margin-lg": "2rem", "margin-sm": "0.75rem", "space-md": "1rem", "gutter": "1rem", "space-xs": "0.25rem", "margin": "1rem", "space-sm": "0.5rem" }, "fontFamily": { "label-lg": ["JetBrains Mono"], "headline-md": ["Inter"], "body-lg": ["Inter"], "body-md": ["Inter"], "body-sm": ["Inter"], "headline-lg": ["Inter"], "headline-xl-mobile": ["Inter"], "label-md": ["JetBrains Mono"], "headline-xl": ["Inter"], "label-sm": ["JetBrains Mono"] } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-slate-50 text-slate-800 font-body-md text-sm min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-700"><header class="fixed top-0 w-full z-50 pt-safe bg-white/95 backdrop-blur-xl border-b border-slate-200/80 shadow-sm"><div class="h-16 px-3 flex items-center justify-between gap-2"><div class="flex items-center gap-2 min-w-0"><button aria-label="Go back" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-600 hover:text-blue-600 transition-colors" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[22px]">arrow_back</span></button><img alt="Ibots-Logo.png" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1X_HZjZRVzQSC59dnSb5cJtKHeSqeTngqeS63MpQvCUjbzTCu_YGk3MfzZkiubFfQTBBCajtUoN9HRwNvqecyWTtAUhoqExyAKykIYiOE5k25mdrfBJ5UeeNSDtsXCrfjZNhsgH0RmvrQsc-W8-jnr2mkxVqnI0__44c2Bjsu560-IlXD0yo5--D6LotdmnK4bqzOEGoipO86UH1_bAuc6-ECmxtHqZ42n_tHf57SLJNVQac5-bnY5xVNp6226wtwxLnqTG-X2o2TA"><div class="flex items-center gap-1.5 min-w-0"><span class="font-label-sm text-[11px] px-1.5 py-0.5 rounded font-semibold bg-blue-50 text-blue-700 border border-blue-200/60 uppercase tracking-wider flex-shrink-0">iBots</span><h1 class="font-headline-md text-lg tracking-tight text-slate-900 font-bold truncate">Code Examples</h1></div></div><div class="flex items-center gap-1 flex-shrink-0"><button aria-label="Search code" class="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">search</span></button><button aria-label="Copy active code" class="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">content_copy</span></button><div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 ml-1 shadow-sm"><span class="material-symbols-outlined text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-slate-50 px-3.5"><div class="flex flex-col w-full text-slate-800">
+<!-- Top Utility Banner -->
+<div class="flex flex-col gap-2.5 p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-sm mb-4 mt-3">
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-600 text-[20px]">terminal</span>
+<span class="font-semibold text-slate-900 text-base">Firmware Snippets</span>
+</div>
+<span class="font-mono text-[11px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 tracking-wide font-semibold">
+        SAMPLE CODE v2.4
+      </span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed">
+      Optimized C++/Arduino sketches for low-latency robotics. Fully compatible with BLE, Classic BT &amp; Serial UART over HC-05/06 or ESP32 native hardware interfaces.
+    </p>
+<!-- Horizontal Category Filter Chips -->
+<div class="flex items-center gap-1.5 overflow-x-auto py-1" id="filter-bar">
+<button class="category-chip px-3 py-1 rounded-full font-mono text-xs whitespace-nowrap transition-all duration-150 bg-blue-600 text-white font-semibold shadow-sm" data-filter="all" type="button">All (14)</button>
+<button class="category-chip px-3 py-1 rounded-full font-mono text-xs whitespace-nowrap transition-all duration-150 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 border border-slate-200/70" data-filter="motion" type="button">
+        Motion &amp; Motors
+      </button>
+<button class="category-chip px-3 py-1 rounded-full font-mono text-xs whitespace-nowrap transition-all duration-150 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 border border-slate-200/70" data-filter="lighting" type="button">
+        Lighting &amp; GPIO
+      </button>
+<button class="category-chip px-3 py-1 rounded-full font-mono text-xs whitespace-nowrap transition-all duration-150 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 border border-slate-200/70" data-filter="comm" type="button">
+        Communication
+      </button>
+<button class="category-chip px-3 py-1 rounded-full font-mono text-xs whitespace-nowrap transition-all duration-150 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 border border-slate-200/70" data-filter="sensors" type="button">
+        Sensors &amp; CAM
+      </button>
+</div>
+</div>
+<!-- Cards Container -->
+<div class="flex flex-col gap-3.5" id="cards-stack">
+<!-- 1. LED Control -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="lighting">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">lightbulb</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">1. LED Control</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">GPIO</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Turn an onboard or external LED ON/OFF via single byte signals.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_less</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-slate-400">#define LED_PIN 13</span>
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">setup</span>() {
+  <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">begin</span>(<span class="text-amber-600">9600</span>);
+  <span class="text-indigo-600 font-medium">pinMode</span>(<span class="text-slate-700">LED_PIN</span>, <span class="text-blue-600">OUTPUT</span>);
+}
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">available</span>() &gt; <span class="text-amber-600">0</span>) {
+    <span class="text-blue-600 font-semibold">char</span> cmd = <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">read</span>();
+    <span class="text-blue-600 font-semibold">if</span> (cmd == <span class="text-emerald-600">'1'</span>) {
+      <span class="text-indigo-600 font-medium">digitalWrite</span>(<span class="text-slate-700">LED_PIN</span>, <span class="text-blue-600">HIGH</span>); <span class="text-slate-400">// Turn ON</span>
+    } <span class="text-blue-600 font-semibold">else if</span> (cmd == <span class="text-emerald-600">'0'</span>) {
+      <span class="text-indigo-600 font-medium">digitalWrite</span>(<span class="text-slate-700">LED_PIN</span>, <span class="text-blue-600">LOW</span>);  <span class="text-slate-400">// Turn OFF</span>
+    }
+  }
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">Note: Standard Arduino boards default onboard status LED to Digital Pin 13.</span>
+</div>
+</div>
+</div>
+<!-- 2. Car Controller -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="motion">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">directions_car</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">2. Car Controller</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">L298N</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Forward, Reverse, Left, Right &amp; Stop motor driver H-Bridge sequencing.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_less</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-slate-400">// Left &amp; Right Motor Driver Pins (L298N/TB6612)</span>
+<span class="text-blue-600 font-semibold">const int</span> IN1 = <span class="text-amber-600">4</span>, IN2 = <span class="text-amber-600">5</span>, IN3 = <span class="text-amber-600">6</span>, IN4 = <span class="text-amber-600">7</span>;
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">setup</span>() {
+  <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">begin</span>(<span class="text-amber-600">9600</span>);
+  <span class="text-indigo-600 font-medium">pinMode</span>(IN1, <span class="text-blue-600">OUTPUT</span>); <span class="text-indigo-600 font-medium">pinMode</span>(IN2, <span class="text-blue-600">OUTPUT</span>);
+  <span class="text-indigo-600 font-medium">pinMode</span>(IN3, <span class="text-blue-600">OUTPUT</span>); <span class="text-indigo-600 font-medium">pinMode</span>(IN4, <span class="text-blue-600">OUTPUT</span>);
+}
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600 font-semibold">int</span> a1, <span class="text-blue-600 font-semibold">int</span> a2, <span class="text-blue-600 font-semibold">int</span> b1, <span class="text-blue-600 font-semibold">int</span> b2) {
+  <span class="text-indigo-600 font-medium">digitalWrite</span>(IN1, a1); <span class="text-indigo-600 font-medium">digitalWrite</span>(IN2, a2);
+  <span class="text-indigo-600 font-medium">digitalWrite</span>(IN3, b1); <span class="text-indigo-600 font-medium">digitalWrite</span>(IN4, b2);
+}
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">available</span>()) {
+    <span class="text-blue-600 font-semibold">char</span> c = <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">read</span>();
+    <span class="text-blue-600 font-semibold">switch</span>(c) {
+      <span class="text-blue-600 font-semibold">case</span> <span class="text-emerald-600">'F'</span>: <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">HIGH</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">HIGH</span>, <span class="text-blue-600">LOW</span>); <span class="text-blue-600 font-semibold">break</span>;
+      <span class="text-blue-600 font-semibold">case</span> <span class="text-emerald-600">'B'</span>: <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">LOW</span>, <span class="text-blue-600">HIGH</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">HIGH</span>); <span class="text-blue-600 font-semibold">break</span>;
+      <span class="text-blue-600 font-semibold">case</span> <span class="text-emerald-600">'L'</span>: <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">LOW</span>, <span class="text-blue-600">HIGH</span>, <span class="text-blue-600">HIGH</span>, <span class="text-blue-600">LOW</span>); <span class="text-blue-600 font-semibold">break</span>;
+      <span class="text-blue-600 font-semibold">case</span> <span class="text-emerald-600">'R'</span>: <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">HIGH</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">HIGH</span>); <span class="text-blue-600 font-semibold">break</span>;
+      <span class="text-blue-600 font-semibold">default</span>:  <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>);   <span class="text-blue-600 font-semibold">break</span>;
+    }
+  }
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">Connect IN1-IN4 to standard PWM or digital I/O. Add ENA/ENB jumpers to VCC for full speed.</span>
+</div>
+</div>
+</div>
+<!-- 3. Horn Control -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="lighting">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">volume_up</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">3. Horn Control</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">PWM / Tone</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Triggers an active or passive piezoelectric buzzer on request.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-blue-600 font-semibold">const int</span> BUZZER_PIN = <span class="text-amber-600">8</span>;
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">setup</span>() {
+  <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">begin</span>(<span class="text-amber-600">9600</span>);
+  <span class="text-indigo-600 font-medium">pinMode</span>(BUZZER_PIN, <span class="text-blue-600">OUTPUT</span>);
+}
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">available</span>()) {
+    <span class="text-blue-600 font-semibold">char</span> ch = <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">read</span>();
+    <span class="text-blue-600 font-semibold">if</span> (ch == <span class="text-emerald-600">'H'</span>) {
+      <span class="text-indigo-600 font-medium">tone</span>(BUZZER_PIN, <span class="text-amber-600">1000</span>); <span class="text-slate-400">// 1kHz acoustic pulse</span>
+    } <span class="text-blue-600 font-semibold">else if</span> (ch == <span class="text-emerald-600">'h'</span>) {
+      <span class="text-indigo-600 font-medium">noTone</span>(BUZZER_PIN);
+    }
+  }
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">For active buzzers without tone generation, substitute tone() with digitalWrite(BUZZER_PIN, HIGH).</span>
+</div>
+</div>
+</div>
+<!-- 4. Light Control -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="lighting">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">wb_incandescent</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">4. Light Control</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">MOSFET / LED</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Operates high-intensity front headlight beams ('W' / 'w').</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-blue-600 font-semibold">const int</span> HEADLIGHT_PIN = <span class="text-amber-600">9</span>;
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">setup</span>() {
+  <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">begin</span>(<span class="text-amber-600">9600</span>);
+  <span class="text-indigo-600 font-medium">pinMode</span>(HEADLIGHT_PIN, <span class="text-blue-600">OUTPUT</span>);
+}
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">available</span>()) {
+    <span class="text-blue-600 font-semibold">char</span> lightCmd = <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">read</span>();
+    <span class="text-blue-600 font-semibold">if</span> (lightCmd == <span class="text-emerald-600">'W'</span>) {
+      <span class="text-indigo-600 font-medium">digitalWrite</span>(HEADLIGHT_PIN, <span class="text-blue-600">HIGH</span>); <span class="text-slate-400">// Headlights ON</span>
+    } <span class="text-blue-600 font-semibold">else if</span> (lightCmd == <span class="text-emerald-600">'w'</span>) {
+      <span class="text-indigo-600 font-medium">digitalWrite</span>(HEADLIGHT_PIN, <span class="text-blue-600">LOW</span>);  <span class="text-slate-400">// Headlights OFF</span>
+    }
+  }
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">Use an N-channel logic MOSFET (e.g. IRLZ44N) if operating 12V automotive-style LED strips.</span>
+</div>
+</div>
+</div>
+<!-- 5. Dance Mode -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="motion">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">music_note</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">5. Dance Mode</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">Choreography</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Automated celebratory routine with random spins and directional pivots.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">performDance</span>() {
+  <span class="text-blue-600 font-semibold">for</span> (<span class="text-blue-600 font-semibold">int</span> step = <span class="text-amber-600">0</span>; step &lt; <span class="text-amber-600">4</span>; step++) {
+    <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">HIGH</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">HIGH</span>); <span class="text-slate-400">// Spin right</span>
+    <span class="text-indigo-600 font-medium">delay</span>(<span class="text-amber-600">200</span>);
+    <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">LOW</span>, <span class="text-blue-600">HIGH</span>, <span class="text-blue-600">HIGH</span>, <span class="text-blue-600">LOW</span>); <span class="text-slate-400">// Spin left</span>
+    <span class="text-indigo-600 font-medium">delay</span>(<span class="text-amber-600">200</span>);
+  }
+  <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>);   <span class="text-slate-400">// Finished</span>
+}
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">available</span>()) {
+    <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">read</span>() == <span class="text-emerald-600">'X'</span>) {
+      <span class="text-indigo-600 font-medium">performDance</span>();
+    }
+  }
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">Ensure sufficient battery discharge headroom to prevent MCU brownout during rapid reversals.</span>
+</div>
+</div>
+</div>
+<!-- 6. Virtual Gamepad -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="motion">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">sports_esports</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">6. Virtual Gamepad</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">D-PAD &amp; Actions</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Maps directional triggers and action buttons (Δ, □, ○, ×) to actuators.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">available</span>()) {
+    <span class="text-blue-600 font-semibold">char</span> padKey = <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">read</span>();
+    <span class="text-blue-600 font-semibold">switch</span>(padKey) {
+      <span class="text-blue-600 font-semibold">case</span> <span class="text-emerald-600">'F'</span>: <span class="text-slate-400">/* Forward */</span> <span class="text-blue-600 font-semibold">break</span>;
+      <span class="text-blue-600 font-semibold">case</span> <span class="text-emerald-600">'B'</span>: <span class="text-slate-400">/* Reverse */</span> <span class="text-blue-600 font-semibold">break</span>;
+      <span class="text-blue-600 font-semibold">case</span> <span class="text-emerald-600">'T'</span>: <span class="text-slate-400">// Triangle (Turbo Boost)</span>
+        <span class="text-indigo-600 font-medium">analogWrite</span>(<span class="text-slate-700">ENA_PIN</span>, <span class="text-amber-600">255</span>); <span class="text-blue-600 font-semibold">break</span>;
+      <span class="text-blue-600 font-semibold">case</span> <span class="text-emerald-600">'S'</span>: <span class="text-slate-400">// Square (Claw Actuator Open)</span>
+        <span class="text-slate-800">gripperServo</span>.<span class="text-indigo-600 font-medium">write</span>(<span class="text-amber-600">45</span>); <span class="text-blue-600 font-semibold">break</span>;
+      <span class="text-blue-600 font-semibold">case</span> <span class="text-emerald-600">'C'</span>: <span class="text-slate-400">// Circle (Claw Actuator Close)</span>
+        <span class="text-slate-800">gripperServo</span>.<span class="text-indigo-600 font-medium">write</span>(<span class="text-amber-600">120</span>); <span class="text-blue-600 font-semibold">break</span>;
+      <span class="text-blue-600 font-semibold">case</span> <span class="text-emerald-600">'X'</span>: <span class="text-slate-400">// Cross (Brake)</span>
+        <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>); <span class="text-blue-600 font-semibold">break</span>;
+    }
+  }
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">Include &lt;Servo.h&gt; on standard AVR boards to link gripper servo pins to Square/Circle actions.</span>
+</div>
+</div>
+</div>
+<!-- 7. Switch Panel -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="lighting">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">toggle_on</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">7. Switch Panel</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">Relay 10CH</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Independent toggling of up to 10 digital relay channels via 'a'-'j' &amp; 'A'-'J'.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-blue-600 font-semibold">const int</span> RELAYS[<span class="text-amber-600">10</span>] = {<span class="text-amber-600">22, 23, 24, 25, 26, 27, 28, 29, 30, 31</span>};
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">setup</span>() {
+  <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">begin</span>(<span class="text-amber-600">9600</span>);
+  <span class="text-blue-600 font-semibold">for</span> (<span class="text-blue-600 font-semibold">int</span> i = <span class="text-amber-600">0</span>; i &lt; <span class="text-amber-600">10</span>; i++) {
+    <span class="text-indigo-600 font-medium">pinMode</span>(RELAYS[i], <span class="text-blue-600">OUTPUT</span>);
+    <span class="text-indigo-600 font-medium">digitalWrite</span>(RELAYS[i], <span class="text-blue-600">HIGH</span>); <span class="text-slate-400">// Opto-isolated relay boards are active-LOW</span>
+  }
+}
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">available</span>()) {
+    <span class="text-blue-600 font-semibold">char</span> c = <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">read</span>();
+    <span class="text-blue-600 font-semibold">if</span> (c &gt;= <span class="text-emerald-600">'a'</span> &amp;&amp; c &lt;= <span class="text-emerald-600">'j'</span>) {
+      <span class="text-indigo-600 font-medium">digitalWrite</span>(RELAYS[c - <span class="text-emerald-600">'a'</span>], <span class="text-blue-600">LOW</span>);  <span class="text-slate-400">// ON</span>
+    } <span class="text-blue-600 font-semibold">else if</span> (c &gt;= <span class="text-emerald-600">'A'</span> &amp;&amp; c &lt;= <span class="text-emerald-600">'J'</span>) {
+      <span class="text-indigo-600 font-medium">digitalWrite</span>(RELAYS[c - <span class="text-emerald-600">'A'</span>], <span class="text-blue-600">HIGH</span>); <span class="text-slate-400">// OFF</span>
+    }
+  }
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">Most multi-channel relay modules use active-LOW optocouplers. Adjust logic levels if using high-side switches.</span>
+</div>
+</div>
+</div>
+<!-- 8. Text Terminal -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="comm">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">terminal</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">8. Text Terminal</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">ASCII Parser</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Full string command decoding via newline delimiter (e.g. "FORWARD\n").</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">available</span>()) {
+    <span class="text-blue-600 font-semibold">String</span> cmd = <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">readStringUntil</span>(<span class="text-emerald-600">'\n'</span>);
+    cmd.<span class="text-indigo-600 font-medium">trim</span>();
+
+    <span class="text-blue-600 font-semibold">if</span> (cmd == <span class="text-emerald-600">"FORWARD"</span>) {
+      <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">HIGH</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">HIGH</span>, <span class="text-blue-600">LOW</span>);
+    } <span class="text-blue-600 font-semibold">else if</span> (cmd == <span class="text-emerald-600">"STOP"</span>) {
+      <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">LOW</span>);
+    } <span class="text-blue-600 font-semibold">else if</span> (cmd == <span class="text-emerald-600">"HORN ON"</span>) {
+      <span class="text-indigo-600 font-medium">tone</span>(<span class="text-amber-600">8</span>, <span class="text-amber-600">1000</span>);
+    }
+  }
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">Set Serial.setTimeout(50) in setup() to avoid blocking delays during line parsing.</span>
+</div>
+</div>
+</div>
+<!-- 9. Voice Control -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="comm">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">mic</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">9. Voice Control</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">NLP Matcher</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Matches recognized mobile speech phrases to hardware execution paths.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">available</span>()) {
+    <span class="text-blue-600 font-semibold">String</span> phrase = <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">readStringUntil</span>(<span class="text-emerald-600">'\n'</span>);
+    phrase.<span class="text-indigo-600 font-medium">toLowerCase</span>();
+    phrase.<span class="text-indigo-600 font-medium">trim</span>();
+
+    <span class="text-blue-600 font-semibold">if</span> (phrase.<span class="text-indigo-600 font-medium">indexOf</span>(<span class="text-emerald-600">"forward"</span>) &gt;= <span class="text-amber-600">0</span>) {
+      <span class="text-indigo-600 font-medium">drive</span>(<span class="text-blue-600">HIGH</span>, <span class="text-blue-600">LOW</span>, <span class="text-blue-600">HIGH</span>, <span class="text-blue-600">LOW</span>);
+    } <span class="text-blue-600 font-semibold">else if</span> (phrase.<span class="text-indigo-600 font-medium">indexOf</span>(<span class="text-emerald-600">"dance"</span>) &gt;= <span class="text-amber-600">0</span>) {
+      <span class="text-indigo-600 font-medium">performDance</span>();
+    } <span class="text-blue-600 font-semibold">else if</span> (phrase.<span class="text-indigo-600 font-medium">indexOf</span>(<span class="text-emerald-600">"lights on"</span>) &gt;= <span class="text-amber-600">0</span>) {
+      <span class="text-indigo-600 font-medium">digitalWrite</span>(<span class="text-amber-600">9</span>, <span class="text-blue-600">HIGH</span>);
+    }
+  }
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">indexOf keyword matching allows the controller to accept complex sentences gracefully.</span>
+</div>
+</div>
+</div>
+<!-- 10. Virtual Keypad -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="comm">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">dialpad</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">10. Virtual Keypad</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">4x4 Matrix</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Processes 4x4 matrix keystrokes (0-9, A-D, *, #) for numeric PIN payloads.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-blue-600 font-semibold">String</span> pinBuffer = <span class="text-emerald-600">""</span>;
+<span class="text-blue-600 font-semibold">const String</span> ACCESS_PIN = <span class="text-emerald-600">"1234"</span>;
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">available</span>()) {
+    <span class="text-blue-600 font-semibold">char</span> key = <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">read</span>();
+    <span class="text-blue-600 font-semibold">if</span> (key == <span class="text-emerald-600">'#'</span>) { <span class="text-slate-400">// Submit key</span>
+      <span class="text-blue-600 font-semibold">if</span> (pinBuffer == ACCESS_PIN) {
+        <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">println</span>(<span class="text-emerald-600">"AUTH_OK"</span>);
+      }
+      pinBuffer = <span class="text-emerald-600">""</span>;
+    } <span class="text-blue-600 font-semibold">else if</span> (key == <span class="text-emerald-600">'*'</span>) {
+      pinBuffer = <span class="text-emerald-600">""</span>; <span class="text-slate-400">// Clear buffer</span>
+    } <span class="text-blue-600 font-semibold">else</span> {
+      pinBuffer += key;
+    }
+  }
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">Great for security enclosures or arming sequence validations before motion enabling.</span>
+</div>
+</div>
+</div>
+<!-- 11. Telemetry -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="sensors">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">sensors</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">11. Telemetry</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">HC-SR04 / Batt</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Computes obstacle distance in cm and maps analog battery voltage.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-blue-600 font-semibold">const int</span> TRIG = <span class="text-amber-600">11</span>, ECHO = <span class="text-amber-600">12</span>, BATT_PIN = <span class="text-amber-600">A0</span>;
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-slate-400">// Ultrasonic ping</span>
+  <span class="text-indigo-600 font-medium">digitalWrite</span>(TRIG, <span class="text-blue-600">LOW</span>); <span class="text-indigo-600 font-medium">delayMicroseconds</span>(<span class="text-amber-600">2</span>);
+  <span class="text-indigo-600 font-medium">digitalWrite</span>(TRIG, <span class="text-blue-600">HIGH</span>); <span class="text-indigo-600 font-medium">delayMicroseconds</span>(<span class="text-amber-600">10</span>);
+  <span class="text-indigo-600 font-medium">digitalWrite</span>(TRIG, <span class="text-blue-600">LOW</span>);
+  <span class="text-blue-600 font-semibold">long</span> duration = <span class="text-indigo-600 font-medium">pulseIn</span>(ECHO, <span class="text-blue-600">HIGH</span>);
+  <span class="text-blue-600 font-semibold">int</span> distanceCm = duration * <span class="text-amber-600">0.034</span> / <span class="text-amber-600">2</span>;
+
+  <span class="text-slate-400">// Battery ADC map</span>
+  <span class="text-blue-600 font-semibold">int</span> raw = <span class="text-indigo-600 font-medium">analogRead</span>(BATT_PIN);
+  <span class="text-blue-600 font-semibold">int</span> battPct = <span class="text-indigo-600 font-medium">map</span>(raw, <span class="text-amber-600">600</span>, <span class="text-amber-600">850</span>, <span class="text-amber-600">0</span>, <span class="text-amber-600">100</span>);
+
+  <span class="text-slate-400">// Emit structured telemetry line</span>
+  <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">print</span>(<span class="text-emerald-600">"DIST:"</span>); <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">print</span>(distanceCm);
+  <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">print</span>(<span class="text-emerald-600">";BATT:"</span>); <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">println</span>(battPct);
+  <span class="text-indigo-600 font-medium">delay</span>(<span class="text-amber-600">100</span>);
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">Ensure a proper voltage divider (e.g. 10k/2.2k) protects the 5V/3.3V analog reference pin.</span>
+</div>
+</div>
+</div>
+<!-- 12. ESP32-CAM -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="sensors">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">videocam</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">12. ESP32-CAM</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">MJPEG Stream</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Full camera web server &amp; low-latency video feed initialization template.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-slate-400">#include "esp_camera.h"</span>
+<span class="text-slate-400">#include &lt;WiFi.h&gt;</span>
+<span class="text-slate-400">#define CAMERA_MODEL_AI_THINKER</span>
+<span class="text-slate-400">#include "camera_pins.h"</span>
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">startCameraServer</span>();
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">setup</span>() {
+  <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">begin</span>(<span class="text-amber-600">115200</span>);
+  camera_config_t config;
+  config.ledc_channel = LEDC_CHANNEL_0;
+  config.ledc_timer = LEDC_TIMER_0;
+  config.pin_d0 = Y2_GPIO_NUM; config.pin_d1 = Y3_GPIO_NUM;
+  config.pin_xclk = XCLK_GPIO_NUM; config.pin_pclk = PCLK_GPIO_NUM;
+  config.pin_vsync = VSYNC_GPIO_NUM; config.pin_href = HREF_GPIO_NUM;
+  config.pin_sccb_sda = SIOD_GPIO_NUM; config.pin_sccb_scl = SIOC_GPIO_NUM;
+  config.pin_pwdn = PWDN_GPIO_NUM; config.pin_reset = RESET_GPIO_NUM;
+  config.xclk_freq_hz = <span class="text-amber-600">20000000</span>;
+  config.pixel_format = PIXFORMAT_JPEG;
+  config.frame_size = FRAMESIZE_SVGA;
+  config.jpeg_quality = <span class="text-amber-600">12</span>;
+  config.fb_count = <span class="text-amber-600">2</span>;
+
+  <span class="text-indigo-600 font-medium">esp_camera_init</span>(&amp;config);
+  <span class="text-slate-800">WiFi</span>.<span class="text-indigo-600 font-medium">softAP</span>(<span class="text-emerald-600">"iBots-ESP32"</span>, <span class="text-emerald-600">"12345678"</span>);
+  <span class="text-indigo-600 font-medium">startCameraServer</span>();
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">Stream is served on port 81 (e.g. http://192.168.4.1:81/stream) with frame-rate sync.</span>
+</div>
+</div>
+</div>
+<!-- 13. Settings and Profile -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="comm">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">manage_accounts</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">13. Settings &amp; Profile</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-slate-100 text-slate-600 border border-slate-200">App Level</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Application configuration scope and client profile storage details.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-4 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-blue-700 font-semibold text-sm">
+<span class="material-symbols-outlined text-blue-600 text-[20px]">verified_user</span>
+<span class="">No Hardware Firmware Required</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed">
+            Operator profile editing, color theme persistence, button layout mappings, and local client preferences are managed entirely inside the mobile app storage layer.
+          </p>
+<div class="p-2.5 rounded-lg bg-white border border-slate-200/80 flex items-center gap-2 font-mono text-xs text-slate-600 mt-1">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">tune</span>
+<span class="">Configure transmission rates, baud rates, and IP addresses via the app's Settings tab.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 14. Robotic Arm Control -->
+<div class="code-card flex flex-col rounded-2xl bg-white border border-slate-200/90 overflow-hidden shadow-sm" data-category="motion">
+<div class="card-header flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer select-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[19px]">precision_manufacturing</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold text-slate-900 truncate">14. Robotic Arm Control</span>
+<span class="font-mono text-[11px] px-1.5 py-0.5 rounded font-medium bg-blue-50 text-blue-700 border border-blue-200/60">PCA9685 / Servos</span>
+</div>
+<p class="text-xs text-slate-500 truncate mt-0.5">Multi-axis positional servo kinematics &amp; I2C PWM expander driver.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<button class="copy-btn min-w-[34px] min-h-[34px] flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-blue-600 transition-colors" title="Copy Code" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<span class="material-symbols-outlined toggle-chevron text-slate-400 text-[20px] transition-transform duration-200">expand_more</span>
+</div>
+</div>
+<div class="card-body p-3.5 pt-0 flex flex-col gap-2.5 hidden">
+<div class="rounded-xl bg-slate-50 border border-slate-200/90 p-3 font-mono text-xs overflow-x-auto text-slate-900">
+<pre class="leading-relaxed"><span class="text-slate-400">#include &lt;Wire.h&gt;</span>
+<span class="text-slate-400">#include &lt;Adafruit_PWMServoDriver.h&gt;</span>
+
+<span class="text-blue-600 font-semibold">Adafruit_PWMServoDriver</span> pwm = <span class="text-indigo-600 font-medium">Adafruit_PWMServoDriver</span>();
+
+<span class="text-slate-400">#define SERVOMIN  150 // Minimum pulse length count (0 deg)</span>
+<span class="text-slate-400">#define SERVOMAX  600 // Maximum pulse length count (180 deg)</span>
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">setup</span>() {
+  <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">begin</span>(<span class="text-amber-600">9600</span>);
+  pwm.<span class="text-indigo-600 font-medium">begin</span>();
+  pwm.<span class="text-indigo-600 font-medium">setPWMFreq</span>(<span class="text-amber-600">60</span>);  <span class="text-slate-400">// Analog servos run at ~60 Hz</span>
+  <span class="text-slate-400">// Center initial servos to 90 degrees</span>
+  <span class="text-indigo-600 font-medium">setServoAngle</span>(<span class="text-amber-600">0</span>, <span class="text-amber-600">90</span>);
+  <span class="text-indigo-600 font-medium">setServoAngle</span>(<span class="text-amber-600">1</span>, <span class="text-amber-600">90</span>);
+  <span class="text-indigo-600 font-medium">setServoAngle</span>(<span class="text-amber-600">2</span>, <span class="text-amber-600">90</span>);
+}
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">setServoAngle</span>(<span class="text-blue-600 font-semibold">uint8_t</span> n, <span class="text-blue-600 font-semibold">int</span> angle) {
+  <span class="text-blue-600 font-semibold">int</span> pulselen = <span class="text-indigo-600 font-medium">map</span>(angle, <span class="text-amber-600">0</span>, <span class="text-amber-600">180</span>, <span class="text-slate-700">SERVOMIN</span>, <span class="text-slate-700">SERVOMAX</span>);
+  pwm.<span class="text-indigo-600 font-medium">setPWM</span>(n, <span class="text-amber-600">0</span>, pulselen);
+}
+
+<span class="text-blue-600 font-semibold">void</span> <span class="text-indigo-600 font-medium">loop</span>() {
+  <span class="text-blue-600 font-semibold">if</span> (<span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">available</span>()) {
+    <span class="text-slate-400">// Protocol format: [ChannelChar][AngleInt], e.g. A90, B180, C45</span>
+    <span class="text-blue-600 font-semibold">char</span> ch = <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">read</span>();
+    <span class="text-blue-600 font-semibold">int</span> angle = <span class="text-slate-800">Serial</span>.<span class="text-indigo-600 font-medium">parseInt</span>();
+    <span class="text-blue-600 font-semibold">if</span> (ch &gt;= <span class="text-emerald-600">'A'</span> &amp;&amp; ch &lt;= <span class="text-emerald-600">'Z'</span>) {
+      <span class="text-blue-600 font-semibold">uint8_t</span> servoNum = ch - <span class="text-emerald-600">'A'</span>;
+      <span class="text-indigo-600 font-medium">setServoAngle</span>(servoNum, <span class="text-indigo-600 font-medium">constrain</span>(angle, <span class="text-amber-600">0</span>, <span class="text-amber-600">180</span>));
+    }
+  }
+}</pre>
+</div>
+<div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100/90 flex items-center gap-2 font-mono text-xs text-blue-900">
+<span class="material-symbols-outlined text-[16px] text-blue-600 flex-shrink-0">info</span>
+<span class="">Supports multi-axis servo PWM expander (PCA9685 I2C) or direct ESP32 LEDC servo channels from 0° to 180°.</span>
+</div>
+</div>
+</div></div>
+</div>
+<script>
+  // Filter chips functionality
+  const chips = document.querySelectorAll('.category-chip');
+  const cards = document.querySelectorAll('.code-card');
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => {
+        c.className = 'category-chip px-3 py-1 rounded-full font-mono text-xs whitespace-nowrap transition-all duration-150 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 border border-slate-200/70';
+      });
+      chip.className = 'category-chip px-3 py-1 rounded-full font-mono text-xs whitespace-nowrap transition-all duration-150 bg-blue-600 text-white font-semibold shadow-sm';
+
+      const filter = chip.getAttribute('data-filter');
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        if (filter === 'all' || cat === filter) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Accordion Expand / Collapse
+  document.querySelectorAll('.card-header').forEach(header => {
+    header.addEventListener('click', (e) => {
+      // Don't toggle accordion if user clicked the copy button
+      if (e.target.closest('.copy-btn')) return;
+
+      const card = header.closest('.code-card');
+      const body = card.querySelector('.card-body');
+      const chevron = header.querySelector('.toggle-chevron');
+
+      if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        if (chevron) {
+          chevron.textContent = 'expand_less';
+        }
+      } else {
+        body.classList.add('hidden');
+        if (chevron) {
+          chevron.textContent = 'expand_more';
+        }
+      }
+    });
+  });
+
+  // Copy Code Feedback
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.code-card');
+      const pre = card.querySelector('pre');
+      const textToCopy = pre ? pre.innerText : '';
+
+      navigator.clipboard.writeText(textToCopy).catch(() => {});
+
+      const icon = btn.querySelector('.material-symbols-outlined');
+      const originalText = icon.textContent;
+      icon.textContent = 'check';
+      btn.classList.add('text-emerald-600', 'bg-emerald-50');
+
+      setTimeout(() => {
+        icon.textContent = originalText;
+        btn.classList.remove('text-emerald-600', 'bg-emerald-50');
+      }, 1500);
+    });
+  });
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-[0_-1px_6px_rgba(0,0,0,0.04)]"><div class="flex justify-around items-center h-16 px-3"><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] py-1 text-slate-500 hover:text-slate-800 transition-all duration-150" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">dashboard</span><span class="font-mono text-[10px] mt-0.5">Home</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] py-1 text-slate-500 hover:text-slate-800 transition-all duration-150" data-path="devices" href="#"><span class="material-symbols-outlined text-[22px]">memory</span><span class="font-mono text-[10px] mt-0.5">Devices</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] py-1 transition-all duration-150 text-blue-600 font-semibold" data-path="code-examples" href="#"><span class="material-symbols-outlined text-[22px]">terminal</span><span class="font-mono text-[10px] mt-0.5">Code</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] py-1 text-slate-500 hover:text-slate-800 transition-all duration-150" data-path="settings" href="#"><span class="material-symbols-outlined text-[22px]">settings</span><span class="font-mono text-[10px] mt-0.5">Settings</span></a></div></nav>
+
+</body></html>

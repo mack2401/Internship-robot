@@ -1,0 +1,680 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Noto+Serif:wght@500;600;700&amp;family=Public+Sans:wght@500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-error": "#ffffff", "surface-container": "#efedee", "surface-container-highest": "#e3e2e3", "on-secondary": "#ffffff", "on-primary-fixed-variant": "#00419d", "surface-container-lowest": "#ffffff", "tertiary-fixed-dim": "#dcc661", "on-tertiary": "#ffffff", "secondary-fixed-dim": "#c2c7cc", "primary": "#094cb2", "error": "#ba1a1a", "on-tertiary-container": "#4a3f00", "surface-variant": "#e3e2e3", "outline-variant": "#c3c6d5", "tertiary": "#6d5e00", "secondary-container": "#dfe3e8", "on-tertiary-fixed-variant": "#524600", "on-primary-fixed": "#001946", "background": "#faf9fa", "on-primary": "#ffffff", "secondary-fixed": "#dfe3e8", "secondary": "#5a5f63", "primary-container": "#3366cc", "surface-container-low": "#f5f3f4", "surface-tint": "#2259bf", "outline": "#737784", "tertiary-container": "#bfab49", "surface-bright": "#faf9fa", "surface": "#faf9fa", "surface-container-high": "#e9e8e9", "tertiary-fixed": "#f9e37a", "on-surface": "#1b1c1d", "on-primary-container": "#e7ebff", "inverse-surface": "#303031", "on-background": "#1b1c1d", "on-tertiary-fixed": "#211b00", "on-secondary-fixed": "#171c20", "on-secondary-fixed-variant": "#42474b", "primary-fixed": "#d9e2ff", "on-surface-variant": "#434653", "surface-dim": "#dbdadb", "error-container": "#ffdad6", "primary-fixed-dim": "#b1c5ff", "on-error-container": "#93000a", "inverse-primary": "#b1c5ff", "on-secondary-container": "#606569", "inverse-on-surface": "#f2f0f1" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, fontFamily: { "headline": ["Noto Serif"], "display": ["Noto Serif"], "body": ["Inter"], "label": ["Public Sans"] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-4 flex items-center justify-between gap-3"><div class="flex items-center gap-2"><button aria-label="Go back" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container active:bg-surface-container-high transition-colors" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><img alt="Ibots-Logo.png" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X_HZjZRVzQSC59dnSb5cJtKHeSqeTngqeS63MpQvCUjbzTCu_YGk3MfzZkiubFfQTBBCajtUoN9HRwNvqecyWTtAUhoqExyAKykIYiOE5k25mdrfBJ5UeeNSDtsXCrfjZNhsgH0RmvrQsc-W8-jnr2mkxVqnI0__44c2Bjsu560-IlXD0yo5--D6LotdmnK4bqzOEGoipO86UH1_bAuc6-ECmxtHqZ42n_tHf57SLJNVQac5-bnY5xVNp6226wtwxLnqTG-X2o2TA"><div class="flex flex-col"><span class="font-label text-[11px] font-semibold uppercase tracking-wider text-primary">iBots Remote</span><span class="font-headline font-semibold text-sm leading-tight text-on-surface">Settings</span></div></div><div class="flex items-center"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 w-full bg-surface pt-16 pb-24"><div class="flex flex-col w-full pb-8">
+<!-- Search & Filter Area -->
+<section class="px-4 py-3 bg-surface-container-low">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-[20px] pointer-events-none">search</span>
+<input aria-label="Search user guide" class="w-full bg-surface-container-lowest text-on-surface font-body text-sm pl-10 pr-9 py-2.5 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-outline transition-all" id="guideSearch" oninput="filterGuide()" placeholder="Search guide, features, commands..." type="search">
+<button aria-label="Clear search" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center text-xs active:bg-surface-container-high transition-colors" id="clearSearch" onclick="resetSearch()" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</div>
+<!-- Category Chips Filter -->
+<div class="flex gap-1.5 overflow-x-auto pt-3 pb-1 no-scrollbar items-center">
+<button class="cat-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-label font-medium bg-primary text-on-primary shadow-sm transition-all" data-cat-btn="all" onclick="setCategory('all', this)" type="button">
+        All (13)
+      </button>
+<button class="cat-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-label font-medium bg-surface-container text-on-surface-variant active:bg-surface-container-high transition-all" data-cat-btn="controls" onclick="setCategory('controls', this)" type="button">
+        Controls
+      </button>
+<button class="cat-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-label font-medium bg-surface-container text-on-surface-variant active:bg-surface-container-high transition-all" data-cat-btn="hardware" onclick="setCategory('hardware', this)" type="button">
+        Hardware
+      </button>
+<button class="cat-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-label font-medium bg-surface-container text-on-surface-variant active:bg-surface-container-high transition-all" data-cat-btn="connectivity" onclick="setCategory('connectivity', this)" type="button">
+        Connectivity
+      </button>
+<button class="cat-chip whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-label font-medium bg-surface-container text-on-surface-variant active:bg-surface-container-high transition-all" data-cat-btn="troubleshooting" onclick="setCategory('troubleshooting', this)" type="button">
+        Troubleshooting
+      </button>
+</div>
+</section>
+<!-- Status / Search Feedback Bar -->
+<div class="hidden px-4 py-2 bg-primary-fixed text-on-primary-fixed text-xs font-label flex items-center justify-between" id="filterStatus">
+<span id="filterStatusText" class="">Showing matching results</span>
+<button class="font-semibold underline ml-2" onclick="resetSearch()" type="button">Show all</button>
+</div>
+<!-- Guide Accordion List -->
+<div class="flex flex-col gap-3 px-4 pt-3" id="guideList">
+<!-- 1. Getting Started -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="connectivity" open="">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">rocket_launch</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">Getting Started</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed">Essential</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">Setup, pairing modes &amp; connection telemetry</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-3 bg-surface-container-lowest">
+<p class="leading-relaxed">
+          The <span class="font-semibold text-on-surface">iBots Remote Controller</span> delivers responsive low-latency IoT control for ESP32 and Arduino boards over BLE, Classic Bluetooth, and local Wi-Fi.
+        </p>
+<!-- Step-by-Step Connection -->
+<div class="rounded-lg bg-surface-container-low p-3 space-y-2">
+<span class="font-label font-semibold text-[11px] uppercase tracking-wider text-primary block">3-Step Quick Connect</span>
+<ol class="space-y-2 pl-1">
+<li class="flex items-start gap-2">
+<span class="w-4 h-4 rounded-full bg-primary text-on-primary text-[10px] font-semibold flex items-center justify-center shrink-0 mt-0.5">1</span>
+<span class=""><strong class="text-on-surface">Enable Radio:</strong> Turn on phone Bluetooth or join the robot's local Wi-Fi network.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="w-4 h-4 rounded-full bg-primary text-on-primary text-[10px] font-semibold flex items-center justify-center shrink-0 mt-0.5">2</span>
+<span class=""><strong class="text-on-surface">Select Mode:</strong> Choose between <code class="bg-surface-container px-1 rounded text-primary font-mono text-[11px]">BLE</code>, <code class="bg-surface-container px-1 rounded text-primary font-mono text-[11px]">Classic BT</code>, or <code class="bg-surface-container px-1 rounded text-primary font-mono text-[11px]">Wi-Fi IP</code>.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="w-4 h-4 rounded-full bg-primary text-on-primary text-[10px] font-semibold flex items-center justify-center shrink-0 mt-0.5">3</span>
+<span class=""><strong class="text-on-surface">Pair &amp; Verify:</strong> Tap <em class="text-on-surface font-medium">Connect Device</em> and look for the connection indicator.</span>
+</li>
+</ol>
+</div>
+<!-- Status Indicator Pill Explainer -->
+<div class="flex items-center gap-2 p-2.5 rounded-lg bg-surface-container text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px]">info</span>
+<div class="text-[11px] leading-snug">
+<span class="inline-flex items-center gap-1 font-semibold text-primary"><span class="w-2 h-2 rounded-full bg-primary inline-block animate-pulse"></span> Connected</span> shows active ping latency. <span class="font-semibold text-error">Disconnected</span> requires re-scanning.
+          </div>
+</div>
+</div>
+</details>
+<!-- 2. Car Controller -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="controls" open="">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">directions_car</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">Car Controller</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container">Standard</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">Omnidirectional drive, cutoff switch &amp; dance mode</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-3 bg-surface-container-lowest">
+<p class="leading-relaxed">
+          The Car Controller view dispatches instant single-character UART commands over serial stream for H-Bridge motor drivers (L298N, TB6612FNG, or ESP32 Motor Shields).
+        </p>
+<!-- Command Grid -->
+<div class="grid grid-cols-2 gap-2">
+<div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col gap-1">
+<span class="font-label font-semibold text-[11px] text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">swap_calls</span> Movement Commands
+            </span>
+<div class="font-mono text-[11px] space-y-0.5 text-on-surface">
+<div class=""><span class="text-primary font-bold">F</span> = Drive Forward</div>
+<div class=""><span class="text-primary font-bold">B</span> = Reverse / Back</div>
+<div class=""><span class="text-primary font-bold">L</span> = Pivot Left</div>
+<div class=""><span class="text-primary font-bold">R</span> = Pivot Right</div>
+</div>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col gap-1">
+<span class="font-label font-semibold text-[11px] text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">cancel</span> Emergency Brake
+            </span>
+<div class="font-mono text-[11px] space-y-0.5 text-on-surface">
+<div class=""><span class="text-error font-bold">S</span> = Instant Motor Cutoff</div>
+<p class="text-[10px] font-body text-on-surface-variant mt-1 leading-tight">Releasing buttons also automatically issues 'S' stop safety pulses.</p>
+</div>
+</div>
+</div>
+<!-- Auxiliary & Dance Mode -->
+<div class="space-y-2">
+<span class="font-label font-semibold text-[11px] uppercase tracking-wider text-on-surface block">Special Triggers</span>
+<ul class="space-y-1.5 pl-1">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-tertiary">volume_up</span>
+<span class=""><strong>Horn:</strong> Toggles onboard active buzzer / piezo pin.</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-tertiary">highlight</span>
+<span class=""><strong>Headlights:</strong> Toggles ultra-bright forward LED array.</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary">animation</span>
+<span class=""><strong>Dance Mode:</strong> Runs an automated sequence of spins, reverse wiggles, and alternating flashing lights.</span>
+</li>
+</ul>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container text-on-surface text-[11px]">
+<strong>Hardware Note:</strong> If wheels do not spin, ensure 9V/12V motor battery is turned ON and ground (<code class="font-mono">GND</code>) is shared with the ESP32.
+        </div>
+</div>
+</details><!-- Robotic Arm Control -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="controls">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">precision_manufacturing</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">Robotic Arm Control</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container">Multi-Axis</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">Servo angle adjustment (0°–180°), multi-joint expansion &amp; centering</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-3 bg-surface-container-lowest">
+<p class="leading-relaxed">
+  The Robotic Arm module controls articulated servos across individual joint axes (Base A, Shoulder B, Elbow C, and auxiliary joints).
+</p>
+<div class="rounded-lg bg-surface-container-low p-3 space-y-2">
+<span class="font-label font-semibold text-[11px] uppercase tracking-wider text-primary block">Standard Controls</span>
+<ul class="space-y-1.5 pl-1">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[15px] text-primary shrink-0 mt-0.5">linear_scale</span>
+<span class=""><strong class="text-on-surface">Servo Sliders (0°–180°):</strong> Continuous angle manipulation with real-time degree readout.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[15px] text-primary shrink-0 mt-0.5">add_circle</span>
+<span class=""><strong class="text-on-surface">+ Add Movement:</strong> Dynamically append extra axes (D, E, F...) for 4-DOF, 5-DOF, or 6-DOF robotic arms.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[15px] text-primary shrink-0 mt-0.5">adjust</span>
+<span class=""><strong class="text-on-surface">Center All:</strong> Instantly resets all connected servos to 90° neutral position.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[15px] text-error shrink-0 mt-0.5">remove_circle</span>
+<span class=""><strong class="text-on-surface">Remove Axis:</strong> Delete custom auxiliary axes while preserving core A, B, and C joints.</span>
+</li>
+</ul>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col gap-1">
+<span class="font-label font-semibold text-[11px] text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">code</span> Serial Protocol
+</span>
+<p class="text-[11px] leading-relaxed">
+  Dispatches commands formatted as <code class="bg-surface-container px-1 rounded text-primary font-mono text-[11px]">[Axis][Angle]</code> (e.g. <code class="bg-surface-container px-1 rounded text-primary font-mono text-[11px]">A90</code>, <code class="bg-surface-container px-1 rounded text-primary font-mono text-[11px]">B120</code>, <code class="bg-surface-container px-1 rounded text-primary font-mono text-[11px]">C45</code>).
+</p>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container text-on-surface text-[11px]">
+<strong>Hardware Note:</strong> Ensure external 5V/6V high-current servo power supply is used to prevent ESP32 brownouts during multi-servo torque spikes.
+</div>
+</div>
+</details>
+<!-- 3. Virtual Gamepad -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="controls">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">sports_esports</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">Virtual Gamepad</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container">Tactile</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">Dual-zone D-pad, 4 PlayStation action keys &amp; pause</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-3 bg-surface-container-lowest">
+<p class="leading-relaxed">
+          Provides a classic ergonomic dual-zone gamepad experience designed for low touch-latency and customizable actuator routines.
+        </p>
+<div class="grid grid-cols-1 gap-2.5">
+<div class="p-2.5 rounded-lg bg-surface-container-low">
+<div class="font-semibold text-on-surface text-[11px] mb-1 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-primary">gamepad</span> Left Zone (D-Pad &amp; Analog Thumbstick)
+            </div>
+<p class="leading-relaxed">Supports 4-way discrete digital pulses or dynamic 360-degree analog floating vectors for proportional robotic arm control.</p>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low">
+<div class="font-semibold text-on-surface text-[11px] mb-1 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-primary">shapes</span> Right Zone (Action Cluster)
+            </div>
+<div class="grid grid-cols-2 gap-1 text-[11px]">
+<div class=""><strong class="text-on-surface">▲ Triangle:</strong> Gripper Open</div>
+<div class=""><strong class="text-on-surface">■ Square:</strong> Pan Camera Left</div>
+<div class=""><strong class="text-on-surface">● Circle:</strong> Pan Camera Right</div>
+<div class=""><strong class="text-on-surface">✕ Cross:</strong> Gripper Close</div>
+</div>
+</div>
+</div>
+<p class="text-[11px]">The <strong>Start / Pause</strong> header buttons allow freezing autonomous navigation algorithms immediately while keeping telemetry alive.</p>
+</div>
+</details>
+<!-- 4. LED & RGB Control -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="hardware">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">lightbulb</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">LED &amp; RGB Control</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed">Lighting</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">360° color wheel, PWM brightness &amp; quick chips</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-3 bg-surface-container-lowest">
+<p class="leading-relaxed">Control single-pin digital lamps or WS2812B / NeoPixel addressable lighting strips.</p>
+<div class="space-y-2">
+<div class="flex items-start gap-2.5 p-2 rounded-lg bg-surface-container-low">
+<span class="material-symbols-outlined text-tertiary text-[18px] shrink-0 mt-0.5">toggle_on</span>
+<div>
+<strong class="text-on-surface block text-[11px]">Simple Lamp Switch</strong>
+<span class="">Transmits binary command <code class="font-mono bg-surface-container px-1 rounded text-primary">1</code> for ON (active yellow indicator) and <code class="font-mono bg-surface-container px-1 rounded text-primary">0</code> for OFF.</span>
+</div>
+</div>
+<div class="flex items-start gap-2.5 p-2 rounded-lg bg-surface-container-low">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">palette</span>
+<div>
+<strong class="text-on-surface block text-[11px]">RGB Wheel &amp; Brightness</strong>
+<span class="">Color touch canvas sends HEX packet <code class="font-mono bg-surface-container px-1 rounded text-primary">#RRGGBB\n</code>. Use the 0–255 PWM slider to dim without changing tint.</span>
+</div>
+</div>
+</div>
+<div class="flex gap-1.5 flex-wrap pt-1">
+<span class="font-label text-[10px] px-2 py-0.5 rounded bg-surface-container text-on-surface font-medium">Red</span>
+<span class="font-label text-[10px] px-2 py-0.5 rounded bg-surface-container text-on-surface font-medium">Green</span>
+<span class="font-label text-[10px] px-2 py-0.5 rounded bg-surface-container text-on-surface font-medium">Blue</span>
+<span class="font-label text-[10px] px-2 py-0.5 rounded bg-surface-container text-on-surface font-medium">Cyan</span>
+<span class="font-label text-[10px] px-2 py-0.5 rounded bg-surface-container text-on-surface font-medium">Purple</span>
+<span class="font-label text-[10px] px-2 py-0.5 rounded bg-surface-container text-on-surface font-medium">Yellow</span>
+</div>
+</div>
+</details>
+<!-- 5. Switch Panel -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="hardware">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">tune</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">Switch Panel</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container">Relays</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">10 template digital toggle relays &amp; GPIO pins</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-3 bg-surface-container-lowest">
+<p class="leading-relaxed">
+          Configured as a convenient 2-column grid of 10 digital toggles (Switch 1 through 10) for activating solenoids, secondary pumps, or custom GPIO relays.
+        </p>
+<div class="p-3 rounded-lg bg-surface-container-low space-y-1.5">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary shrink-0"></span>
+<span class="text-on-surface font-medium">Active (ON):</span> Sends <code class="font-mono bg-surface-container px-1 rounded text-primary">SW{ID}:HIGH</code> with prominent state glow.
+          </div>
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary shrink-0"></span>
+<span class="text-on-surface font-medium">Inactive (OFF):</span> Sends <code class="font-mono bg-surface-container px-1 rounded text-primary">SW{ID}:LOW</code> in neutral state.
+          </div>
+</div>
+</div>
+</details>
+<!-- 6. Text Terminal -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="connectivity">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">terminal</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">Text Terminal (CLI)</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container">Raw UART</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">Direct ASCII commands, echo buffer &amp; console logs</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-3 bg-surface-container-lowest">
+<p class="leading-relaxed">
+          The low-level engineer's tool for observing live return data, debug logs, and dispatching custom string parameters.
+        </p>
+<!-- Command cheat sheet -->
+<div class="rounded-lg bg-inverse-surface text-inverse-on-surface p-3 font-mono text-[11px] space-y-1">
+<div class="text-primary-fixed-dim font-bold pb-1 text-[10px] tracking-wider uppercase font-label">Common Command Reference</div>
+<div class="flex justify-between"><span class="text-primary-fixed">FORWARD / BACKWARD</span> <span class="text-outline-variant">Drive routine</span></div>
+<div class="flex justify-between"><span class="text-primary-fixed">STOP</span> <span class="text-outline-variant">Immediate freeze</span></div>
+<div class="flex justify-between"><span class="text-primary-fixed">LIGHT ON / LIGHT OFF</span> <span class="text-outline-variant">Headlamp relay</span></div>
+<div class="flex justify-between"><span class="text-primary-fixed">HORN ON / HORN OFF</span> <span class="text-outline-variant">Buzzer state</span></div>
+<div class="flex justify-between"><span class="text-primary-fixed">STATUS</span> <span class="text-outline-variant">Returns batt &amp; uptime</span></div>
+</div>
+<p class="text-[11px]">Use the <strong>Clear</strong> button at the top-right of the CLI viewport to flush the rolling 500-line memory buffer.</p>
+</div>
+</details>
+<!-- 7. Voice Control -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="controls">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">mic</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">Voice Control</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed">Smart</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">Speech recognition routines &amp; trigger keywords</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-3 bg-surface-container-lowest">
+<p class="leading-relaxed">Control the vehicle hands-free using natural speech processed locally on your smartphone device.</p>
+<div class="p-3 rounded-lg bg-surface-container-low space-y-1.5">
+<span class="font-label font-semibold text-[11px] text-on-surface block">Supported Vocal Phrases:</span>
+<div class="grid grid-cols-2 gap-1.5 text-[11px]">
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-primary">record_voice_over</span> "Go forward"</div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-primary">record_voice_over</span> "Turn left / right"</div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-primary">record_voice_over</span> "Stop car"</div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-primary">record_voice_over</span> "Lights on / off"</div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-primary">record_voice_over</span> "Dance mode"</div>
+</div>
+</div>
+<div class="text-[11px] leading-tight text-on-surface-variant">
+<em>Tip:</em> If voice is not triggering, check system microphone permissions in your phone settings and avoid loud engine acoustics.
+        </div>
+</div>
+</details>
+<!-- 8. Virtual Keypad -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="controls">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">dialpad</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">Virtual Keypad</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container">Hex 4x4</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">Matrix telephone dialer with A-D, *, and # commands</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-2 bg-surface-container-lowest">
+<p class="leading-relaxed">
+          Simulates an industrial 4x4 tactile matrix keypad (0–9, A, B, C, D, *, #). Ideal for password authentication locks, setting numeric PID parameters, or triggering predetermined state machine modes.
+        </p>
+<ul class="list-disc pl-4 space-y-1 text-[11px]">
+<li class=""><strong>Backspace (&lt;):</strong> Clears the most recent buffer entry.</li>
+<li class=""><strong>Clear (C):</strong> Flushes the current staging string.</li>
+<li class=""><strong>Enter / Send:</strong> Pushes the verified byte array to your micro-controller.</li>
+</ul>
+</div>
+</details>
+<!-- 9. Telemetry -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="hardware">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">speed</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">Telemetry &amp; Sensors</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed">Live Data</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">Ultrasonic sonar, LiPo voltage, warnings &amp; debug pins</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-3 bg-surface-container-lowest">
+<p class="leading-relaxed">
+          Receives streaming JSON or delimited packets from HC-SR04 sonar sensors, IMU gyroscopes, and analog battery dividers.
+        </p>
+<div class="grid grid-cols-2 gap-2">
+<div class="p-2.5 rounded-lg bg-surface-container-low">
+<div class="font-semibold text-on-surface text-[11px] flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[15px] text-primary">sensors</span> Sonar Range
+            </div>
+<p class="text-[11px]">Displays obstacle distance in cm. Danger warning triggers below 15 cm.</p>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low">
+<div class="font-semibold text-on-surface text-[11px] flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[15px] text-tertiary">battery_charging_full</span> Battery Level
+            </div>
+<p class="text-[11px]">LiPo voltage and calculated percentage. Low battery warning sounds under 6.8V (2S).</p>
+</div>
+</div>
+<div class="p-2.5 rounded-lg bg-secondary-container text-on-secondary-container text-[11px]">
+<strong>Notice on '--- cm' or '0.0V':</strong> This means the hardware sensor pin is unassigned or the ADC voltage divider is missing, rather than representing zero distance.
+        </div>
+</div>
+</details>
+<!-- 10. ESP32-CAM -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="hardware">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">videocam</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">ESP32-CAM Video</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container">Streaming</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">MJPEG feed, AP vs Station mode &amp; snapshots</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-3 bg-surface-container-lowest">
+<p class="leading-relaxed">Connect to an OV2640 camera module streaming real-time video directly into the controller cockpit.</p>
+<div class="space-y-2">
+<div class="p-2.5 rounded-lg bg-surface-container-low">
+<strong class="text-on-surface text-[11px] block">a) Access Point (AP Mode)</strong>
+<p class="text-[11px]">Connect your phone to the ESP's created Wi-Fi network (e.g. <code class="font-mono text-primary font-semibold">ESP32-CAM-AP</code>). Default URL is <code class="font-mono text-primary">http://192.168.4.1:81/stream</code>.</p>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low">
+<strong class="text-on-surface text-[11px] block">b) Router / Station Mode</strong>
+<p class="text-[11px]">Connect both phone and robot to your home network; type the local LAN IP address output to the Arduino IDE serial monitor.</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 text-[11px]">
+<div class=""><strong class="text-on-surface">Resolution:</strong> Low (QVGA), Med (VGA), High (SVGA)</div>
+<div class=""><strong class="text-on-surface">Media Tools:</strong> Snapshot capture &amp; Landscape toggle</div>
+</div>
+</div>
+</details>
+<!-- 11. Settings -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="troubleshooting">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">settings</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">Settings &amp; Profiles</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container">System</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">Themes, operator identity, sound &amp; firmware info</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-2.5 bg-surface-container-lowest">
+<div class="p-2.5 rounded-lg bg-surface-container-low space-y-1">
+<strong class="text-on-surface text-[11px] block">Profile Customization</strong>
+<p class="text-[11px]">Configure custom callsigns, operator avatar badges, and bind hardware MAC addresses for automatic handshake reconnects.</p>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low space-y-1">
+<strong class="text-on-surface text-[11px] block">App Preferences</strong>
+<p class="text-[11px]">Toggle between High-Contrast Light and Night-Ops Dark themes, enable tactile haptic vibrations on button presses, and verify app version build details.</p>
+</div>
+</div>
+</details>
+<!-- 12. Troubleshooting -->
+<details class="guide-item group rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden transition-all duration-200" data-category="troubleshooting">
+<summary class="flex items-center justify-between p-3.5 cursor-pointer list-none select-none bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-xl bg-error-container text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">build_circle</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 flex-wrap">
+<h2 class="font-headline font-semibold text-sm text-on-surface leading-snug">Troubleshooting</h2>
+<span class="font-label text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-error-container text-on-error-container">Diagnostics</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant truncate">Connection failures, motor power &amp; sensor fixes</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-open:rotate-180 transition-transform duration-200 shrink-0 ml-2">expand_more</span>
+</summary>
+<div class="px-4 pb-4 pt-2 text-xs font-body text-on-surface-variant space-y-2.5 bg-surface-container-lowest">
+<div class="p-2.5 rounded-lg bg-surface-container-low">
+<div class="font-semibold text-error text-[11px] flex items-center gap-1 mb-0.5">
+<span class="material-symbols-outlined text-[14px]">bluetooth_disabled</span> Device fails to connect or discover
+          </div>
+<p class="text-[11px] text-on-surface-variant">Ensure your ESP32 is powered via reliable 5V USB (not sagging battery). Verify smartphone Bluetooth permissions are granted and cycle the phone's Bluetooth toggle.</p>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low">
+<div class="font-semibold text-error text-[11px] flex items-center gap-1 mb-0.5">
+<span class="material-symbols-outlined text-[14px]">videocam_off</span> Camera stream is blank or sluggish
+          </div>
+<p class="text-[11px] text-on-surface-variant">Check camera ribbon cable seated firmly in FPC connector. Lower stream resolution from High to Medium/Low in Settings to preserve 2.4GHz bandwidth.</p>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low">
+<div class="font-semibold text-error text-[11px] flex items-center gap-1 mb-0.5">
+<span class="material-symbols-outlined text-[14px]">electric_meter</span> Commands sent but motors don't spin
+          </div>
+<p class="text-[11px] text-on-surface-variant">Ensure the motor driver ground (GND) is wired together with ESP32 ground pin. Without a shared common reference ground, logic signals cannot be interpreted.</p>
+</div>
+</div>
+</details>
+<!-- Empty State for Search -->
+<div class="hidden flex-col items-center justify-center py-10 px-4 text-center" id="guideEmptyState">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-outline mb-2">
+<span class="material-symbols-outlined text-[24px]">search_off</span>
+</div>
+<h3 class="font-headline font-semibold text-sm text-on-surface">No matching guide topics</h3>
+<p class="font-body text-xs text-on-surface-variant mt-1 max-w-[260px]">Try adjusting your search terms or tap the reset button below.</p>
+<button class="mt-3 px-4 py-2 rounded-lg bg-primary text-on-primary font-label text-xs font-semibold shadow-sm transition-opacity active:opacity-90" onclick="resetSearch()" type="button">
+        Clear filters
+      </button>
+</div>
+</div>
+<!-- Bottom Helper Footnote -->
+<footer class="mt-6 mx-4 p-4 rounded-xl bg-surface-container-low flex items-center justify-between gap-3">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+</div>
+<div class="min-w-0">
+<div class="font-headline font-semibold text-xs text-on-surface leading-tight">Need Firmware Sketches?</div>
+<div class="font-body text-[11px] text-on-surface-variant truncate">Download open-source ESP32 .ino files</div>
+</div>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-label text-xs font-semibold whitespace-nowrap shadow-sm active:bg-surface-container transition-colors" onclick="alert('Firmware sketches are hosted in the iBots GitHub repository.');" type="button">
+      Get Code
+    </button>
+</footer>
+</div>
+<script>
+  let activeCategory = 'all';
+
+  function filterGuide() {
+    const input = document.getElementById('guideSearch');
+    const clearBtn = document.getElementById('clearSearch');
+    const query = input.value.trim().toLowerCase();
+    const items = document.querySelectorAll('.guide-item');
+    const emptyState = document.getElementById('guideEmptyState');
+    const statusBanner = document.getElementById('filterStatus');
+    const statusText = document.getElementById('filterStatusText');
+
+    if (query.length > 0) {
+      clearBtn.classList.remove('hidden');
+    } else {
+      clearBtn.classList.add('hidden');
+    }
+
+    let matchCount = 0;
+
+    items.forEach(item => {
+      const itemCat = item.getAttribute('data-category');
+      const text = item.innerText.toLowerCase();
+      const matchesCat = (activeCategory === 'all' || itemCat === activeCategory);
+      const matchesQuery = (query === '' || text.includes(query));
+
+      if (matchesCat && matchesQuery) {
+        item.classList.remove('hidden');
+        matchCount++;
+        if (query.length > 1) {
+          item.open = true; // Automatically expand matched items during search
+        }
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+
+    if (matchCount === 0) {
+      emptyState.classList.remove('hidden');
+      emptyState.classList.add('flex');
+    } else {
+      emptyState.classList.add('hidden');
+      emptyState.classList.remove('flex');
+    }
+
+    if (query !== '' || activeCategory !== 'all') {
+      statusBanner.classList.remove('hidden');
+      statusText.textContent = `Showing ${matchCount} topic${matchCount === 1 ? '' : 's'}` + 
+        (activeCategory !== 'all' ? ` in ${activeCategory}` : '') + 
+        (query !== '' ? ` for "${query}"` : '');
+    } else {
+      statusBanner.classList.add('hidden');
+    }
+  }
+
+  function setCategory(cat, btn) {
+    activeCategory = cat;
+    document.querySelectorAll('.cat-chip').forEach(el => {
+      el.classList.remove('bg-primary', 'text-on-primary');
+      el.classList.add('bg-surface-container', 'text-on-surface-variant');
+    });
+    btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+    btn.classList.add('bg-primary', 'text-on-primary');
+    filterGuide();
+  }
+
+  function resetSearch() {
+    const input = document.getElementById('guideSearch');
+    input.value = '';
+    activeCategory = 'all';
+    document.querySelectorAll('.cat-chip').forEach(el => {
+      if (el.getAttribute('data-cat-btn') === 'all') {
+        el.classList.remove('bg-surface-container', 'text-on-surface-variant');
+        el.classList.add('bg-primary', 'text-on-primary');
+      } else {
+        el.classList.remove('bg-primary', 'text-on-primary');
+        el.classList.add('bg-surface-container', 'text-on-surface-variant');
+      }
+    });
+    filterGuide();
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/80 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.04)]" data-active-classes="text-primary font-semibold"><div class="flex justify-around items-center h-16 px-2"><a class="flex-1 flex flex-col items-center justify-center h-full min-h-[44px] gap-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label text-[10px] tracking-wide">Home</span></a><a class="flex-1 flex flex-col items-center justify-center h-full min-h-[44px] gap-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="devices" href="#"><span class="material-symbols-outlined text-[22px]">precision_manufacturing</span><span class="font-label text-[10px] tracking-wide">Devices</span></a><a class="flex-1 flex flex-col items-center justify-center h-full min-h-[44px] gap-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="code" href="#"><span class="material-symbols-outlined text-[22px]">terminal</span><span class="font-label text-[10px] tracking-wide">Code</span></a><a aria-current="page" class="flex-1 flex flex-col items-center justify-center h-full min-h-[44px] gap-1 transition-colors text-primary font-semibold" data-path="settings" href="#"><span class="material-symbols-outlined text-[22px]">settings</span><span class="font-label text-[10px] tracking-wide">Settings</span></a></div></nav>
+
+</body></html>

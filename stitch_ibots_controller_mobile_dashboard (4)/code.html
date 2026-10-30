@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html lang="en" style=""><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Noto+Serif:ital,wght@0,600;0,700;1,400&amp;family=Public+Sans:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-primary-fixed": "#001946", "primary-fixed-dim": "#b1c5ff", "on-primary-fixed-variant": "#00419d", "outline-variant": "#c3c6d5", "surface-variant": "#e3e2e3", "inverse-surface": "#303031", "surface-container-lowest": "#ffffff", "on-tertiary-fixed-variant": "#524600", "on-error": "#ffffff", "secondary-fixed": "#dfe3e8", "on-tertiary-fixed": "#211b00", "tertiary-container": "#bfab49", "secondary-fixed-dim": "#c2c7cc", "on-secondary-container": "#606569", "surface-dim": "#dbdadb", "on-background": "#1b1c1d", "on-surface": "#1b1c1d", "inverse-primary": "#b1c5ff", "surface-tint": "#2259bf", "surface-bright": "#faf9fa", "surface": "#faf9fa", "tertiary-fixed-dim": "#dcc661", "surface-container-high": "#e9e8e9", "error": "#ba1a1a", "on-secondary": "#ffffff", "on-primary-container": "#e7ebff", "surface-container-highest": "#e3e2e3", "on-secondary-fixed-variant": "#42474b", "on-primary": "#ffffff", "background": "#faf9fa", "tertiary": "#6d5e00", "on-surface-variant": "#434653", "secondary": "#5a5f63", "primary-fixed": "#d9e2ff", "surface-container-low": "#f5f3f4", "on-tertiary-container": "#4a3f00", "on-tertiary": "#ffffff", "primary-container": "#3366cc", "outline": "#737784", "on-error-container": "#93000a", "error-container": "#ffdad6", "on-secondary-fixed": "#171c20", "tertiary-fixed": "#f9e37a", "surface-container": "#efedee", "secondary-container": "#dfe3e8", "inverse-on-surface": "#f2f0f1", "primary": "#094cb2" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, fontFamily: { headline: ["Noto Serif"], display: ["Noto Serif"], body: ["Inter"], label: ["Public Sans"] } } } }</script></head><body class="bg-surface font-body text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-4 flex items-center justify-between"><div class="flex items-center gap-3"><button aria-label="Go back" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-on-surface rounded-full hover:bg-surface-container transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[22px]">arrow_back</span></button><h1 class="text-lg font-headline font-semibold tracking-tight text-on-surface truncate">Telemetry</h1></div><div class="flex items-center"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface flex-1"><div class="flex flex-col w-full px-5 py-4 space-y-4 max-w-md mx-auto">
+<!-- Subtle Editorial Subheading / Breadcrumb -->
+<!-- 1. Device Connection Status Card -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 flex items-center justify-between"><div class="flex items-center space-x-3"><span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span></span><div class="space-y-0.5"><div class="flex items-center space-x-2"><span class="text-xs font-label font-semibold text-on-surface">Live Updates</span><span class="text-[10px] font-label font-medium text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded-full">Connected</span></div><p class="text-xs font-body text-secondary">Updating sensor data in real time (20 Hz)</p></div></div><div class="flex items-center space-x-1.5 text-xs font-label text-outline"><span class="material-symbols-outlined text-[16px] text-primary">sync</span><span class="">Live</span></div></div>
+<!-- 2. Distance Reading Card -->
+<section class="bg-surface-container-lowest rounded-xl p-6 shadow-sm transition-opacity duration-300" id="distance-card">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">radar</span>
+</div>
+<span class="text-xs font-label font-semibold text-secondary uppercase tracking-wider">Ultrasonic Range</span>
+</div>
+<span class="text-[11px] font-label text-outline bg-surface-container-high px-2 py-0.5 rounded-full">HC-SR04</span>
+</div>
+<!-- Metric Callout -->
+<div class="flex items-baseline space-x-2 my-2">
+<span class="text-5xl font-headline font-bold text-on-surface tracking-tight transition-all" id="distance-value">43</span>
+<span class="text-lg font-headline text-secondary">cm</span>
+</div>
+<p class="text-xs font-body text-secondary mb-4" id="distance-status">Clear path directly ahead</p>
+<!-- Proximity Level Bar -->
+<div class="space-y-1.5">
+<div class="h-2.5 w-full bg-surface-container rounded-full overflow-hidden p-0.5 flex">
+<div class="h-full rounded-full bg-primary transition-all duration-500 ease-out" id="distance-progress-bar" style="width: 21.5%;"></div>
+</div>
+<div class="flex justify-between text-[10px] font-label text-outline">
+<span class="">0 cm</span>
+<span class="">100 cm</span>
+<span class="">200 cm</span>
+</div>
+</div>
+</section>
+<!-- 3. Battery Reading Card -->
+<section class="bg-surface-container-lowest rounded-xl p-6 shadow-sm transition-opacity duration-300" id="battery-card">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" id="battery-icon">battery_5_bar</span>
+</div>
+<span class="text-xs font-label font-semibold text-secondary uppercase tracking-wider">LiPo Pack</span>
+</div>
+<span class="text-[11px] font-label font-medium text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full" id="battery-status-tag">Nominal</span>
+</div>
+<!-- Battery Percentage -->
+<div class="flex items-baseline space-x-2 my-2">
+<span class="text-5xl font-headline font-bold text-on-surface tracking-tight" id="battery-percentage">85</span>
+<span class="text-lg font-headline text-secondary">%</span>
+</div>
+<div class="flex items-center space-x-3 text-xs font-body text-secondary mb-4">
+<span class="">Output: <strong class="font-semibold text-on-surface">8.2 V</strong></span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="">2S 2200mAh</span>
+</div>
+<!-- Battery Bar -->
+<div class="space-y-1.5">
+<div class="h-2.5 w-full bg-surface-container rounded-full overflow-hidden p-0.5 flex">
+<div class="h-full rounded-full bg-primary transition-all duration-500" id="battery-progress-bar" style="width: 85%;"></div>
+</div>
+<div class="flex justify-between text-[10px] font-label text-outline">
+<span class="">Cutoff (6.4V)</span>
+<span class="">Safe</span>
+<span class="">Full (8.4V)</span>
+</div>
+</div>
+</section>
+</div>
+<script>
+  let isConnected = true;
+  let telemetryInterval = null;
+
+  function toggleConnection() {
+    isConnected = !isConnected;
+    const toggleBtn = document.getElementById('connection-toggle-btn');
+    const toggleThumb = document.getElementById('toggle-thumb');
+    const statusText = document.getElementById('status-text');
+    const statusDot = document.getElementById('status-dot');
+    const pingWrapper = document.getElementById('status-indicator-ping');
+    const latencyLabel = document.getElementById('latency-label');
+    const distanceCard = document.getElementById('distance-card');
+    const batteryCard = document.getElementById('battery-card');
+    const distanceVal = document.getElementById('distance-value');
+    const distanceStatus = document.getElementById('distance-status');
+
+    if (isConnected) {
+      toggleBtn.classList.remove('bg-surface-container-highest');
+      toggleBtn.classList.add('bg-primary');
+      toggleThumb.classList.remove('translate-x-1');
+      toggleThumb.classList.add('translate-x-7');
+      toggleBtn.setAttribute('aria-checked', 'true');
+
+      statusText.textContent = 'Connected';
+      statusText.className = 'text-xs font-label font-semibold uppercase tracking-wider text-emerald-700';
+      statusDot.className = 'relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 transition-colors duration-300';
+      pingWrapper.firstElementChild.className = 'animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75';
+
+      latencyLabel.textContent = '14 ms latency';
+      distanceCard.style.opacity = '1';
+      batteryCard.style.opacity = '1';
+      distanceStatus.textContent = 'Clear path directly ahead';
+
+      startLiveTelemetry();
+    } else {
+      toggleBtn.classList.remove('bg-primary');
+      toggleBtn.classList.add('bg-surface-container-highest');
+      toggleThumb.classList.remove('translate-x-7');
+      toggleThumb.classList.add('translate-x-1');
+      toggleBtn.setAttribute('aria-checked', 'false');
+
+      statusText.textContent = 'Disconnected';
+      statusText.className = 'text-xs font-label font-semibold uppercase tracking-wider text-secondary';
+      statusDot.className = 'relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary transition-colors duration-300';
+      pingWrapper.firstElementChild.className = 'hidden';
+
+      latencyLabel.textContent = 'Offline';
+      distanceCard.style.opacity = '0.45';
+      batteryCard.style.opacity = '0.45';
+      distanceVal.textContent = '--';
+      distanceStatus.textContent = 'Telemetry paused';
+
+      clearInterval(telemetryInterval);
+    }
+  }
+
+  function startLiveTelemetry() {
+    clearInterval(telemetryInterval);
+    telemetryInterval = setInterval(() => {
+      if (!isConnected) return;
+      
+      // Jitter range slightly to simulate real sensor readouts
+      const baseDist = 45;
+      const variation = Math.floor(Math.random() * 5) - 2;
+      const currentDist = Math.max(12, Math.min(180, baseDist + variation));
+      
+      const distanceVal = document.getElementById('distance-value');
+      const progressBar = document.getElementById('distance-progress-bar');
+      
+      if (distanceVal && progressBar) {
+        distanceVal.textContent = currentDist;
+        const percentage = Math.min(100, Math.round((currentDist / 200) * 100));
+        progressBar.style.width = percentage + '%';
+      }
+    }, 2800);
+  }
+
+  startLiveTelemetry();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.03)]" data-active-classes="text-primary font-semibold"><div class="flex justify-around items-center h-16 px-2"><a class="flex flex-col items-center justify-center gap-1 min-w-[56px] min-h-[44px] px-2 py-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span class="text-[11px] font-label tracking-tight">Home</span></a><a class="flex flex-col items-center justify-center gap-1 min-w-[56px] min-h-[44px] px-2 py-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="devices" href="#"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span class="text-[11px] font-label tracking-tight">Devices</span></a><a class="flex flex-col items-center justify-center gap-1 min-w-[56px] min-h-[44px] px-2 py-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="code-examples" href="#"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span class="text-[11px] font-label tracking-tight">Code</span></a><a class="flex flex-col items-center justify-center gap-1 min-w-[56px] min-h-[44px] px-2 py-1 text-on-surface-variant hover:text-on-surface transition-colors" data-path="settings" href="#"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span class="text-[11px] font-label tracking-tight">Settings</span></a></div></nav>
+</body></html>
