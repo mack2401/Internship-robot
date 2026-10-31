@@ -431,9 +431,7 @@ class RobotState extends ChangeNotifier {
 
   void disconnectDevice() {
     final dev = currentDevice;
-    if (wifiService.isConnected) {
-      wifiService.disconnect();
-    }
+    wifiService.disconnect();
     bleService.disconnect();
     connectionStatus = ConnectionStatus.disconnected;
     currentDevice = dev.copyWith(isConnected: false);

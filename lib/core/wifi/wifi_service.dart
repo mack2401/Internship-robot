@@ -54,6 +54,26 @@ class RealWifiNetwork {
     this.isConnected = false,
   });
 
+  RealWifiNetwork copyWith({
+    String? ssid,
+    String? bssid,
+    int? level,
+    int? frequency,
+    String? capabilities,
+    bool? isSaved,
+    bool? isConnected,
+  }) {
+    return RealWifiNetwork(
+      ssid: ssid ?? this.ssid,
+      bssid: bssid ?? this.bssid,
+      level: level ?? this.level,
+      frequency: frequency ?? this.frequency,
+      capabilities: capabilities ?? this.capabilities,
+      isSaved: isSaved ?? this.isSaved,
+      isConnected: isConnected ?? this.isConnected,
+    );
+  }
+
   bool get isEspDevice {
     final lower = ssid.toLowerCase();
     return lower.contains("esp32") ||
@@ -508,10 +528,18 @@ class RealWifiService extends ChangeNotifier {
   void disconnect() {
     _heartbeatTimer?.cancel();
     _heartbeatTimer = null;
-    _channel.invokeMethod('disconnectTcp');
+    try {
+      _channel.invokeMethod('disconnectTcp');
+      _channel.invokeMethod('disconnectWifi');
+    } catch (_) {}
     status = WifiStatus.disconnected;
     currentDeviceName = null;
     pingMs = 0;
+    for (var i = 0; i < availableNetworks.length; i++) {
+      if (availableNetworks[i].isConnected) {
+        availableNetworks[i] = availableNetworks[i].copyWith(isConnected: false);
+      }
+    }
     notifyListeners();
   }
 

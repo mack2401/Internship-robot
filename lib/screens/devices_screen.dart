@@ -612,15 +612,17 @@ class _DevicesScreenState extends State<DevicesScreen> with SingleTickerProvider
     final info = ws.currentPhoneWifi;
     final isEsp = info?.isEspHotspot ?? false;
     final ssid = info?.ssid ?? (ws.currentDeviceName ?? "Connected Wi-Fi");
+    final bool isRobotConnected = state.isConnected &&
+        (state.activeProtocol.contains("Wi-Fi") || state.activeProtocol.contains("WiFi") || ws.isConnected);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 2),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2),
           child: Text(
-            "Currently Connected Wi-Fi",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
+            isRobotConnected ? "Currently Connected Robot (Wi-Fi)" : "Phone Wi-Fi Network",
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
           ),
         ),
         const SizedBox(height: 8),
@@ -629,12 +631,15 @@ class _DevicesScreenState extends State<DevicesScreen> with SingleTickerProvider
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFF10B981), width: 1.5),
-            boxShadow: const [
+            border: Border.all(
+              color: isRobotConnected ? const Color(0xFF10B981) : const Color(0xFFE2E8F0),
+              width: isRobotConnected ? 1.5 : 1,
+            ),
+            boxShadow: [
               BoxShadow(
-                color: Color(0x0C059669),
+                color: isRobotConnected ? const Color(0x0C059669) : const Color(0x050F172A),
                 blurRadius: 16,
-                offset: Offset(0, 4),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -649,19 +654,21 @@ class _DevicesScreenState extends State<DevicesScreen> with SingleTickerProvider
                       Container(
                         width: 10,
                         height: 10,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF10B981),
+                        decoration: BoxDecoration(
+                          color: isRobotConnected ? const Color(0xFF10B981) : const Color(0xFF94A3B8),
                           shape: BoxShape.circle,
                         ),
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        isEsp ? "★ CONNECTED TO ESP ROBOT AP" : "CONNECTED TO LOCAL WI-FI",
-                        style: const TextStyle(
+                        isRobotConnected
+                            ? (isEsp ? "★ CONNECTED TO ESP ROBOT AP" : "CONNECTED TO ROBOT VIA WI-FI")
+                            : (isEsp ? "ESP AP DETECTED • ROBOT NOT LINKED" : "PHONE ON WI-FI • ROBOT DISCONNECTED"),
+                        style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.5,
-                          color: Color(0xFF059669),
+                          color: isRobotConnected ? const Color(0xFF059669) : const Color(0xFF64748B),
                         ),
                       ),
                     ],
@@ -670,16 +677,16 @@ class _DevicesScreenState extends State<DevicesScreen> with SingleTickerProvider
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFECFDF5),
+                        color: isRobotConnected ? const Color(0xFFECFDF5) : const Color(0xFFF1F5F9),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
                         "${info.linkSpeed} Mbps • ${info.rssi} dBm",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'monospace',
-                          color: Color(0xFF059669),
+                          color: isRobotConnected ? const Color(0xFF059669) : const Color(0xFF475569),
                         ),
                       ),
                     ),
@@ -691,13 +698,13 @@ class _DevicesScreenState extends State<DevicesScreen> with SingleTickerProvider
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF0FDF4),
+                      color: isRobotConnected ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.wifi,
                       size: 26,
-                      color: Color(0xFF059669),
+                      color: isRobotConnected ? const Color(0xFF059669) : const Color(0xFF64748B),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -712,32 +719,64 @@ class _DevicesScreenState extends State<DevicesScreen> with SingleTickerProvider
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          info != null
-                              ? "Phone IP: ${info.ip} • Gateway: ${info.gateway}"
-                              : "http://${ws.currentHost}:${ws.currentPort}",
+                          isRobotConnected
+                              ? (info != null
+                                  ? "Phone IP: ${info.ip} • Gateway: ${info.gateway}"
+                                  : "http://${ws.currentHost}:${ws.currentPort}")
+                              : (info != null ? "Phone IP: ${info.ip} • Robot Offline" : "Robot Disconnected"),
                           style: const TextStyle(fontSize: 11, fontFamily: 'monospace', color: Color(0xFF64748B)),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFEF2F2),
-                      foregroundColor: const Color(0xFFDC2626),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  if (isRobotConnected)
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFEF2F2),
+                        foregroundColor: const Color(0xFFDC2626),
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      onPressed: () {
+                        state.disconnectDevice();
+                        state.wifiService.openWifiSettings();
+                      },
+                      child: const Text("Disconnect", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                    )
+                  else
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0284C7),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      onPressed: () {
+                        if (isEsp) {
+                          state.connectWifi(host: "192.168.4.1", mode: WifiMode.softAp, name: ssid);
+                        } else {
+                          final matching = ws.availableNetworks.firstWhere(
+                            (n) => n.ssid.toLowerCase() == ssid.toLowerCase(),
+                            orElse: () => RealWifiNetwork(
+                              ssid: ssid,
+                              bssid: info?.bssid ?? "",
+                              level: info?.rssi ?? -50,
+                              frequency: info?.frequency ?? 2400,
+                              capabilities: "[WPA2-PSK]",
+                              isSaved: true,
+                            ),
+                          );
+                          _showWifiConnectDialog(matching);
+                        }
+                      },
+                      child: const Text("Connect Robot", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                     ),
-                    onPressed: () {
-                      state.disconnectDevice();
-                      state.wifiService.openWifiSettings();
-                    },
-                    child: const Text("Disconnect", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-                  ),
                 ],
               ),
-              if (ws.isConnected) ...[
+              if (isRobotConnected && ws.isConnected) ...[
                 const SizedBox(height: 14),
                 const Divider(height: 1, color: Color(0xFFE2E8F0)),
                 const SizedBox(height: 12),
@@ -818,7 +857,10 @@ class _DevicesScreenState extends State<DevicesScreen> with SingleTickerProvider
           )
         else
           ...saved.map((profile) {
-            final isLive = ws.currentPhoneWifi?.ssid.toLowerCase() == profile.name.toLowerCase();
+            final isLive = (state.isConnected || ws.isConnected) &&
+                (ws.currentDeviceName?.toLowerCase() == profile.name.toLowerCase() ||
+                    state.currentDevice.name.toLowerCase() == profile.name.toLowerCase() ||
+                    ws.currentPhoneWifi?.ssid.toLowerCase() == profile.name.toLowerCase());
 
             return Container(
               margin: const EdgeInsets.only(bottom: 8),
@@ -1001,7 +1043,11 @@ class _DevicesScreenState extends State<DevicesScreen> with SingleTickerProvider
           )
         else
           ...networks.map((net) {
-            final isConnected = net.isConnected || (ws.currentPhoneWifi?.ssid == net.ssid);
+            final isConnected = (state.isConnected || ws.isConnected) &&
+                (net.isConnected ||
+                    (ws.currentDeviceName?.toLowerCase() == net.ssid.toLowerCase()) ||
+                    (state.currentDevice.name.toLowerCase() == net.ssid.toLowerCase()) ||
+                    (ws.currentPhoneWifi?.ssid.toLowerCase() == net.ssid.toLowerCase()));
 
             return Container(
               margin: const EdgeInsets.only(bottom: 8),
